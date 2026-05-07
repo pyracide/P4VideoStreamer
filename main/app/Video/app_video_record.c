@@ -204,7 +204,7 @@ esp_err_t take_and_save_video(uint8_t *camera_buf, uint32_t width, uint32_t heig
     // Apply magnification if needed
     if(magnification_factor > 1) {
         ret = app_image_process_magnify(
-            camera_buf, width, height,
+            camera_buf, width, height, PPA_SRM_COLOR_MODE_YUV422_YUYV,
             magnification_factor,
             scaled_camera_buf, 
             ALIGN_UP(width * height * 2, data_cache_line_size)
@@ -238,7 +238,7 @@ esp_err_t take_and_save_video(uint8_t *camera_buf, uint32_t width, uint32_t heig
         }
 
         ret = app_image_process_scale_crop(
-            pre_handle_buf, width, height,
+            pre_handle_buf, width, height, PPA_SRM_COLOR_MODE_YUV422_YUYV,
             CROP_PHOTO_WIDTH, CROP_PHOTO_HEIGHT,
             photo_buf, photo_width, photo_height,
             ALIGN_UP(photo_width * photo_height * 2, data_cache_line_size),
@@ -261,6 +261,7 @@ esp_err_t take_and_save_video(uint8_t *camera_buf, uint32_t width, uint32_t heig
         pic_buf,
         photo_width,
         photo_height,
+        JPEG_ENCODE_IN_FORMAT_YUV422,
         JPEG_VIDEO_QUALITY,
         jpg_buf,
         rx_buffer_size,

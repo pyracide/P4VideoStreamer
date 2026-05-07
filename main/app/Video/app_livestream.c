@@ -19,6 +19,8 @@
 #include "esp_h264_enc_single_hw.h"
 
 #include "app_livestream.h"
+#include "app_video_utils.h"
+#include "driver/ppa.h"
 
 static const char *TAG = "app_livestream";
 
@@ -47,102 +49,25 @@ static bool s_wifi_connected = false;
 static esp_h264_enc_handle_t s_h264_enc = NULL;
 static uint8_t *s_yuv_buf = NULL;
 static uint8_t *s_out_buf = NULL;
+static uint8_t *s_task_rgb_buf = NULL;
 static size_t s_yuv_buf_size = 0;
 static size_t s_data_cache_line = 0;
 static bool s_encoder_ready = false;
+
+/* FreeRTOS synchronization for decoupled processing */
+static TaskHandle_t s_stream_task_handle = NULL;
+static SemaphoreHandle_t s_frame_ready_sem = NULL;
+static volatile bool s_is_processing = false;
 
 /* WebSocket clients tracking */
 static int s_ws_fds[MAX_WS_CLIENTS];
 static int s_ws_client_count = 0;
 static SemaphoreHandle_t s_ws_mutex = NULL;
+static float s_actual_fps = 0;
 
-/* ── RGB565 to YUV420 conversion ────────────────────────── */
+/* ── Hardware Conversion (YUV422 -> O_UYY_E_VYY) ────────── */
 
-static inline void rgb565_to_yuv(uint16_t rgb565, uint8_t *y, uint8_t *u, uint8_t *v)
-{
-    uint8_t r = (rgb565 >> 11) & 0x1F;
-    uint8_t g = (rgb565 >> 5) & 0x3F;
-    uint8_t b = rgb565 & 0x1F;
-    r = (r << 3) | (r >> 2);
-    g = (g << 2) | (g >> 4);
-    b = (b << 3) | (b >> 2);
-    int yi = ((66 * r + 129 * g + 25 * b + 128) >> 8) + 16;
-    int ui = ((-38 * r - 74 * g + 112 * b + 128) >> 8) + 128;
-    int vi = ((112 * r - 94 * g - 18 * b + 128) >> 8) + 128;
-    *y = (uint8_t)(yi < 0 ? 0 : (yi > 255 ? 255 : yi));
-    *u = (uint8_t)(ui < 0 ? 0 : (ui > 255 ? 255 : ui));
-    *v = (uint8_t)(vi < 0 ? 0 : (vi > 255 ? 255 : vi));
-}
 
-static void rgb565_to_ouyy_evyy(const uint8_t *rgb565, uint8_t *ouyy_evyy,
-                                uint32_t width, uint32_t height)
-{
-    /* 
-     * O_UYY_E_VYY format:
-     * Odd lines (1, 3, 5...): u y y u y y u y y...
-     * Even lines (2, 4, 6...): v y y v y y v y y...
-     * 
-     * For a 2x2 block:
-     * (row, col)     | Y | U | V
-     * (0, 0)         | Y0| U0| V0
-     * (0, 1)         | Y1|   | 
-     * (1, 0)         | Y2|   |
-     * (1, 1)         | Y3|   |
-     * 
-     * Line 0 (even in 0-indexed, but "odd" in documentation 1-indexed): U0 Y0 Y1
-     * Line 1 (odd in 0-indexed, "even" in doc): V0 Y2 Y3
-     */
-    const uint16_t *src = (const uint16_t *)rgb565;
-    uint8_t *dst = ouyy_evyy;
-
-    for (uint32_t row = 0; row < height; row += 2) {
-        /* Process two lines at a time */
-        uint8_t *line_u = dst + row * width * 3 / 2;
-        uint8_t *line_v = dst + (row + 1) * width * 3 / 2;
-
-        for (uint32_t col = 0; col < width; col += 2) {
-            uint8_t y00, u00, v00;
-            uint8_t y01, u01, v01;
-            uint8_t y10, u10, v10;
-            uint8_t y11, u11, v11;
-
-            rgb565_to_yuv(src[row * width + col], &y00, &u00, &v00);
-            rgb565_to_yuv(src[row * width + col + 1], &y01, &u01, &v01);
-            rgb565_to_yuv(src[(row + 1) * width + col], &y10, &u10, &v10);
-            rgb565_to_yuv(src[(row + 1) * width + col + 1], &y11, &u11, &v11);
-
-            /* Average U and V for the 2x2 block */
-            uint8_t u_avg = (u00 + u01 + u10 + u11) / 4;
-            uint8_t v_avg = (v00 + v01 + v10 + v11) / 4;
-
-            /* Line 0: U Y Y */
-            *line_u++ = u_avg;
-            *line_u++ = y00;
-            *line_u++ = y01;
-
-            /* Line 1: V Y Y */
-            *line_v++ = v_avg;
-            *line_v++ = y10;
-            *line_v++ = y11;
-        }
-    }
-}
-
-/* ── Downscale RGB565 (nearest-neighbor) ────────────────── */
-
-static void downscale_rgb565(const uint8_t *src, uint32_t src_w, uint32_t src_h,
-                             uint8_t *dst, uint32_t dst_w, uint32_t dst_h)
-{
-    const uint16_t *s = (const uint16_t *)src;
-    uint16_t *d = (uint16_t *)dst;
-    for (uint32_t y = 0; y < dst_h; y++) {
-        uint32_t sy = y * src_h / dst_h;
-        for (uint32_t x = 0; x < dst_w; x++) {
-            uint32_t sx = x * src_w / dst_w;
-            d[y * dst_w + x] = s[sy * src_w + sx];
-        }
-    }
-}
 
 /* ── Wi-Fi event handler ────────────────────────────────── */
 
@@ -246,6 +171,62 @@ static void ws_broadcast(const uint8_t *data, size_t len)
     xSemaphoreGive(s_ws_mutex);
 }
 
+/* ── H.264 Encoder Task ─────────────────────────────────── */
+
+static void livestream_process_task(void *arg)
+{
+    static int64_t last_time = 0;
+    static int frame_count = 0;
+
+    while (1) {
+        if (xSemaphoreTake(s_frame_ready_sem, portMAX_DELAY) == pdTRUE) {
+            if (s_ws_client_count == 0 || !s_h264_enc) {
+                s_is_processing = false;
+                continue;
+            }
+
+            /* Convert YUV422 to O_UYY_E_VYY via Hardware PPA */
+            esp_err_t ppa_err = app_image_process_yuv422_to_ouyy_evyy(s_task_rgb_buf, STREAM_WIDTH, STREAM_HEIGHT, s_yuv_buf, s_yuv_buf_size);
+            if (ppa_err != ESP_OK) {
+                ESP_LOGE(TAG, "PPA hardware conversion failed");
+                s_is_processing = false;
+                continue;
+            }
+
+            /* Encode with H.264 */
+            esp_h264_enc_in_frame_t in_frame = {
+                .raw_data = { .buffer = s_yuv_buf, .len = s_yuv_buf_size },
+                .pts = (uint64_t)(esp_timer_get_time() / 1000),
+            };
+            esp_h264_enc_out_frame_t out_frame = {
+                .raw_data = { .buffer = s_out_buf, .len = s_yuv_buf_size }
+            };
+
+            esp_h264_err_t err = esp_h264_enc_process(s_h264_enc, &in_frame, &out_frame);
+            if (err == ESP_H264_ERR_OK) {
+                /* Broadcast encoded data to WebSocket clients */
+                if (out_frame.raw_data.buffer && out_frame.length > 0) {
+                    ws_broadcast(out_frame.raw_data.buffer, out_frame.length);
+                    
+                    /* Calculate actual FPS */
+                    frame_count++;
+                    int64_t now = esp_timer_get_time();
+                    if (now - last_time >= 1000000) {
+                        s_actual_fps = (float)frame_count * 1000000.0f / (float)(now - last_time);
+                        last_time = now;
+                        frame_count = 0;
+                    }
+                }
+            } else {
+                ESP_LOGW(TAG, "H.264 encode failed: %d", err);
+            }
+
+            /* Release the buffer lock so the camera thread can push the next frame */
+            s_is_processing = false;
+        }
+    }
+}
+
 /* ── H.264 Encoder ──────────────────────────────────────── */
 
 static esp_err_t init_h264_encoder(void)
@@ -292,7 +273,6 @@ static esp_err_t init_h264_encoder(void)
         return ESP_ERR_NO_MEM;
     }
 
-    s_encoder_ready = true;
     ESP_LOGI(TAG, "H.264 encoder initialized: %dx%d @ %dfps, %d bps",
              STREAM_WIDTH, STREAM_HEIGHT, STREAM_FPS, STREAM_BITRATE);
     return ESP_OK;
@@ -315,12 +295,29 @@ esp_err_t app_livestream_init(void)
         return ret;
     }
 
+    s_task_rgb_buf = heap_caps_aligned_calloc(s_data_cache_line, 1, 
+        STREAM_WIDTH * STREAM_HEIGHT * 2, MALLOC_CAP_SPIRAM);
+    if (!s_task_rgb_buf) {
+        ESP_LOGE(TAG, "Task RGB buffer allocation failed");
+        return ESP_ERR_NO_MEM;
+    }
+
+    s_frame_ready_sem = xSemaphoreCreateBinary();
+    if (!s_frame_ready_sem) {
+        return ESP_ERR_NO_MEM;
+    }
+
+    /* Create the decoupled processing task */
+    xTaskCreatePinnedToCore(livestream_process_task, "livestream_task", 8192, NULL, 5, &s_stream_task_handle, 1);
+
     /* Initialize H.264 encoder */
     ret = init_h264_encoder();
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "H.264 init failed");
         return ret;
     }
+
+    s_encoder_ready = true;
 
     /* Initialize networking stack */
     ESP_ERROR_CHECK(esp_netif_init());
@@ -406,51 +403,32 @@ esp_err_t app_livestream_stop_server(void)
     return ESP_OK;
 }
 
-esp_err_t app_livestream_feed_frame(uint8_t *rgb565_buf, uint32_t width, uint32_t height)
+esp_err_t app_livestream_feed_frame(uint8_t *yuv422_buf, uint32_t width, uint32_t height)
 {
     if (!s_encoder_ready || !s_h264_enc) return ESP_ERR_INVALID_STATE;
     if (s_ws_client_count == 0) return ESP_OK;  /* No clients, skip encoding */
 
-    /* Downscale if needed */
-    static uint8_t *s_downscale_buf = NULL;
-    const uint8_t *src_buf = rgb565_buf;
+    if (s_is_processing) {
+        /* Task is still busy encoding/sending the previous frame.
+           Drop this frame to avoid blocking the camera capture thread (High FPS preservation). */
+        return ESP_OK;
+    }
+    
+    s_is_processing = true;
 
+    /* Downscale if needed directly into task buffer, otherwise memcpy */
     if (width != STREAM_WIDTH || height != STREAM_HEIGHT) {
-        if (!s_downscale_buf) {
-            s_downscale_buf = heap_caps_aligned_calloc(s_data_cache_line, 1,
-                STREAM_WIDTH * STREAM_HEIGHT * 2, MALLOC_CAP_SPIRAM);
-            if (!s_downscale_buf) {
-                ESP_LOGE(TAG, "Downscale buf alloc failed");
-                return ESP_ERR_NO_MEM;
-            }
-        }
-        downscale_rgb565(rgb565_buf, width, height,
-                         s_downscale_buf, STREAM_WIDTH, STREAM_HEIGHT);
-        src_buf = s_downscale_buf;
+        /* If the camera is 720p or 1080p, we use PPA to downscale it */
+        app_image_process_scale_crop(yuv422_buf, width, height, PPA_SRM_COLOR_MODE_YUV422_YUYV,
+                                     STREAM_WIDTH, STREAM_HEIGHT,
+                                     s_task_rgb_buf, STREAM_WIDTH, STREAM_HEIGHT, 
+                                     STREAM_WIDTH * STREAM_HEIGHT * 2, PPA_SRM_ROTATION_ANGLE_0);
+    } else {
+        memcpy(s_task_rgb_buf, yuv422_buf, STREAM_WIDTH * STREAM_HEIGHT * 2);
     }
 
-    /* Convert RGB565 to O_UYY_E_VYY */
-    rgb565_to_ouyy_evyy(src_buf, s_yuv_buf, STREAM_WIDTH, STREAM_HEIGHT);
-
-    /* Encode with H.264 */
-    esp_h264_enc_in_frame_t in_frame = {
-        .raw_data = { .buffer = s_yuv_buf, .len = s_yuv_buf_size },
-        .pts = (uint64_t)(esp_timer_get_time() / 1000),
-    };
-    esp_h264_enc_out_frame_t out_frame = {
-        .raw_data = { .buffer = s_out_buf, .len = s_yuv_buf_size }
-    };
-
-    esp_h264_err_t err = esp_h264_enc_process(s_h264_enc, &in_frame, &out_frame);
-    if (err != ESP_H264_ERR_OK) {
-        ESP_LOGW(TAG, "H.264 encode failed: %d", err);
-        return ESP_FAIL;
-    }
-
-    /* Broadcast encoded data to WebSocket clients */
-    if (out_frame.raw_data.buffer && out_frame.length > 0) {
-        ws_broadcast(out_frame.raw_data.buffer, out_frame.length);
-    }
+    /* Signal the processing task that a new frame is ready */
+    xSemaphoreGive(s_frame_ready_sem);
 
     return ESP_OK;
 }
@@ -481,4 +459,8 @@ const char* app_livestream_get_ws_url(void)
 bool app_livestream_has_clients(void)
 {
     return s_ws_client_count > 0;
+}
+float app_livestream_get_actual_fps(void)
+{
+    return s_actual_fps;
 }

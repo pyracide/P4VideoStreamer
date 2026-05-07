@@ -1,0 +1,1217 @@
+Command: C:\Espressif\tools\python\v5.5.4\venv\Scripts\python.exe C:\esp\v5.5.4\esp-idf\tools/idf_monitor.py -p COM5 -b 115200 --toolchain-prefix riscv32-esp-elf- --target esp32p4 --revision 301 --decode-panic backtrace C:\Users\samgr\ArduinoProjects\P4VideoStreamer\build\factory_demo.elf C:\Users\samgr\ArduinoProjects\P4VideoStreamer\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\tools\python\v5.5.4\venv\Scripts\python.exe' 'C:\esp\v5.5.4\esp-idf\tools\idf.py'
+[0;32mI (188) esp_image: segment 1: paddr=00187a9c vaddr=30100000 sizeESP-ROM:esp32p4-eco6-20251011[0m
+Build:Oct 11 2025
+rst:0x17 (CHIP_USB_UART_RESET),boot:0x30c (SPI_FAST_FLASH_BOOT)
+Core0 Saved PC:0x4ff47988
+Core1 Saved PC:0x4ff47988
+SPI mode:DIO, clock div:1
+load:0x4ffb60d0,len:0x1660
+load:0x4ffac2c0,len:0xe48
+load:0x4ffaefc0,len:0x3574
+entry 0x4ffac2ca
+[0;32mI (8) boot: ESP-IDF v5.5.4 2nd stage bootloader[0m
+[0;32mI (8) boot: compile time May  7 2026 18:00:42[0m
+[0;32mI (9) boot: Multicore bootloader[0m
+[0;32mI (10) boot: chip revision: v3.1[0m
+[0;32mI (10) boot: efuse block revision: v1.2[0m
+[0;32mI (10) boot.esp32p4: SPI Speed      : 80MHz[0m
+[0;32mI (10) boot.esp32p4: SPI Mode       : DIO[0m
+[0;32mI (11) boot.esp32p4: SPI Flash Size : 16MB[0m
+[0;32mI (11) boot: Enabling RNG early entropy source...[0m
+[0;32mI (11) boot: Partition Table:[0m
+[0;32mI (12) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (12) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (13) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (13) boot:  2 factory          factory app      00 00 00010000 00a00000[0m
+[0;32mI (14) boot: End of partition table[0m
+[0;32mI (15) esp_image: segment 0: paddr=00010020 vaddr=48110020 size=177a74h (1538676) map[0m
+[0;32mI (188) esp_image: segment 1: paddr=00187a9c vaddr=30100000 size=00aach (  2732) load[0m
+[0;32mI (190) esp_image: segment 2: paddr=00188550 vaddr=30100ab0 size=0006ch (   108) load[0m
+[0;32mI (191) esp_image: segment 3: paddr=001885c4 vaddr=4ff40000 size=07a54h ( 31316) load[0m
+[0;32mI (196) esp_image: segment 4: paddr=00190020 vaddr=48000020 size=107960h (1079648) map[0m
+[0;32mI (318) esp_image: segment 5: paddr=00297988 vaddr=4ff47a54 size=15600h ( 87552) load[0m
+[0;32mI (331) esp_image: segment 6: paddr=002acf90 vaddr=4ff5d080 size=04a40h ( 19008) load[0m
+[0;32mI (335) esp_image: segment 7: paddr=002b19d8 vaddr=50108080 size=00020h (    32) load[0m
+[0;32mI (342) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (342) boot: Disabling RNG early entropy source...[0m
+[0;32mI (345) hex_psram: vendor id    : 0x0d (AP)[0m
+[0;32mI (345) hex_psram: Latency      : 0x01 (Fixed)[0m
+[0;32mI (346) hex_psram: DriveStr.    : 0x00 (25 Ohm)[0m
+[0;32mI (346) hex_psram: dev id       : 0x03 (generation 4)[0m
+[0;32mI (346) hex_psram: density      : 0x07 (256 Mbit)[0m
+[0;32mI (347) hex_psram: good-die     : 0x06 (Pass)[0m
+[0;32mI (347) hex_psram: SRF          : 0x02 (Slow Refresh)[0m
+[0;32mI (347) hex_psram: BurstType    : 0x00 ( Wrap)[0m
+[0;32mI (348) hex_psram: BurstLen     : 0x03 (2048 Byte)[0m
+[0;32mI (348) hex_psram: BitMode      : 0x01 (X16 Mode)[0m
+[0;32mI (348) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)[0m
+[0;32mI (349) hex_psram: DriveStrength: 0x00 (1/1)[0m
+[0;32mI (349) MSPI Timing: Enter psram timing tuning[0m
+I esp_psram: Found 32MB PSRAM device
+I esp_psram: Speed: 200MHz
+[0;32mI (618) mmu_psram: .rodata xip on psram[0m
+[0;32mI (696) mmu_psram: .text xip on psram[0m
+[0;32mI (697) hex_psram: psram CS IO is dedicated[0m
+[0;32mI (697) cpu_start: Multicore app[0m
+[0;32mI (706) cpu_start: Pro cpu start user code[0m
+[0;32mI (706) cpu_start: cpu freq: 400000000 Hz[0m
+[0;32mI (706) app_init: Application information:[0m
+[0;32mI (707) app_init: Project name:     factory_demo[0m
+[0;32mI (707) app_init: App version:      1.0.0[0m
+[0;32mI (707) app_init: Compile time:     May  7 2026 17:59:59[0m
+[0;32mI (707) app_init: ELF file SHA256:  09eeab27b...[0m
+[0;32mI (707) app_init: ESP-IDF:          v5.5.4[0m
+[0;32mI (707) efuse_init: Min chip rev:     v3.1[0m
+[0;32mI (708) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (708) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (708) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (708) heap_init: At 4FF66580 len 00054A40 (338 KiB): RETENT_RAM[0m
+[0;32mI (709) heap_init: At 4FFBAFC0 len 00004BF0 (18 KiB): RAM[0m
+[0;32mI (709) heap_init: At 501080A0 len 00007F60 (31 KiB): RTCRAM[0m
+[0;32mI (709) heap_init: At 30100B1C len 000014E4 (5 KiB): TCM[0m
+[0;32mI (710) esp_psram: Adding pool of 30144K of PSRAM memory to heap allocator[0m
+[0;32mI (710) esp_psram: Adding pool of 33K of PSRAM memory gap generated due to end address alignment of irom to the heap allocator[0m
+[0;32mI (710) esp_psram: Adding pool of 33K of PSRAM memory gap generated due to end address alignment of drom to the heap allocator[0m
+[0;32mI (711) spi_flash: detected chip: generic[0m
+[0;32mI (711) spi_flash: flash io: dio[0m
+[0;32mI (712) sleep_gpio: Configure to isolate all GPIO pins in sleep state[0m
+[0;32mI (713) sleep_gpio: Enable automatic switching of GPIO sleep configuration[0m
+[0;32mI (713) H_SDIO_DRV: sdio_data_to_rx_buf_task started[0m
+[0;32mI (713) main_task: Started on CPU0[0m
+[0;32mI (714) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations[0m
+[0;32mI (714) main_task: Calling app_main()[0m
+[0;32mI (714) main: Initialize NVS[0m
+[0;32mI (719) main: Initialize the flashlight[0m
+[0;32mI (719) main: Initialize the I2C[0m
+[0;33mW (719) i2c.master: Please check pull-up resistances whether be connected properly. Otherwise unexpected behavior would happen. For more detailed information, please read docs[0m
+[0;32mI (719) main: Initialize the AI detect[0m
+[0;32mI (719) app_ai_detect: AI detect disabled to save memory[0m
+[0;32mI (719) main: Initialize the display[0m
+[0;32mI (719) LVGL: Starting LVGL task[0m
+[0;33mW (720) p4-eye: If the pixel clock is not set to 20 MHz, you need to temporarily apply the patch 0001-fix-spi-default-clock-source.patch. For details on how to apply the patch, please refer to the README.[0m
+[0;32mI (1026) app_storage: Settings loaded from NVS successfully[0m
+[0;32mI (1026) app_video_photo: Photo resolution set to 1920x1080[0m
+[0;32mI (1026) app_video_record: Video resolution set to 1920x1080[0m
+[0;32mI (1027) app_storage: Settings saved to NVS successfully[0m
+[0;32mI (1027) app_storage: Settings saved to NVS successfully[0m
+[0;32mI (1028) app_storage: Settings saved to NVS successfully[0m
+[0;32mI (1028) app_storage: Settings saved to NVS successfully[0m
+[0;32mI (1028) app_storage: Camera settings loaded from NVS successfully[0m
+[0;32mI (1039) main: Initialize the QMA6100 IMU sensor with display auto-rotation[0m
+[0;32mI (1040) APP_QMA6100: Initializing QMA6100 sensor...[0m
+[0;32mI (1040) APP_QMA6100: QMA6100 sensor initialized successfully[0m
+[0;32mI (1040) APP_QMA6100: Starting integrated display auto-rotation...[0m
+[0;32mI (1041) APP_QMA6100: Display rotation task started with simplified single-axis detection[0m
+[0;32mI (1041) APP_QMA6100: Display auto-rotation task started successfully[0m
+[0;32mI (1041) APP_QMA6100: Display auto-rotation started successfully[0m
+[0;32mI (1041) APP_QMA6100: QMA6100 initialization complete with integrated display rotation[0m
+[0;32mI (1041) main: Initialize the storage[0m
+[0;32mI (1041) app_storage: other wake up[0m
+[0;32mI (1042) app_storage: Interval state loaded: active=0, next_wake=0[0m
+[0;32mI (1042) app_storage: Interval state saved: active=0, next_wake=0[0m
+[0;32mI (1042) app_storage: Photo count saved: 0[0m
+[0;32mI (1042) app_video_stream: Interval photo stopped[0m
+[0;32mI (1043) app_storage: Photo count saved: 0[0m
+[0;32mI (1043) p4-eye: Setting LCD backlight: 100%[0m
+[0;32mI (1043) main: Initialize the application control module[0m
+[0;32mI (1043) button: IoT Button Version: 3.5.0[0m
+[0;32mI (1043) button: IoT Button Version: 3.5.0[0m
+[0;32mI (1043) button: IoT Button Version: 3.5.0[0m
+[0;32mI (1043) button: IoT Button Version: 3.5.0[0m
+[0;32mI (1043) Knob: Iot Knob Config Succeed, encoder A:48, encoder B:47, direction:0, Version: 1.0.2[0m
+[0;32mI (1044) main: Initialize the video streaming application[0m
+[0;32mI (1045) ov2710: Detected Camera sensor PID=0x2710[0m
+[0;32mI (1192) app_video: version: 0.9.0[0m
+[0;32mI (1192) app_video: driver:  MIPI-CSI[0m
+[0;32mI (1192) app_video: card:    MIPI-CSI[0m
+[0;32mI (1192) app_video: bus:     esp32p4:MIPI-CSI[0m
+[0;32mI (1193) app_video: width=1920 height=1080[0m
+[0;32mI (1193) app_storage: Camera settings loaded from NVS successfully[0m
+[0;32mI (1249) app_video_stream: Allocated shared photo buffer: 1843200 bytes (1280x720)[0m
+[0;32mI (1254) app_storage: Photo count loaded: 0[0m
+[0;32mI (1254) app_storage: Photo count saved: 0[0m
+[0;32mI (1254) app_video_photo: Using shared photo buffer: 1843200 bytes[0m
+[0;32mI (1254) app_video_record: Using shared photo buffer: 1843200 bytes[0m
+[0;32mI (1254) p4-eye: bsp_microphone_init: 0[0m
+[0;33mW (1255) i2s_common: dma frame num is adjusted to 256 to align the dma buffer with 64, bufsize = 512[0m
+[0;32mI (1255) I2S_IF: Auto get out handle 0x0 from in handle 0x48288cb0 when duplex mode[0m
+[0;32mI (1255) I2S_IF: No paired data, current mode: record[0m
+[0;32mI (1256) I2S_IF: PDM RX mode, data_bit: 16, slot_bit: 16, sample_rate: 16000, slot_mask: 0x3[0m
+[0;32mI (1256) Adev_Codec: Open codec device OK[0m
+[0;32mI (1256) app_video: Video Stream Start[0m
+[0;32mI (1258) APP_QMA6100: Registered rotation callback at slot 0[0m
+[0;32mI (1258) app_video_stream: Registered rotation callback for video stream synchronization[0m
+[0;32mI (1258) app_video_stream: Video stream synchronized with display rotation: LVGL 0° -> PPA 0°[0m
+[0;32mI (1258) main: Initialize the livestream module[0m
+[0;32mI (1281) app_livestream: H.264 encoder initialized: 640x480 @ 15fps, 1500000 bps[0m
+[0;32mI (1282) transport: Attempt connection with slave: retry[0][0m
+[0;33mW (1282) H_SDIO_DRV: Reset slave using GPIO[9][0m
+[0;32mI (1282) os_wrapper_esp: GPIO [9] configured[0m
+[0;32mI (2838) sdio_wrapper: SDIO master: Slot 1, Data-Lines: 4-bit Freq(KHz)[40000 KHz][0m
+[0;32mI (2838) sdio_wrapper: GPIOs: CLK[28] CMD[27] D0[29] D1[30] D2[31] D3[32] Slave_Reset[9][0m
+[0;32mI (2838) sdio_wrapper: Queues: Tx[20] Rx[20] SDIO-Rx-Mode[1][0m
+[0;32mI (2881) sdio_wrapper: Function 0 Blocksize: 512[0m
+[0;32mI (2881) sdio_wrapper: Function 1 Blocksize: 512[0m
+[0;32mI (2981) H_SDIO_DRV: Card init success, TRANSPORT_RX_ACTIVE[0m
+[0;32mI (2981) transport: set_transport_state: 1[0m
+[0;32mI (2981) transport: Waiting for esp_hosted slave to be ready[0m
+[0;32mI (3013) H_SDIO_DRV: SDIO Host operating in STREAMING MODE[0m
+[0;32mI (3013) H_SDIO_DRV: Open data path at slave[0m
+[0;32mI (3013) H_SDIO_DRV: Starting SDIO process rx task[0m
+[0;32mI (3023) H_SDIO_DRV: Received ESP_PRIV_IF type message[0m
+[0;32mI (3023) transport: Received INIT event from ESP32 peripheral[0m
+[0;32mI (3023) transport: EVENT: 12[0m
+[0;32mI (3023) transport: Identified slave [esp32c6][0m
+[0;32mI (3023) transport: EVENT: 11[0m
+[0;32mI (3023) transport: capabilities: 0xd[0m
+[0;32mI (3023) transport: Features supported are:[0m
+[0;32mI (3023) transport: 	 * WLAN[0m
+[0;32mI (3023) transport: 	   - HCI over SDIO[0m
+[0;32mI (3023) transport: 	   - BLE only[0m
+[0;32mI (3023) transport: EVENT: 13[0m
+[0;33mW (3024) transport: Version mismatch: Host [2.12.0] > Co-proc [0.0.0] ==> Upgrade co-proc to avoid RPC timeouts[0m
+[0;32mI (3024) transport: ESP board type is : 13 [0m
+
+[0;32mI (3024) transport: Base transport is set-up, TRANSPORT_TX_ACTIVE[0m
+[0;32mI (3024) H_API: Transport active[0m
+[0;32mI (3024) transport: Slave chip Id[12][0m
+[0;32mI (3024) transport: raw_tp_dir[-], flow_ctrl: low[60] high[80][0m
+[0;32mI (3024) transport: transport_delayed_init[0m
+[0;32mI (3024) esp_cli: Registering command: crash[0m
+[0;32mI (3025) esp_cli: Registering command: reboot[0m
+[0;32mI (3025) esp_cli: Registering command: mem-dump[0m
+[0;32mI (3025) esp_cli: Registering command: task-dump[0m
+[0;32mI (3025) esp_cli: Registering command: cpu-dump[0m
+[0;32mI (3025) esp_cli: Registering command: heap-trace[0m
+[0;32mI (3025) esp_cli: Registering command: sock-dump[0m
+[0;32mI (3025) esp_cli: Registering command: host-power-save[0m
+[0;32mI (3025) hci_stub_drv: Host BT Support: Disabled[0m
+[0;32mI (3025) H_SDIO_DRV: Received INIT event[0m
+[0;32mI (3025) H_SDIO_DRV: Event type: 0x22[0m
+[0;32mI (3025) H_SDIO_DRV: Write thread started[0m
+[0;32mI (3292) app_video_stream: Camera initialized after 50 frames[0m
+[0;32mI (3713) RPC_WRAP: Coprocessor Boot-up[0m
+[0;32mI (3943) app_livestream: Wi-Fi STA started, connecting to CommunityFibre69420...[0m
+[0;32mI (3950) RPC_WRAP: ESP Event: wifi station started[0m
+[0;32mI (3964) H_API: esp_wifi_remote_connect[0m
+[0;32mI (6744) RPC_WRAP: ESP Event: Station mode: Connected[0m
+[0;32mI (6744) esp_wifi_remote: esp_wifi_internal_reg_rxcb: sta: 0x480dee8a[0m
+[0;32mI (7773) esp_netif_handlers: sta ip: 192.168.1.251, mask: 255.255.255.0, gw: 192.168.1.1[0m
+[0;32mI (7773) app_livestream: Wi-Fi connected! IP: 192.168.1.251[0m
+[0;32mI (7773) app_livestream: WebSocket URL: ws://192.168.1.251:8080/stream[0m
+[0;32mI (7773) app_livestream: Wi-Fi connected to CommunityFibre69420[0m
+[0;32mI (7774) app_livestream: WebSocket server started on port 8080[0m
+[0;32mI (7774) app_livestream: Stream URL: ws://192.168.1.251:8080/stream[0m
+[0;32mI (7774) main: Application initialization completed[0m
+[0;32mI (7775) main_task: Returned from app_main()[0m
+[0;32mI (18596) app_livestream: WS handshake from client[0m
+[0;32mI (18596) app_livestream: Client connected (total: 1)[0m
+[1;31mE (18609) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (18609) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (19009) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (19009) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (19329) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (19329) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (19649) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (19649) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (19889) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (19889) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (20168) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (20169) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (20448) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (20449) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (20729) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (20729) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (20969) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (20969) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (21168) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (21168) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (21368) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (21368) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (21528) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (21528) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (21648) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (21648) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (21808) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (21809) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (21928) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (21929) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22048) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22049) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22128) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22128) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22208) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22208) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22288) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22289) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22368) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22368) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22448) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22448) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22528) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22528) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22608) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22608) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22688) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22688) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22768) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22768) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22848) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22848) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (22928) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (22928) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (23048) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (23048) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (23288) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (23288) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (23408) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (23408) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (23528) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (23528) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (23688) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (23688) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (23808) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (23808) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (23927) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (23928) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (24047) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (24048) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (24167) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (24168) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (24247) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (24248) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (24367) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (24368) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (24448) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (24448) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (24568) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (24568) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (24688) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (24688) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (24808) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (24808) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (24928) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (24928) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (25007) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (25008) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (25087) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (25087) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (25207) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (25207) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (25287) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (25288) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (25367) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (25367) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (25487) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (25487) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (25607) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (25607) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (25727) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (25727) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (25847) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (25847) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (25967) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (25967) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (26087) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (26087) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (26207) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (26207) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (26327) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (26327) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (26407) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (26407) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (26487) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (26487) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (26567) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (26567) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (26647) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (26647) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (26727) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (26727) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (26847) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (26848) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (26927) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (26927) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (27047) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (27047) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (27167) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (27167) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (27367) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (27367) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (27487) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (27487) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (27607) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (27607) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (27727) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (27727) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (27847) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (27847) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (27967) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (27967) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28087) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28087) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28167) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28167) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28246) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28247) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28366) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28367) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28446) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28447) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28527) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28527) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28606) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28607) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28686) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28687) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28806) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28807) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28887) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28887) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (28966) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (28967) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29046) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29047) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29127) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29127) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29206) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29207) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29286) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29287) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29366) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29367) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29446) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29446) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29566) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29566) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29686) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29686) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29766) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29766) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29886) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29886) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (29966) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (29967) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30046) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30046) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30126) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30126) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30206) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30207) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30286) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30286) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30366) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30366) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30446) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30447) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30526) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30526) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30606) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30606) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30726) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30726) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30846) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30846) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (30926) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (30926) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31006) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31006) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31126) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31126) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31206) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31206) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31286) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31286) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31406) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31406) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31486) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31486) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31566) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31566) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31646) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31646) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31766) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31766) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31846) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31846) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (31926) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (31926) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32006) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32006) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32086) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32086) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32166) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32166) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32246) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32246) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32325) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32326) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32445) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32446) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32525) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32526) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32606) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32606) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32685) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32686) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32765) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32766) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32846) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32846) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (32925) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (32926) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33005) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33006) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33086) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33086) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33165) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33166) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33245) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33246) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33365) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33366) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33446) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33446) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33525) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33525) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33605) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33606) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33685) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33686) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33765) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33765) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33845) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33845) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (33925) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (33926) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (34005) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (34005) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (34085) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (34085) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (34165) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (34166) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (34285) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (34286) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (34405) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (34406) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (34485) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (34485) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (34605) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (34605) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (34685) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (34685) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (34805) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (34805) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (34885) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (34885) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (35005) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (35005) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (35125) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (35125) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (35205) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (35205) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (35285) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (35285) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (35365) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (35366) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (35485) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (35485) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (35565) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (35565) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (35685) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (35685) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (35805) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (35805) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (35925) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (35925) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36045) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36045) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36165) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36165) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36245) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36245) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36325) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36325) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36445) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36445) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36525) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36525) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36604) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36605) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36685) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36685) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36764) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36765) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36884) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36885) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (36964) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (36965) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (37045) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (37045) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (37124) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (37125) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (37204) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (37205) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (37285) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (37285) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (37364) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (37365) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (37525) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (37525) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (37604) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (37605) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (37765) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (37765) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (37884) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (37885) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38004) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38005) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38084) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38084) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38204) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38204) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38324) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38324) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38404) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38404) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38484) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38485) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38604) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38605) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38684) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38684) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38764) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38764) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38844) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38845) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (38924) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (38924) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (39044) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (39044) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (39164) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (39164) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (39244) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (39244) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (39324) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (39324) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (39404) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (39404) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (39524) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (39524) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (39604) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (39604) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (39684) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (39684) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (39764) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (39764) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (39846) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (39846) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40004) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40004) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40084) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40084) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40164) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40164) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40244) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40244) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40324) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40324) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40404) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40404) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40484) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40484) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40564) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40564) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40644) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40644) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40724) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40724) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40803) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40804) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40884) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40884) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (40963) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (40964) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41043) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41044) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41124) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41124) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41203) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41204) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41283) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41284) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41364) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41364) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41443) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41444) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41563) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41564) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41643) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41644) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41724) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41724) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41803) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41804) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41883) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41884) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (41964) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (41964) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42084) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42084) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42163) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42163) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42243) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42243) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42323) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42324) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42403) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42403) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42483) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42483) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42563) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42564) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42643) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42643) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42723) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42723) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42803) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42804) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42883) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42883) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (42963) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (42963) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43043) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43044) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43123) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43123) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43203) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43203) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43283) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43284) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43363) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43363) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43443) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43443) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43523) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43523) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43603) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43603) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43683) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43683) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43763) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43763) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43843) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43843) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (43923) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (43923) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44003) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44003) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44083) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44083) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44163) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44163) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44243) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44243) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44323) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44323) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44403) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44403) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44483) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44483) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44563) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44563) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44643) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44643) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44723) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44723) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44803) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44803) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44883) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44883) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (44963) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (44963) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45042) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45043) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45122) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45123) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45203) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45203) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45282) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45283) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45362) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45363) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45443) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45443) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45522) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45523) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45642) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45643) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45722) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45723) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45803) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45803) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45882) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45883) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (45962) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (45963) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46043) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46043) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46163) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46163) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46282) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46283) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46362) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46362) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46442) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46442) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46522) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46523) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46602) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46602) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46722) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46722) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46802) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46802) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46882) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46883) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (46962) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (46962) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47042) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47042) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47122) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47123) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47202) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47202) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47282) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47282) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47362) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47362) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47442) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47442) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47522) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47522) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47602) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47602) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47682) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47682) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47762) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47762) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47882) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47882) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (47962) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (47962) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48042) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48042) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48122) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48122) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48242) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48242) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48322) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48322) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48402) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48402) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48482) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48482) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48562) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48562) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48642) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48642) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48722) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48722) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48802) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48802) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48882) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48882) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (48962) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (48962) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49042) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49042) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49122) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49122) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49201) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49202) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49282) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49282) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49361) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49362) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49441) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49442) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49522) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49522) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49601) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49602) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49681) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49682) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49762) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49762) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49841) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49842) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (49921) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (49922) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50002) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50002) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50081) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50082) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50161) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50162) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50242) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50242) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50321) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50322) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50401) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50401) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50481) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50482) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50561) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50561) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50641) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50641) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50721) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50722) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50801) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50801) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50881) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50881) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (50961) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (50962) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51041) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51041) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51121) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51121) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51201) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51202) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51321) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51322) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51401) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51401) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51481) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51481) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51561) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51562) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51641) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51641) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51721) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51721) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51801) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51801) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51881) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51881) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (51961) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (51961) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52041) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52041) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52121) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52121) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52201) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52201) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52281) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52281) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52361) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52361) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52441) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52441) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52521) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52521) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52601) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52601) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52681) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52681) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52761) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52761) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52841) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52841) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (52921) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (52921) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53001) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53001) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53121) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53121) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53201) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53201) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53281) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53281) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53361) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53361) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53440) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53441) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53520) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53521) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53601) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53601) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53680) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53681) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53760) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53761) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53841) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53841) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (53920) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (53921) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54000) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54001) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54081) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54081) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54160) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54161) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54240) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54241) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54321) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54321) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54400) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54401) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54480) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54481) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54561) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54561) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54640) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54640) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54720) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54720) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54800) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54801) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54880) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54880) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (54960) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (54960) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55040) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55041) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55120) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55120) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55200) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55200) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55280) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55281) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55360) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55360) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55440) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55440) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55560) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55560) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55640) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55641) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55720) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55720) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55800) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55800) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55880) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55880) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (55960) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (55960) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56040) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56040) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56120) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56120) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56200) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56200) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56280) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56280) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56360) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56360) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56440) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56440) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56520) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56520) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56600) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56600) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56680) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56680) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56760) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56760) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56840) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56840) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (56920) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (56920) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57000) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57000) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57080) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57080) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57160) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57160) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57240) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57240) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57320) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57320) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57400) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57400) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57480) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57480) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57560) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57560) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57639) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57640) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57719) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57720) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57800) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57800) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57879) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57880) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (57959) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (57960) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58079) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58080) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58160) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58160) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58239) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58240) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58319) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58320) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58400) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58400) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58479) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58480) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58559) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58560) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58640) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58640) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58719) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58720) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58799) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58800) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58880) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58880) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (58959) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (58960) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59079) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59079) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59159) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59159) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59239) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59240) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59319) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59319) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59399) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59399) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59479) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59480) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59559) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59559) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59639) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59639) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59719) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59720) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59799) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59799) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59879) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59879) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (59959) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (59960) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60039) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60039) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60119) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60119) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60199) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60199) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60279) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60279) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60359) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60359) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60439) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60439) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60559) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60559) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60639) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60639) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60719) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60719) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60799) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60799) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60879) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60879) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (60959) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (60959) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61039) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61039) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61119) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61119) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61199) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61199) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61279) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61279) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61359) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61359) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61439) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61439) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61519) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61519) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61599) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61599) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61679) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61679) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61759) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61759) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61839) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61839) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (61958) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (61959) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62038) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62039) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62119) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62119) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62198) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62199) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62278) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62279) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62359) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62359) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62438) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62439) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62518) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62519) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62599) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62599) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62678) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62679) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62758) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62759) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62839) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62839) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62918) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62919) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (62998) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (62998) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63079) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63079) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63158) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63158) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63278) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63278) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63358) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63358) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63438) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63439) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63518) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63518) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63598) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63598) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63678) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63679) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63758) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63758) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63838) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63838) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63918) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63919) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (63998) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (63998) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64078) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64078) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64158) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64159) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64238) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64238) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64318) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64318) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64398) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64399) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64478) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64478) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64558) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64558) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64638) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64638) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64718) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64718) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64798) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64798) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64878) ppa_srm: exceed maximum pending transactions for the client, consider increase max_pending_trans_num[0m
+[1;31mE (64878) app_video_stream: Failed to process frame: 0xffffffff[0m
+[1;31mE (64958) ppa_srm: exceed maximum pending transactions for the client, consider increase max_

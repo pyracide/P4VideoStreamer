@@ -75,7 +75,7 @@ esp_err_t app_video_utils_deinit(void)
  * @return esp_err_t ESP_OK on success, error code otherwise
  */
 esp_err_t app_image_process_scale_crop(
-    uint8_t *in_buf, uint32_t in_width, uint32_t in_height,
+    uint8_t *in_buf, uint32_t in_width, uint32_t in_height, ppa_srm_color_mode_t in_color_mode,
     uint32_t crop_width, uint32_t crop_height,
     uint8_t *out_buf, uint32_t out_width, uint32_t out_height, size_t out_buf_size,
     ppa_srm_rotation_angle_t rotation_angle)
@@ -88,7 +88,7 @@ esp_err_t app_image_process_scale_crop(
         .in.block_h = crop_height,
         .in.block_offset_x = (in_width - crop_width) / 2,
         .in.block_offset_y = (in_height - crop_height) / 2,
-        .in.srm_cm = PPA_SRM_COLOR_MODE_RGB565,
+        .in.srm_cm = in_color_mode,
         .out.buffer = out_buf,
         .out.buffer_size = out_buf_size,
         .out.pic_w = out_width,
@@ -119,7 +119,7 @@ esp_err_t app_image_process_scale_crop(
  * @return esp_err_t ESP_OK on success, error code otherwise
  */
 esp_err_t app_image_process_magnify(
-    uint8_t *in_buf, uint32_t in_width, uint32_t in_height,
+    uint8_t *in_buf, uint32_t in_width, uint32_t in_height, ppa_srm_color_mode_t in_color_mode,
     uint16_t magnification_factor,
     uint8_t *out_buf, size_t out_buf_size)
 {
@@ -131,7 +131,7 @@ esp_err_t app_image_process_magnify(
     uint32_t crop_height = adj_resolution_height[magnification_factor - 1];
 
     return app_image_process_scale_crop(
-        in_buf, in_width, in_height,
+        in_buf, in_width, in_height, in_color_mode,
         crop_width, crop_height,
         out_buf, in_width, in_height, out_buf_size,
         PPA_SRM_ROTATION_ANGLE_0
@@ -151,7 +151,7 @@ esp_err_t app_image_process_magnify(
  * @return esp_err_t ESP_OK on success, error code otherwise
  */
 esp_err_t app_image_process_video_frame(
-    uint8_t *in_buf, uint32_t in_width, uint32_t in_height,
+    uint8_t *in_buf, uint32_t in_width, uint32_t in_height, ppa_srm_color_mode_t in_color_mode,
     int scale_level, ppa_srm_rotation_angle_t rotation_angle,
     uint8_t *out_buf, size_t out_buf_size)
 {
@@ -163,11 +163,46 @@ esp_err_t app_image_process_video_frame(
     int res_height = scale_level_res[scale_level - 1];
 
     return app_image_process_scale_crop(
-        in_buf, in_width, in_height,
+        in_buf, in_width, in_height, in_color_mode,
         res_width, res_height,
         out_buf, BSP_LCD_H_RES, BSP_LCD_V_RES, out_buf_size,
         rotation_angle
     );
+}
+
+/**
+ * @brief Hardware-accelerate conversion from YUV422 to O_UYY_E_VYY using PPA
+ */
+esp_err_t app_image_process_yuv422_to_ouyy_evyy(
+    uint8_t *in_buf, uint32_t in_width, uint32_t in_height,
+    uint8_t *out_buf, size_t out_buf_size)
+{
+    ppa_srm_oper_config_t srm_config = {
+        .in.buffer = in_buf,
+        .in.pic_w = in_width,
+        .in.pic_h = in_height,
+        .in.block_w = in_width,
+        .in.block_h = in_height,
+        .in.block_offset_x = 0,
+        .in.block_offset_y = 0,
+        .in.srm_cm = PPA_SRM_COLOR_MODE_YUV422_YUYV,
+        .out.buffer = out_buf,
+        .out.buffer_size = out_buf_size,
+        .out.pic_w = in_width,
+        .out.pic_h = in_height,
+        .out.block_offset_x = 0,
+        .out.block_offset_y = 0,
+        /* Setting PPA_SRM_COLOR_MODE_YUV420 outputs ESP_H264_RAW_FMT_O_UYY_E_VYY block layout! */
+        .out.srm_cm = PPA_SRM_COLOR_MODE_YUV420,
+        .rotation_angle = PPA_SRM_ROTATION_ANGLE_0,
+        .scale_x = 1.0f,
+        .scale_y = 1.0f,
+        .rgb_swap = 0,
+        .byte_swap = 0,
+        .mode = PPA_TRANS_MODE_BLOCKING,
+    };
+
+    return ppa_do_scale_rotate_mirror(ppa_srm_handle, &srm_config);
 }
 
 /**
@@ -186,6 +221,7 @@ esp_err_t app_image_encode_jpeg(
     uint8_t *src_buf, 
     uint32_t width, 
     uint32_t height, 
+    jpeg_enc_input_format_t in_format,
     uint8_t quality,
     uint8_t *out_buf, 
     size_t out_buf_size, 
@@ -197,7 +233,7 @@ esp_err_t app_image_encode_jpeg(
 
     // Configure JPEG encoding
     jpeg_encode_cfg_t enc_config = {
-        .src_type = JPEG_ENCODE_IN_FORMAT_RGB565,
+        .src_type = in_format,
         .sub_sample = JPEG_DOWN_SAMPLING_YUV420,
         .image_quality = quality,
         .width = width,

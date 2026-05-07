@@ -588,9 +588,9 @@ static void camera_video_frame_operation(uint8_t *camera_buf, uint8_t camera_buf
     // Use synchronized PPA rotation angle (no need for independent QMA6100 detection)
     ppa_srm_rotation_angle_t rotation_angle = current_ppa_rotation;
 
-    // Process video frame with rotation compensation
+    // Process video frame with rotation compensation (hardware conversion YUV422 -> RGB565)
     esp_err_t ret = app_image_process_video_frame(
-        camera_buf, camera_buf_hes, camera_buf_ves,
+        camera_buf, camera_buf_hes, camera_buf_ves, PPA_SRM_COLOR_MODE_YUV422_YUYV,
         scale_level, rotation_angle,
         camera_buffer.canvas_buf[camera_buf_index], 
         ALIGN_UP(BSP_LCD_H_RES * BSP_LCD_V_RES * 2, data_cache_line_size)

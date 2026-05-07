@@ -98,6 +98,7 @@ const char* app_livestream_get_ws_url(void);
  * @return true if at least one client is connected
  */
 bool app_livestream_has_clients(void);
+float app_livestream_get_actual_fps(void);
 
 #ifdef __cplusplus
 }

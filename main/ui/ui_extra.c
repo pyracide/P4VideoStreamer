@@ -63,6 +63,7 @@ static lv_obj_t *ai_mode_label = NULL;
 
 // Livestream status label
 static lv_obj_t *livestream_status_label = NULL;
+static lv_obj_t *fps_label = NULL;
 static lv_timer_t *lv_livestream_status_timer = NULL;
 
 // UI settings
@@ -861,6 +862,9 @@ void ui_extra_clear_page(void)
     if (ai_mode_label != NULL) {
         lv_obj_add_flag(ai_mode_label, LV_OBJ_FLAG_HIDDEN);
     }
+    if (fps_label != NULL) {
+        lv_obj_add_flag(fps_label, LV_OBJ_FLAG_HIDDEN);
+    }
 }
 
 /**
@@ -927,6 +931,11 @@ static void livestream_status_timer_cb(lv_timer_t *timer)
     const char *status = app_livestream_get_status_str();
     const char *url = app_livestream_get_ws_url();
     lv_label_set_text_fmt(livestream_status_label, "%s | %s", status, url);
+
+    if (fps_label) {
+        float fps = app_livestream_get_actual_fps();
+        lv_label_set_text_fmt(fps_label, "%d.%d FPS", (int)fps, (int)(fps * 10) % 10);
+    }
 }
 
 /**
@@ -955,6 +964,21 @@ static void ui_extra_redirect_to_livestream_page(void)
     const char *url = app_livestream_get_ws_url();
     lv_label_set_text_fmt(livestream_status_label, "%s | %s", status, url);
     lv_obj_clear_flag(livestream_status_label, LV_OBJ_FLAG_HIDDEN);
+
+    /* Create or update FPS counter at top right */
+    if (fps_label == NULL) {
+        fps_label = lv_label_create(ui_ScreenCamera);
+        lv_obj_set_style_text_font(fps_label, &lv_font_montserrat_16, 0);
+        lv_obj_set_style_text_color(fps_label, lv_color_hex(0xFFFF00), 0); // Yellow
+        lv_obj_set_style_bg_color(fps_label, lv_color_hex(0x000000), 0);
+        lv_obj_set_style_bg_opa(fps_label, LV_OPA_70, 0);
+        lv_obj_set_style_radius(fps_label, 5, 0);
+        lv_obj_set_style_pad_all(fps_label, 4, 0);
+        lv_obj_align(fps_label, LV_ALIGN_TOP_RIGHT, -10, 10);
+    }
+    float initial_fps = app_livestream_get_actual_fps();
+    lv_label_set_text_fmt(fps_label, "%d.%d FPS", (int)initial_fps, (int)(initial_fps * 10) % 10);
+    lv_obj_clear_flag(fps_label, LV_OBJ_FLAG_HIDDEN);
 
     /* Start periodic status update timer */
     if (!lv_livestream_status_timer) {
