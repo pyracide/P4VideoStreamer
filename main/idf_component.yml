@@ -1,0 +1,23 @@
+dependencies:
+  idf:
+    version: ">=5.5.3"
+  esp32_p4_eye:
+    path: "../common_components/esp32_p4_eye"
+
+  espressif/esp_tinyusb:
+    version: "1.4.*"
+
+  espressif/esp_audio_codec:
+    version: "2.3.*"
+    public: true
+
+  espressif/esp_muxer:
+    version: "1.1.*"
+    public: true
+
+  espressif/qma6100p:
+    version: "^2.0.0"
+
+  espressif/esp_h264:
+    version: "==1.0.3"
+    public: true

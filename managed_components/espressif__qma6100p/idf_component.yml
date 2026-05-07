@@ -1,0 +1,10 @@
+dependencies:
+  cmake_utilities: 0.*
+  idf: '>=5.2'
+description: I2C driver for QMA6100P accelerometer
+repository: git://github.com/espressif/esp-bsp.git
+repository_info:
+  commit_sha: 1bd663be5317bfc4457335011889eec5db33098d
+  path: components/qma6100p
+url: https://github.com/espressif/esp-bsp/tree/master/components/qma6100p
+version: 2.0.1

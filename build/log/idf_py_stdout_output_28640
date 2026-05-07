@@ -1,0 +1,92 @@
+Command: cmake -G Ninja -DPYTHON_DEPS_CHECKED=1 -DPYTHON=C:\Espressif\tools\python\v5.5.4\venv\Scripts\python.exe -DESP_PLATFORM=1 -DIDF_TARGET=esp32p4 -DCCACHE_ENABLE=0 C:\Users\samgr\ArduinoProjects\P4VideoStreamer
+-- Found Git: C:/Program Files/Git/cmd/git.exe (found version "2.45.1.windows.1")
+-- Minimal build - OFF
+-- The C compiler identification is GNU 14.2.0
+-- The CXX compiler identification is GNU 14.2.0
+-- The ASM compiler identification is GNU
+-- Found assembler: C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20260121/riscv32-esp-elf/bin/riscv32-esp-elf-gcc.exe
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20260121/riscv32-esp-elf/bin/riscv32-esp-elf-gcc.exe - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20260121/riscv32-esp-elf/bin/riscv32-esp-elf-g++.exe - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Building ESP-IDF components for target esp32p4
+NOTICE: Dependencies lock doesn't exist, solving dependencies.
+NOTICE: Using component placed at C:\Users\samgr\ArduinoProjects\P4VideoStreamer\common_components\esp32_p4_eye for dependency "esp32_p4_eye", specified in C:\Users\samgr\ArduinoProjects\P4VideoStreamer\main\idf_component.yml
+................................NOTICE: Updating lock file at C:\Users\samgr\ArduinoProjects\P4VideoStreamer\dependencies.lock
+NOTICE: Processing 20 dependencies:
+NOTICE: [1/20] esp32_p4_eye (0.0.1) (C:\Users\samgr\ArduinoProjects\P4VideoStreamer\common_components\esp32_p4_eye)
+NOTICE: [2/20] espressif/button (3.5.0)
+NOTICE: [3/20] espressif/cmake_utilities (0.5.3)
+NOTICE: [4/20] espressif/esp-dl (3.1.3)
+NOTICE: [5/20] espressif/esp_audio_codec (2.3.0)
+NOTICE: [6/20] espressif/esp_cam_sensor (1.0.0)
+NOTICE: [7/20] espressif/esp_codec_dev (1.5.9)
+NOTICE: [8/20] espressif/esp_h264 (1.0.3)
+NOTICE: [9/20] espressif/esp_ipa (0.3.0~1)
+NOTICE: [10/20] espressif/esp_lvgl_port (2.7.2)
+NOTICE: [11/20] espressif/esp_muxer (1.1.3)
+NOTICE: [12/20] espressif/esp_new_jpeg (0.6.1)
+NOTICE: [13/20] espressif/esp_sccb_intf (0.0.8)
+NOTICE: [14/20] espressif/esp_tinyusb (1.4.5)
+NOTICE: [15/20] espressif/esp_video (0.9.0)
+NOTICE: [16/20] espressif/knob (1.0.2)
+NOTICE: [17/20] espressif/qma6100p (2.0.1)
+NOTICE: [18/20] espressif/tinyusb (0.19.0~3)
+NOTICE: [19/20] lvgl/lvgl (8.4.0)
+NOTICE: [20/20] idf (5.5.4)
+-- ESP-TEE is currently supported only on the esp32c6;esp32h2;esp32c5 SoCs
+-- Project sdkconfig file C:/Users/samgr/ArduinoProjects/P4VideoStreamer/sdkconfig
+Loading defaults file C:/Users/samgr/ArduinoProjects/P4VideoStreamer/sdkconfig.defaults...
+warning: unknown kconfig symbol 'SD_HOST_SDMMC_ISR_CACHE_SAFE' assigned to 'y' in C:/Users/samgr/ArduinoProjects/P4VideoStreamer/sdkconfig.defaults
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Adding linker script C:/esp/v5.5.4/esp-idf/components/riscv/ld/rom.api.ld
+-- Found Python3: C:/Espressif/tools/python/v5.5.4/venv/Scripts/python.exe (found version "3.11.7") found components: Interpreter
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS
+-- Performing Test C_COMPILER_SUPPORTS_WFORMAT_SIGNEDNESS - Success
+-- USING O3
+-- App "factory_demo" version: 1.0.0
+-- Adding linker script C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_system/ld/memory.ld
+-- Adding linker script C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_system/ld/sections.ld.in
+-- Adding linker script C:/esp/v5.5.4/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.eco5.ld
+-- Adding linker script C:/esp/v5.5.4/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.api.ld
+-- Adding linker script C:/esp/v5.5.4/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.eco5.rvfp.ld
+-- Adding linker script C:/esp/v5.5.4/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.wdt.ld
+-- Adding linker script C:/esp/v5.5.4/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.systimer.ld
+-- Adding linker script C:/esp/v5.5.4/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.version.ld
+-- Adding linker script C:/esp/v5.5.4/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.eco5.libc.ld
+-- Adding linker script C:/esp/v5.5.4/esp-idf/components/esp_rom/esp32p4/ld/esp32p4.rom.eco5.newlib.ld
+-- Adding linker script C:/esp/v5.5.4/esp-idf/components/soc/esp32p4/ld/esp32p4.peripherals.ld
+-- KNOB: 1.0.2
+-- BUTTON: 3.5.0
+-- LVGL version: 8.4.0
+-- ESP_CAM_SENSOR: 1.0.0
+-- ESP_IPA: 0.3.0
+-- ESP_VIDEO: 0.9.0
+-- QMA6100P: 2.0.1
+-- Component idf::esp32_p4_eye will be linked with -Wl,--whole-archive
+-- Components: app_update bootloader bootloader_support coco_detect cxx driver efuse esp32_p4_eye esp_adc esp_app_format esp_bootloader_format esp_common esp_driver_ana_cmpr esp_driver_bitscrambler esp_driver_cam esp_driver_dac esp_driver_gpio esp_driver_gptimer esp_driver_i2c esp_driver_i2s esp_driver_isp esp_driver_jpeg esp_driver_ledc esp_driver_mcpwm esp_driver_parlio esp_driver_pcnt esp_driver_ppa esp_driver_rmt esp_driver_sdio esp_driver_sdm esp_driver_sdmmc esp_driver_sdspi esp_driver_spi esp_driver_tsens esp_driver_twai esp_driver_uart esp_driver_usb_serial_jtag esp_event esp_hw_support esp_lcd esp_mm esp_netif esp_netif_stack esp_painter esp_partition esp_pm esp_psram esp_ringbuf esp_rom esp_security esp_system esp_timer esp_vfs_console espressif__button espressif__cmake_utilities espressif__esp-dl espressif__esp_audio_codec espressif__esp_cam_sensor espressif__esp_codec_dev espressif__esp_h264 espressif__esp_ipa espressif__esp_lvgl_port espressif__esp_muxer espressif__esp_new_jpeg espressif__esp_sccb_intf espressif__esp_tinyusb espressif__esp_video espressif__knob espressif__qma6100p espressif__tinyusb esptool_py fatfs freertos hal heap human_face_detect log lvgl__lvgl lwip main mbedtls newlib nvs_flash partition_table pedestrian_detect pthread riscv sdmmc soc spi_flash spiffs usb vfs wear_levelling
+-- Component paths: C:/esp/v5.5.4/esp-idf/components/app_update C:/esp/v5.5.4/esp-idf/components/bootloader C:/esp/v5.5.4/esp-idf/components/bootloader_support C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/coco_detect C:/esp/v5.5.4/esp-idf/components/cxx C:/esp/v5.5.4/esp-idf/components/driver C:/esp/v5.5.4/esp-idf/components/efuse C:/Users/samgr/ArduinoProjects/P4VideoStreamer/common_components/esp32_p4_eye C:/esp/v5.5.4/esp-idf/components/esp_adc C:/esp/v5.5.4/esp-idf/components/esp_app_format C:/esp/v5.5.4/esp-idf/components/esp_bootloader_format C:/esp/v5.5.4/esp-idf/components/esp_common C:/esp/v5.5.4/esp-idf/components/esp_driver_ana_cmpr C:/esp/v5.5.4/esp-idf/components/esp_driver_bitscrambler C:/esp/v5.5.4/esp-idf/components/esp_driver_cam C:/esp/v5.5.4/esp-idf/components/esp_driver_dac C:/esp/v5.5.4/esp-idf/components/esp_driver_gpio C:/esp/v5.5.4/esp-idf/components/esp_driver_gptimer C:/esp/v5.5.4/esp-idf/components/esp_driver_i2c C:/esp/v5.5.4/esp-idf/components/esp_driver_i2s C:/esp/v5.5.4/esp-idf/components/esp_driver_isp C:/esp/v5.5.4/esp-idf/components/esp_driver_jpeg C:/esp/v5.5.4/esp-idf/components/esp_driver_ledc C:/esp/v5.5.4/esp-idf/components/esp_driver_mcpwm C:/esp/v5.5.4/esp-idf/components/esp_driver_parlio C:/esp/v5.5.4/esp-idf/components/esp_driver_pcnt C:/esp/v5.5.4/esp-idf/components/esp_driver_ppa C:/esp/v5.5.4/esp-idf/components/esp_driver_rmt C:/esp/v5.5.4/esp-idf/components/esp_driver_sdio C:/esp/v5.5.4/esp-idf/components/esp_driver_sdm C:/esp/v5.5.4/esp-idf/components/esp_driver_sdmmc C:/esp/v5.5.4/esp-idf/components/esp_driver_sdspi C:/esp/v5.5.4/esp-idf/components/esp_driver_spi C:/esp/v5.5.4/esp-idf/components/esp_driver_tsens C:/esp/v5.5.4/esp-idf/components/esp_driver_twai C:/esp/v5.5.4/esp-idf/components/esp_driver_uart C:/esp/v5.5.4/esp-idf/components/esp_driver_usb_serial_jtag C:/esp/v5.5.4/esp-idf/components/esp_event C:/esp/v5.5.4/esp-idf/components/esp_hw_support C:/esp/v5.5.4/esp-idf/components/esp_lcd C:/esp/v5.5.4/esp-idf/components/esp_mm C:/esp/v5.5.4/esp-idf/components/esp_netif C:/esp/v5.5.4/esp-idf/components/esp_netif_stack C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/esp_painter C:/esp/v5.5.4/esp-idf/components/esp_partition C:/esp/v5.5.4/esp-idf/components/esp_pm C:/esp/v5.5.4/esp-idf/components/esp_psram C:/esp/v5.5.4/esp-idf/components/esp_ringbuf C:/esp/v5.5.4/esp-idf/components/esp_rom C:/esp/v5.5.4/esp-idf/components/esp_security C:/esp/v5.5.4/esp-idf/components/esp_system C:/esp/v5.5.4/esp-idf/components/esp_timer C:/esp/v5.5.4/esp-idf/components/esp_vfs_console C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__button C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__cmake_utilities C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp-dl C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_audio_codec C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_cam_sensor C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_codec_dev C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264 C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_ipa C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_lvgl_port C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_muxer C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_new_jpeg C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_sccb_intf C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_tinyusb C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__knob C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__qma6100p C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb C:/esp/v5.5.4/esp-idf/components/esptool_py C:/esp/v5.5.4/esp-idf/components/fatfs C:/esp/v5.5.4/esp-idf/components/freertos C:/esp/v5.5.4/esp-idf/components/hal C:/esp/v5.5.4/esp-idf/components/heap C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/human_face_detect C:/esp/v5.5.4/esp-idf/components/log C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl C:/esp/v5.5.4/esp-idf/components/lwip C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main C:/esp/v5.5.4/esp-idf/components/mbedtls C:/esp/v5.5.4/esp-idf/components/newlib C:/esp/v5.5.4/esp-idf/components/nvs_flash C:/esp/v5.5.4/esp-idf/components/partition_table C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/pedestrian_detect C:/esp/v5.5.4/esp-idf/components/pthread C:/esp/v5.5.4/esp-idf/components/riscv C:/esp/v5.5.4/esp-idf/components/sdmmc C:/esp/v5.5.4/esp-idf/components/soc C:/esp/v5.5.4/esp-idf/components/spi_flash C:/esp/v5.5.4/esp-idf/components/spiffs C:/esp/v5.5.4/esp-idf/components/usb C:/esp/v5.5.4/esp-idf/components/vfs C:/esp/v5.5.4/esp-idf/components/wear_levelling
+-- Applied warning suppression to esp-dl component
+-- Configuring done (89.6s)
+-- Generating done (1.7s)
+-- Build files have been written to: C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build
