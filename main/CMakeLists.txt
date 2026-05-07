@@ -23,4 +23,4 @@ file(GLOB_RECURSE LV_UI_SOURCES ${LV_UI_DIR}/*.c)
 
 idf_component_register(SRCS "main.c" ${LV_UI_SOURCES} ${APP_ALL_SOURCES}
                     INCLUDE_DIRS "." ${LV_UI_DIR} ${APP_DIR} ${APP_DIR}/AI ${APP_DIR}/Video
-                    REQUIRES esp_driver_ppa nvs_flash human_face_detect pedestrian_detect coco_detect esp_painter)
+                    REQUIRES esp_driver_ppa nvs_flash human_face_detect pedestrian_detect coco_detect esp_painter esp_http_server esp_wifi esp_netif esp_event esp_timer)

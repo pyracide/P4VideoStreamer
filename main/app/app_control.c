@@ -112,7 +112,7 @@ static void handle_knob_rotation(int direction, void (*action_camera)(void), voi
         ESP_LOGD(TAG, "Continuous rotation detected: %d steps, value %d", knob_step_counter, direction);
         
         bsp_display_lock(0);
-        if (ui_extra_get_current_page() == UI_PAGE_CAMERA || 
+        if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM || 
             ui_extra_get_current_page() == UI_PAGE_INTERVAL_CAM || 
             ui_extra_get_current_page() == UI_PAGE_VIDEO_MODE ||
             ui_extra_get_current_page() == UI_PAGE_AI_DETECT) {

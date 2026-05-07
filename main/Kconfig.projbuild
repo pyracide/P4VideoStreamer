@@ -40,4 +40,12 @@ menu "Example Configuration"
             range -1 56
     endif
 
+    config ESP_WIFI_SSID
+        string "Wi-Fi SSID"
+        default "myssid"
+
+    config ESP_WIFI_PASSWORD
+        string "Wi-Fi Password"
+        default "mypassword"
+
 endmenu

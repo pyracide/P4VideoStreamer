@@ -21,12 +21,12 @@
     "monitor_toolprefix": "riscv32-esp-elf-",
     "c_compiler":         "C:/Espressif/tools/riscv32-esp-elf/esp-14.2.0_20260121/riscv32-esp-elf/bin/riscv32-esp-elf-gcc.exe",
     "config_environment" : {
-        "COMPONENT_KCONFIGS" : "C:/esp/v5.5.4/esp-idf/components/driver/Kconfig;C:/esp/v5.5.4/esp-idf/components/efuse/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_adc/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_common/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_ana_cmpr/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_bitscrambler/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_cam/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_dac/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_gpio/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_gptimer/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_i2c/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_i2s/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_isp/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_jpeg/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_ledc/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_mcpwm/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_parlio/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_pcnt/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_rmt/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_sdm/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_spi/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_tsens/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_twai/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_uart/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_usb_serial_jtag/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_event/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_hw_support/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_lcd/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_mm/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_netif/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_partition/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_pm/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_psram/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_ringbuf/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_rom/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_security/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_system/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_timer/Kconfig;C:/esp/v5.5.4/esp-idf/components/fatfs/Kconfig;C:/esp/v5.5.4/esp-idf/components/freertos/Kconfig;C:/esp/v5.5.4/esp-idf/components/hal/Kconfig;C:/esp/v5.5.4/esp-idf/components/heap/Kconfig;C:/esp/v5.5.4/esp-idf/components/log/Kconfig;C:/esp/v5.5.4/esp-idf/components/lwip/Kconfig;C:/esp/v5.5.4/esp-idf/components/mbedtls/Kconfig;C:/esp/v5.5.4/esp-idf/components/newlib/Kconfig;C:/esp/v5.5.4/esp-idf/components/nvs_flash/Kconfig;C:/esp/v5.5.4/esp-idf/components/pthread/Kconfig;C:/esp/v5.5.4/esp-idf/components/soc/Kconfig;C:/esp/v5.5.4/esp-idf/components/spi_flash/Kconfig;C:/esp/v5.5.4/esp-idf/components/spiffs/Kconfig;C:/esp/v5.5.4/esp-idf/components/usb/Kconfig;C:/esp/v5.5.4/esp-idf/components/vfs/Kconfig;C:/esp/v5.5.4/esp-idf/components/wear_levelling/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/coco_detect/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/esp_painter/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/human_face_detect/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/pedestrian_detect/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/common_components/esp32_p4_eye/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__button/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__cmake_utilities/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_audio_codec/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_cam_sensor/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_codec_dev/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_ipa/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_lvgl_port/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_muxer/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_sccb_intf/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_tinyusb/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__knob/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/Kconfig",
+        "COMPONENT_KCONFIGS" : "C:/esp/v5.5.4/esp-idf/components/bt/Kconfig;C:/esp/v5.5.4/esp-idf/components/console/Kconfig;C:/esp/v5.5.4/esp-idf/components/driver/Kconfig;C:/esp/v5.5.4/esp-idf/components/efuse/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp-tls/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_adc/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_coex/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_common/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_ana_cmpr/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_bitscrambler/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_cam/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_dac/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_gpio/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_gptimer/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_i2c/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_i2s/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_isp/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_jpeg/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_ledc/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_mcpwm/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_parlio/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_pcnt/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_rmt/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_sdm/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_spi/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_tsens/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_twai/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_uart/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_driver_usb_serial_jtag/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_eth/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_event/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_gdbstub/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_http_client/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_http_server/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_hw_support/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_lcd/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_mm/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_netif/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_partition/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_phy/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_pm/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_psram/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_ringbuf/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_rom/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_security/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_system/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_timer/Kconfig;C:/esp/v5.5.4/esp-idf/components/esp_wifi/Kconfig;C:/esp/v5.5.4/esp-idf/components/fatfs/Kconfig;C:/esp/v5.5.4/esp-idf/components/freertos/Kconfig;C:/esp/v5.5.4/esp-idf/components/hal/Kconfig;C:/esp/v5.5.4/esp-idf/components/heap/Kconfig;C:/esp/v5.5.4/esp-idf/components/log/Kconfig;C:/esp/v5.5.4/esp-idf/components/lwip/Kconfig;C:/esp/v5.5.4/esp-idf/components/mbedtls/Kconfig;C:/esp/v5.5.4/esp-idf/components/newlib/Kconfig;C:/esp/v5.5.4/esp-idf/components/nvs_flash/Kconfig;C:/esp/v5.5.4/esp-idf/components/pthread/Kconfig;C:/esp/v5.5.4/esp-idf/components/soc/Kconfig;C:/esp/v5.5.4/esp-idf/components/spi_flash/Kconfig;C:/esp/v5.5.4/esp-idf/components/spiffs/Kconfig;C:/esp/v5.5.4/esp-idf/components/tcp_transport/Kconfig;C:/esp/v5.5.4/esp-idf/components/usb/Kconfig;C:/esp/v5.5.4/esp-idf/components/vfs/Kconfig;C:/esp/v5.5.4/esp-idf/components/wear_levelling/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/coco_detect/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/esp_painter/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/human_face_detect/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/pedestrian_detect/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/common_components/esp32_p4_eye/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__button/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__cmake_utilities/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__eppp_link/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_audio_codec/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_cam_sensor/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_codec_dev/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_ipa/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_lvgl_port/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_muxer/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_sccb_intf/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_tinyusb/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__knob/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__wifi_remote_over_eppp/Kconfig;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/Kconfig",
         "COMPONENT_KCONFIGS_PROJBUILD" : "C:/esp/v5.5.4/esp-idf/components/bootloader/Kconfig.projbuild;C:/esp/v5.5.4/esp-idf/components/esp_app_format/Kconfig.projbuild;C:/esp/v5.5.4/esp-idf/components/esp_rom/Kconfig.projbuild;C:/esp/v5.5.4/esp-idf/components/esptool_py/Kconfig.projbuild;C:/esp/v5.5.4/esp-idf/components/partition_table/Kconfig.projbuild;C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/Kconfig.projbuild"
     },
     "common_component_reqs": [ "cxx", "newlib", "freertos", "esp_hw_support", "heap", "log", "soc", "hal", "esp_rom", "esp_common", "esp_system", "riscv" ],
-    "build_components" : [ "app_update", "bootloader", "bootloader_support", "coco_detect", "cxx", "driver", "efuse", "esp32_p4_eye", "esp_adc", "esp_app_format", "esp_bootloader_format", "esp_common", "esp_driver_ana_cmpr", "esp_driver_bitscrambler", "esp_driver_cam", "esp_driver_dac", "esp_driver_gpio", "esp_driver_gptimer", "esp_driver_i2c", "esp_driver_i2s", "esp_driver_isp", "esp_driver_jpeg", "esp_driver_ledc", "esp_driver_mcpwm", "esp_driver_parlio", "esp_driver_pcnt", "esp_driver_ppa", "esp_driver_rmt", "esp_driver_sdio", "esp_driver_sdm", "esp_driver_sdmmc", "esp_driver_sdspi", "esp_driver_spi", "esp_driver_tsens", "esp_driver_twai", "esp_driver_uart", "esp_driver_usb_serial_jtag", "esp_event", "esp_hw_support", "esp_lcd", "esp_mm", "esp_netif", "esp_netif_stack", "esp_painter", "esp_partition", "esp_pm", "esp_psram", "esp_ringbuf", "esp_rom", "esp_security", "esp_system", "esp_timer", "esp_vfs_console", "espressif__button", "espressif__cmake_utilities", "espressif__esp-dl", "espressif__esp_audio_codec", "espressif__esp_cam_sensor", "espressif__esp_codec_dev", "espressif__esp_h264", "espressif__esp_ipa", "espressif__esp_lvgl_port", "espressif__esp_muxer", "espressif__esp_new_jpeg", "espressif__esp_sccb_intf", "espressif__esp_tinyusb", "espressif__esp_video", "espressif__knob", "espressif__qma6100p", "espressif__tinyusb", "esptool_py", "fatfs", "freertos", "hal", "heap", "human_face_detect", "log", "lvgl__lvgl", "lwip", "main", "mbedtls", "newlib", "nvs_flash", "partition_table", "pedestrian_detect", "pthread", "riscv", "sdmmc", "soc", "spi_flash", "spiffs", "usb", "vfs", "wear_levelling", "" ],
-    "build_component_paths" : [ "C:/esp/v5.5.4/esp-idf/components/app_update", "C:/esp/v5.5.4/esp-idf/components/bootloader", "C:/esp/v5.5.4/esp-idf/components/bootloader_support", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/coco_detect", "C:/esp/v5.5.4/esp-idf/components/cxx", "C:/esp/v5.5.4/esp-idf/components/driver", "C:/esp/v5.5.4/esp-idf/components/efuse", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/common_components/esp32_p4_eye", "C:/esp/v5.5.4/esp-idf/components/esp_adc", "C:/esp/v5.5.4/esp-idf/components/esp_app_format", "C:/esp/v5.5.4/esp-idf/components/esp_bootloader_format", "C:/esp/v5.5.4/esp-idf/components/esp_common", "C:/esp/v5.5.4/esp-idf/components/esp_driver_ana_cmpr", "C:/esp/v5.5.4/esp-idf/components/esp_driver_bitscrambler", "C:/esp/v5.5.4/esp-idf/components/esp_driver_cam", "C:/esp/v5.5.4/esp-idf/components/esp_driver_dac", "C:/esp/v5.5.4/esp-idf/components/esp_driver_gpio", "C:/esp/v5.5.4/esp-idf/components/esp_driver_gptimer", "C:/esp/v5.5.4/esp-idf/components/esp_driver_i2c", "C:/esp/v5.5.4/esp-idf/components/esp_driver_i2s", "C:/esp/v5.5.4/esp-idf/components/esp_driver_isp", "C:/esp/v5.5.4/esp-idf/components/esp_driver_jpeg", "C:/esp/v5.5.4/esp-idf/components/esp_driver_ledc", "C:/esp/v5.5.4/esp-idf/components/esp_driver_mcpwm", "C:/esp/v5.5.4/esp-idf/components/esp_driver_parlio", "C:/esp/v5.5.4/esp-idf/components/esp_driver_pcnt", "C:/esp/v5.5.4/esp-idf/components/esp_driver_ppa", "C:/esp/v5.5.4/esp-idf/components/esp_driver_rmt", "C:/esp/v5.5.4/esp-idf/components/esp_driver_sdio", "C:/esp/v5.5.4/esp-idf/components/esp_driver_sdm", "C:/esp/v5.5.4/esp-idf/components/esp_driver_sdmmc", "C:/esp/v5.5.4/esp-idf/components/esp_driver_sdspi", "C:/esp/v5.5.4/esp-idf/components/esp_driver_spi", "C:/esp/v5.5.4/esp-idf/components/esp_driver_tsens", "C:/esp/v5.5.4/esp-idf/components/esp_driver_twai", "C:/esp/v5.5.4/esp-idf/components/esp_driver_uart", "C:/esp/v5.5.4/esp-idf/components/esp_driver_usb_serial_jtag", "C:/esp/v5.5.4/esp-idf/components/esp_event", "C:/esp/v5.5.4/esp-idf/components/esp_hw_support", "C:/esp/v5.5.4/esp-idf/components/esp_lcd", "C:/esp/v5.5.4/esp-idf/components/esp_mm", "C:/esp/v5.5.4/esp-idf/components/esp_netif", "C:/esp/v5.5.4/esp-idf/components/esp_netif_stack", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/esp_painter", "C:/esp/v5.5.4/esp-idf/components/esp_partition", "C:/esp/v5.5.4/esp-idf/components/esp_pm", "C:/esp/v5.5.4/esp-idf/components/esp_psram", "C:/esp/v5.5.4/esp-idf/components/esp_ringbuf", "C:/esp/v5.5.4/esp-idf/components/esp_rom", "C:/esp/v5.5.4/esp-idf/components/esp_security", "C:/esp/v5.5.4/esp-idf/components/esp_system", "C:/esp/v5.5.4/esp-idf/components/esp_timer", "C:/esp/v5.5.4/esp-idf/components/esp_vfs_console", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__button", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__cmake_utilities", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp-dl", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_audio_codec", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_cam_sensor", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_codec_dev", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_ipa", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_lvgl_port", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_muxer", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_new_jpeg", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_sccb_intf", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_tinyusb", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__knob", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__qma6100p", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb", "C:/esp/v5.5.4/esp-idf/components/esptool_py", "C:/esp/v5.5.4/esp-idf/components/fatfs", "C:/esp/v5.5.4/esp-idf/components/freertos", "C:/esp/v5.5.4/esp-idf/components/hal", "C:/esp/v5.5.4/esp-idf/components/heap", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/human_face_detect", "C:/esp/v5.5.4/esp-idf/components/log", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl", "C:/esp/v5.5.4/esp-idf/components/lwip", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main", "C:/esp/v5.5.4/esp-idf/components/mbedtls", "C:/esp/v5.5.4/esp-idf/components/newlib", "C:/esp/v5.5.4/esp-idf/components/nvs_flash", "C:/esp/v5.5.4/esp-idf/components/partition_table", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/pedestrian_detect", "C:/esp/v5.5.4/esp-idf/components/pthread", "C:/esp/v5.5.4/esp-idf/components/riscv", "C:/esp/v5.5.4/esp-idf/components/sdmmc", "C:/esp/v5.5.4/esp-idf/components/soc", "C:/esp/v5.5.4/esp-idf/components/spi_flash", "C:/esp/v5.5.4/esp-idf/components/spiffs", "C:/esp/v5.5.4/esp-idf/components/usb", "C:/esp/v5.5.4/esp-idf/components/vfs", "C:/esp/v5.5.4/esp-idf/components/wear_levelling", "" ],
+    "build_components" : [ "app_update", "bootloader", "bootloader_support", "bt", "coco_detect", "console", "cxx", "driver", "efuse", "esp-tls", "esp32_p4_eye", "esp_adc", "esp_app_format", "esp_bootloader_format", "esp_coex", "esp_common", "esp_driver_ana_cmpr", "esp_driver_bitscrambler", "esp_driver_cam", "esp_driver_dac", "esp_driver_gpio", "esp_driver_gptimer", "esp_driver_i2c", "esp_driver_i2s", "esp_driver_isp", "esp_driver_jpeg", "esp_driver_ledc", "esp_driver_mcpwm", "esp_driver_parlio", "esp_driver_pcnt", "esp_driver_ppa", "esp_driver_rmt", "esp_driver_sdio", "esp_driver_sdm", "esp_driver_sdmmc", "esp_driver_sdspi", "esp_driver_spi", "esp_driver_tsens", "esp_driver_twai", "esp_driver_uart", "esp_driver_usb_serial_jtag", "esp_eth", "esp_event", "esp_gdbstub", "esp_http_client", "esp_http_server", "esp_hw_support", "esp_lcd", "esp_mm", "esp_netif", "esp_netif_stack", "esp_painter", "esp_partition", "esp_phy", "esp_pm", "esp_psram", "esp_ringbuf", "esp_rom", "esp_security", "esp_system", "esp_timer", "esp_vfs_console", "esp_wifi", "espressif__button", "espressif__cmake_utilities", "espressif__eppp_link", "espressif__esp-dl", "espressif__esp_audio_codec", "espressif__esp_cam_sensor", "espressif__esp_codec_dev", "espressif__esp_h264", "espressif__esp_hosted", "espressif__esp_ipa", "espressif__esp_lvgl_port", "espressif__esp_muxer", "espressif__esp_new_jpeg", "espressif__esp_sccb_intf", "espressif__esp_serial_slave_link", "espressif__esp_tinyusb", "espressif__esp_video", "espressif__esp_wifi_remote", "espressif__knob", "espressif__qma6100p", "espressif__tinyusb", "espressif__wifi_remote_over_eppp", "esptool_py", "fatfs", "freertos", "hal", "heap", "http_parser", "human_face_detect", "log", "lvgl__lvgl", "lwip", "main", "mbedtls", "newlib", "nvs_flash", "partition_table", "pedestrian_detect", "pthread", "riscv", "sdmmc", "soc", "spi_flash", "spiffs", "tcp_transport", "usb", "vfs", "wear_levelling", "wpa_supplicant", "" ],
+    "build_component_paths" : [ "C:/esp/v5.5.4/esp-idf/components/app_update", "C:/esp/v5.5.4/esp-idf/components/bootloader", "C:/esp/v5.5.4/esp-idf/components/bootloader_support", "C:/esp/v5.5.4/esp-idf/components/bt", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/coco_detect", "C:/esp/v5.5.4/esp-idf/components/console", "C:/esp/v5.5.4/esp-idf/components/cxx", "C:/esp/v5.5.4/esp-idf/components/driver", "C:/esp/v5.5.4/esp-idf/components/efuse", "C:/esp/v5.5.4/esp-idf/components/esp-tls", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/common_components/esp32_p4_eye", "C:/esp/v5.5.4/esp-idf/components/esp_adc", "C:/esp/v5.5.4/esp-idf/components/esp_app_format", "C:/esp/v5.5.4/esp-idf/components/esp_bootloader_format", "C:/esp/v5.5.4/esp-idf/components/esp_coex", "C:/esp/v5.5.4/esp-idf/components/esp_common", "C:/esp/v5.5.4/esp-idf/components/esp_driver_ana_cmpr", "C:/esp/v5.5.4/esp-idf/components/esp_driver_bitscrambler", "C:/esp/v5.5.4/esp-idf/components/esp_driver_cam", "C:/esp/v5.5.4/esp-idf/components/esp_driver_dac", "C:/esp/v5.5.4/esp-idf/components/esp_driver_gpio", "C:/esp/v5.5.4/esp-idf/components/esp_driver_gptimer", "C:/esp/v5.5.4/esp-idf/components/esp_driver_i2c", "C:/esp/v5.5.4/esp-idf/components/esp_driver_i2s", "C:/esp/v5.5.4/esp-idf/components/esp_driver_isp", "C:/esp/v5.5.4/esp-idf/components/esp_driver_jpeg", "C:/esp/v5.5.4/esp-idf/components/esp_driver_ledc", "C:/esp/v5.5.4/esp-idf/components/esp_driver_mcpwm", "C:/esp/v5.5.4/esp-idf/components/esp_driver_parlio", "C:/esp/v5.5.4/esp-idf/components/esp_driver_pcnt", "C:/esp/v5.5.4/esp-idf/components/esp_driver_ppa", "C:/esp/v5.5.4/esp-idf/components/esp_driver_rmt", "C:/esp/v5.5.4/esp-idf/components/esp_driver_sdio", "C:/esp/v5.5.4/esp-idf/components/esp_driver_sdm", "C:/esp/v5.5.4/esp-idf/components/esp_driver_sdmmc", "C:/esp/v5.5.4/esp-idf/components/esp_driver_sdspi", "C:/esp/v5.5.4/esp-idf/components/esp_driver_spi", "C:/esp/v5.5.4/esp-idf/components/esp_driver_tsens", "C:/esp/v5.5.4/esp-idf/components/esp_driver_twai", "C:/esp/v5.5.4/esp-idf/components/esp_driver_uart", "C:/esp/v5.5.4/esp-idf/components/esp_driver_usb_serial_jtag", "C:/esp/v5.5.4/esp-idf/components/esp_eth", "C:/esp/v5.5.4/esp-idf/components/esp_event", "C:/esp/v5.5.4/esp-idf/components/esp_gdbstub", "C:/esp/v5.5.4/esp-idf/components/esp_http_client", "C:/esp/v5.5.4/esp-idf/components/esp_http_server", "C:/esp/v5.5.4/esp-idf/components/esp_hw_support", "C:/esp/v5.5.4/esp-idf/components/esp_lcd", "C:/esp/v5.5.4/esp-idf/components/esp_mm", "C:/esp/v5.5.4/esp-idf/components/esp_netif", "C:/esp/v5.5.4/esp-idf/components/esp_netif_stack", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/esp_painter", "C:/esp/v5.5.4/esp-idf/components/esp_partition", "C:/esp/v5.5.4/esp-idf/components/esp_phy", "C:/esp/v5.5.4/esp-idf/components/esp_pm", "C:/esp/v5.5.4/esp-idf/components/esp_psram", "C:/esp/v5.5.4/esp-idf/components/esp_ringbuf", "C:/esp/v5.5.4/esp-idf/components/esp_rom", "C:/esp/v5.5.4/esp-idf/components/esp_security", "C:/esp/v5.5.4/esp-idf/components/esp_system", "C:/esp/v5.5.4/esp-idf/components/esp_timer", "C:/esp/v5.5.4/esp-idf/components/esp_vfs_console", "C:/esp/v5.5.4/esp-idf/components/esp_wifi", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__button", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__cmake_utilities", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__eppp_link", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp-dl", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_audio_codec", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_cam_sensor", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_codec_dev", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_ipa", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_lvgl_port", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_muxer", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_new_jpeg", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_sccb_intf", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_serial_slave_link", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_tinyusb", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__knob", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__qma6100p", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__wifi_remote_over_eppp", "C:/esp/v5.5.4/esp-idf/components/esptool_py", "C:/esp/v5.5.4/esp-idf/components/fatfs", "C:/esp/v5.5.4/esp-idf/components/freertos", "C:/esp/v5.5.4/esp-idf/components/hal", "C:/esp/v5.5.4/esp-idf/components/heap", "C:/esp/v5.5.4/esp-idf/components/http_parser", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/human_face_detect", "C:/esp/v5.5.4/esp-idf/components/log", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl", "C:/esp/v5.5.4/esp-idf/components/lwip", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main", "C:/esp/v5.5.4/esp-idf/components/mbedtls", "C:/esp/v5.5.4/esp-idf/components/newlib", "C:/esp/v5.5.4/esp-idf/components/nvs_flash", "C:/esp/v5.5.4/esp-idf/components/partition_table", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/pedestrian_detect", "C:/esp/v5.5.4/esp-idf/components/pthread", "C:/esp/v5.5.4/esp-idf/components/riscv", "C:/esp/v5.5.4/esp-idf/components/sdmmc", "C:/esp/v5.5.4/esp-idf/components/soc", "C:/esp/v5.5.4/esp-idf/components/spi_flash", "C:/esp/v5.5.4/esp-idf/components/spiffs", "C:/esp/v5.5.4/esp-idf/components/tcp_transport", "C:/esp/v5.5.4/esp-idf/components/usb", "C:/esp/v5.5.4/esp-idf/components/vfs", "C:/esp/v5.5.4/esp-idf/components/wear_levelling", "C:/esp/v5.5.4/esp-idf/components/wpa_supplicant", "" ],
     "build_component_info" : {
         "app_update": {
             "alias": "idf::app_update",
@@ -73,6 +73,21 @@
             "sources": [ "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/bootloader_common.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/bootloader_common_loader.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/bootloader_clock_init.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/bootloader_mem.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/bootloader_random.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/bootloader_efuse.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/flash_encrypt.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/secure_boot.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/bootloader_random_esp32p4.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/bootloader_flash/src/bootloader_flash.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/bootloader_flash/src/flash_qio_mode.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/bootloader_flash/src/bootloader_flash_config_esp32p4.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/bootloader_utility.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/flash_partitions.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/esp_image_format.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/bootloader_sha.c", "C:/esp/v5.5.4/esp-idf/components/bootloader_support/src/esp32p4/secure_boot_secure_features.c" ],
             "include_dirs": [ "include", "bootloader_flash/include" ]
         },
+        "bt": {
+            "alias": "idf::bt",
+            "target": "___idf_bt",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/bt",
+            "type": "CONFIG_ONLY",
+            "lib": "__idf_bt",
+            "reqs": [ "esp_timer", "esp_wifi" ],
+            "priv_reqs": [ "nvs_flash", "soc", "esp_pm", "esp_phy", "esp_coex", "mbedtls", "esp_driver_uart", "vfs", "esp_ringbuf", "esp_driver_spi", "esp_driver_gpio", "esp_gdbstub" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "",
+            "sources": [],
+            "include_dirs": []
+        },
         "coco_detect": {
             "alias": "idf::coco_detect",
             "target": "___idf_coco_detect",
@@ -87,6 +102,21 @@
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/coco_detect/libcoco_detect.a",
             "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/components/coco_detect/coco_detect.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/coco_detect.espdl.S" ],
             "include_dirs": [ "." ]
+        },
+        "console": {
+            "alias": "idf::console",
+            "target": "___idf_console",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/console",
+            "type": "LIBRARY",
+            "lib": "__idf_console",
+            "reqs": [ "vfs", "esp_vfs_console" ],
+            "priv_reqs": [ "esp_driver_uart", "esp_driver_usb_serial_jtag" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/console/libconsole.a",
+            "sources": [ "C:/esp/v5.5.4/esp-idf/components/console/commands.c", "C:/esp/v5.5.4/esp-idf/components/console/esp_console_common.c", "C:/esp/v5.5.4/esp-idf/components/console/esp_console_repl_internal.c", "C:/esp/v5.5.4/esp-idf/components/console/split_argv.c", "C:/esp/v5.5.4/esp-idf/components/console/linenoise/linenoise.c", "C:/esp/v5.5.4/esp-idf/components/console/esp_console_repl_chip.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_cmd.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_date.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_dbl.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_dstr.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_end.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_file.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_hashtable.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_int.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_lit.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_rem.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_rex.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_str.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/arg_utils.c", "C:/esp/v5.5.4/esp-idf/components/console/argtable3/argtable3.c" ],
+            "include_dirs": [ "C:/esp/v5.5.4/esp-idf/components/console" ]
         },
         "cxx": {
             "alias": "idf::cxx",
@@ -132,6 +162,21 @@
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/efuse/libefuse.a",
             "sources": [ "C:/esp/v5.5.4/esp-idf/components/efuse/esp32p4/esp_efuse_utility.c", "C:/esp/v5.5.4/esp-idf/components/efuse/esp32p4/esp_efuse_fields.c", "C:/esp/v5.5.4/esp-idf/components/efuse/esp32p4/esp_efuse_rtc_calib.c", "C:/esp/v5.5.4/esp-idf/components/efuse/esp32p4/esp_efuse_table_v3.0.c", "C:/esp/v5.5.4/esp-idf/components/efuse/src/esp_efuse_api.c", "C:/esp/v5.5.4/esp-idf/components/efuse/src/esp_efuse_fields.c", "C:/esp/v5.5.4/esp-idf/components/efuse/src/esp_efuse_utility.c", "C:/esp/v5.5.4/esp-idf/components/efuse/src/efuse_controller/keys/with_key_purposes/esp_efuse_api_key.c", "C:/esp/v5.5.4/esp-idf/components/efuse/src/esp_efuse_startup.c" ],
             "include_dirs": [ "include", "esp32p4/include" ]
+        },
+        "esp-tls": {
+            "alias": "idf::esp-tls",
+            "target": "___idf_esp-tls",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/esp-tls",
+            "type": "LIBRARY",
+            "lib": "__idf_esp-tls",
+            "reqs": [ "mbedtls" ],
+            "priv_reqs": [ "http_parser", "esp_timer", "lwip" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp-tls/libesp-tls.a",
+            "sources": [ "C:/esp/v5.5.4/esp-idf/components/esp-tls/esp_tls.c", "C:/esp/v5.5.4/esp-idf/components/esp-tls/esp-tls-crypto/esp_tls_crypto.c", "C:/esp/v5.5.4/esp-idf/components/esp-tls/esp_tls_error_capture.c", "C:/esp/v5.5.4/esp-idf/components/esp-tls/esp_tls_platform_port.c", "C:/esp/v5.5.4/esp-idf/components/esp-tls/esp_tls_mbedtls.c" ],
+            "include_dirs": [ "C:/esp/v5.5.4/esp-idf/components/esp-tls", "esp-tls-crypto" ]
         },
         "esp32_p4_eye": {
             "alias": "idf::esp32_p4_eye",
@@ -191,6 +236,21 @@
             "managed_priv_reqs": [],
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_bootloader_format/libesp_bootloader_format.a",
             "sources": [ "C:/esp/v5.5.4/esp-idf/components/esp_bootloader_format/esp_bootloader_desc.c" ],
+            "include_dirs": [ "include" ]
+        },
+        "esp_coex": {
+            "alias": "idf::esp_coex",
+            "target": "___idf_esp_coex",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/esp_coex",
+            "type": "CONFIG_ONLY",
+            "lib": "__idf_esp_coex",
+            "reqs": [],
+            "priv_reqs": [ "esp_timer", "esp_driver_gpio" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "",
+            "sources": [],
             "include_dirs": [ "include" ]
         },
         "esp_common": {
@@ -583,6 +643,21 @@
             "sources": [ "C:/esp/v5.5.4/esp-idf/components/esp_driver_usb_serial_jtag/src/usb_serial_jtag.c", "C:/esp/v5.5.4/esp-idf/components/esp_driver_usb_serial_jtag/src/usb_serial_jtag_connection_monitor.c", "C:/esp/v5.5.4/esp-idf/components/esp_driver_usb_serial_jtag/src/usb_serial_jtag_vfs.c" ],
             "include_dirs": [ "include" ]
         },
+        "esp_eth": {
+            "alias": "idf::esp_eth",
+            "target": "___idf_esp_eth",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/esp_eth",
+            "type": "LIBRARY",
+            "lib": "__idf_esp_eth",
+            "reqs": [ "esp_event" ],
+            "priv_reqs": [ "log", "esp_timer", "esp_driver_spi", "esp_driver_gpio" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_eth/libesp_eth.a",
+            "sources": [ "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/esp_eth.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/phy/esp_eth_phy_802_3.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/esp_eth_netif_glue.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/mac/esp_eth_mac_esp.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/mac/esp_eth_mac_esp_dma.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/mac/esp_eth_mac_esp_gpio.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/phy/esp_eth_phy_generic.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/phy/esp_eth_phy_dp83848.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/phy/esp_eth_phy_ip101.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/phy/esp_eth_phy_ksz80xx.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/phy/esp_eth_phy_lan87xx.c", "C:/esp/v5.5.4/esp-idf/components/esp_eth/src/phy/esp_eth_phy_rtl8201.c" ],
+            "include_dirs": [ "include" ]
+        },
         "esp_event": {
             "alias": "idf::esp_event",
             "target": "___idf_esp_event",
@@ -596,6 +671,51 @@
             "managed_priv_reqs": [],
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_event/libesp_event.a",
             "sources": [ "C:/esp/v5.5.4/esp-idf/components/esp_event/default_event_loop.c", "C:/esp/v5.5.4/esp-idf/components/esp_event/esp_event.c", "C:/esp/v5.5.4/esp-idf/components/esp_event/esp_event_private.c" ],
+            "include_dirs": [ "include" ]
+        },
+        "esp_gdbstub": {
+            "alias": "idf::esp_gdbstub",
+            "target": "___idf_esp_gdbstub",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/esp_gdbstub",
+            "type": "LIBRARY",
+            "lib": "__idf_esp_gdbstub",
+            "reqs": [ "freertos" ],
+            "priv_reqs": [ "soc", "esp_rom", "esp_system" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_gdbstub/libesp_gdbstub.a",
+            "sources": [ "C:/esp/v5.5.4/esp-idf/components/esp_gdbstub/src/gdbstub.c", "C:/esp/v5.5.4/esp-idf/components/esp_gdbstub/src/gdbstub_transport.c", "C:/esp/v5.5.4/esp-idf/components/esp_gdbstub/src/packet.c", "C:/esp/v5.5.4/esp-idf/components/esp_gdbstub/src/port/riscv/gdbstub_riscv.c", "C:/esp/v5.5.4/esp-idf/components/esp_gdbstub/src/port/riscv/rv_decode.c" ],
+            "include_dirs": [ "include" ]
+        },
+        "esp_http_client": {
+            "alias": "idf::esp_http_client",
+            "target": "___idf_esp_http_client",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/esp_http_client",
+            "type": "LIBRARY",
+            "lib": "__idf_esp_http_client",
+            "reqs": [ "lwip", "esp_event" ],
+            "priv_reqs": [ "tcp_transport", "http_parser" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_http_client/libesp_http_client.a",
+            "sources": [ "C:/esp/v5.5.4/esp-idf/components/esp_http_client/esp_http_client.c", "C:/esp/v5.5.4/esp-idf/components/esp_http_client/lib/http_auth.c", "C:/esp/v5.5.4/esp-idf/components/esp_http_client/lib/http_header.c", "C:/esp/v5.5.4/esp-idf/components/esp_http_client/lib/http_utils.c" ],
+            "include_dirs": [ "include" ]
+        },
+        "esp_http_server": {
+            "alias": "idf::esp_http_server",
+            "target": "___idf_esp_http_server",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/esp_http_server",
+            "type": "LIBRARY",
+            "lib": "__idf_esp_http_server",
+            "reqs": [ "http_parser", "esp_event" ],
+            "priv_reqs": [ "mbedtls", "lwip", "esp_timer" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_http_server/libesp_http_server.a",
+            "sources": [ "C:/esp/v5.5.4/esp-idf/components/esp_http_server/src/httpd_main.c", "C:/esp/v5.5.4/esp-idf/components/esp_http_server/src/httpd_parse.c", "C:/esp/v5.5.4/esp-idf/components/esp_http_server/src/httpd_sess.c", "C:/esp/v5.5.4/esp-idf/components/esp_http_server/src/httpd_txrx.c", "C:/esp/v5.5.4/esp-idf/components/esp_http_server/src/httpd_uri.c", "C:/esp/v5.5.4/esp-idf/components/esp_http_server/src/httpd_ws.c", "C:/esp/v5.5.4/esp-idf/components/esp_http_server/src/util/ctrl_sock.c" ],
             "include_dirs": [ "include" ]
         },
         "esp_hw_support": {
@@ -702,6 +822,21 @@
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_partition/libesp_partition.a",
             "sources": [ "C:/esp/v5.5.4/esp-idf/components/esp_partition/partition.c", "C:/esp/v5.5.4/esp-idf/components/esp_partition/partition_target.c" ],
             "include_dirs": [ "include" ]
+        },
+        "esp_phy": {
+            "alias": "idf::esp_phy",
+            "target": "___idf_esp_phy",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/esp_phy",
+            "type": "CONFIG_ONLY",
+            "lib": "__idf_esp_phy",
+            "reqs": [],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "",
+            "sources": [],
+            "include_dirs": []
         },
         "esp_pm": {
             "alias": "idf::esp_pm",
@@ -823,6 +958,21 @@
             "sources": [ "C:/esp/v5.5.4/esp-idf/components/esp_vfs_console/vfs_console.c" ],
             "include_dirs": [ "include" ]
         },
+        "esp_wifi": {
+            "alias": "idf::esp_wifi",
+            "target": "___idf_esp_wifi",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/esp_wifi",
+            "type": "LIBRARY",
+            "lib": "__idf_esp_wifi",
+            "reqs": [ "esp_event", "esp_phy", "esp_netif" ],
+            "priv_reqs": [ "esptool_py", "esp_pm", "esp_timer", "nvs_flash", "wpa_supplicant", "hal", "lwip", "esp_coex" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_wifi/libesp_wifi.a",
+            "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote/dummy_src.c" ],
+            "include_dirs": [ "include", "wifi_apps/nan_app/include" ]
+        },
         "espressif__button": {
             "alias": "idf::espressif__button",
             "target": "___idf_espressif__button",
@@ -852,6 +1002,21 @@
             "file": "",
             "sources": [],
             "include_dirs": []
+        },
+        "espressif__eppp_link": {
+            "alias": "idf::espressif__eppp_link",
+            "target": "___idf_espressif__eppp_link",
+            "prefix": "idf",
+            "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__eppp_link",
+            "type": "LIBRARY",
+            "lib": "__idf_espressif__eppp_link",
+            "reqs": [],
+            "priv_reqs": [ "esp_netif", "esp_timer", "esp_eth", "esp_driver_gpio", "esp_driver_spi", "esp_driver_uart", "esp_driver_sdio", "espressif__esp_serial_slave_link" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__esp_serial_slave_link" ],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__eppp_link/libespressif__eppp_link.a",
+            "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__eppp_link/eppp_link.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__eppp_link/eppp_link_netif.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__eppp_link/eppp_uart.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__eppp_link/eppp_netif_tun.c" ],
+            "include_dirs": [ "include" ]
         },
         "espressif__esp-dl": {
             "alias": "idf::espressif__esp-dl",
@@ -928,6 +1093,21 @@
             "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/port/src/esp_h264_alloc.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/port/src/esp_h264_cache.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/interface/src/esp_h264_dec.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/interface/src/esp_h264_dec_param.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/interface/src/esp_h264_enc_dual.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/interface/src/esp_h264_enc_param.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/interface/src/esp_h264_enc_param_hw.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/interface/src/esp_h264_enc_single.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/interface/src/esp_h264_version.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/sw/src/esp_h264_dec_sw.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/sw/src/esp_h264_enc_single_sw.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/sw/src/esp_h264_enc_sw_param.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/sw/src/h264_color_convert.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/hw/src/esp_h264_enc_dual_hw.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/hw/src/esp_h264_enc_hw_param.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/hw/src/esp_h264_enc_single_hw.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/hw/src/h264_nal.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/hw/src/h264_rc.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/hw/hal/esp32p4/h264_dma_hal.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_h264/hw/hal/esp32p4/h264_hal.c" ],
             "include_dirs": [ "./interface/include", "./sw/include", "./port/include/", "./hw/include" ]
         },
+        "espressif__esp_hosted": {
+            "alias": "idf::espressif__esp_hosted",
+            "target": "___idf_espressif__esp_hosted",
+            "prefix": "idf",
+            "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted",
+            "type": "LIBRARY",
+            "lib": "__idf_espressif__esp_hosted",
+            "reqs": [ "esp_driver_sdmmc", "esp_driver_spi", "esp_driver_uart", "esp_driver_gpio", "esp_event" ],
+            "priv_reqs": [ "soc", "esp_netif", "esp_timer", "driver", "esp_wifi", "bt", "esp_http_client", "console", "wpa_supplicant" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__esp_hosted/libespressif__esp_hosted.a",
+            "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/api/src/esp_wifi_weak.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/api/src/esp_hosted_api.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/api/src/esp_hosted_transport_config.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/api/src/esp_hosted_ota_api.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/transport/transport_drv.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/transport/transport_util.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/serial/serial_ll_if.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/utils/stats.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/serial/serial_drv.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/rpc/core/rpc_core.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/rpc/core/rpc_req.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/rpc/core/rpc_rsp.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/rpc/core/rpc_evt.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/rpc/core/rpc_utils.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/rpc/slaveif/rpc_slave_if.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/rpc/wrap/rpc_wrap.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/virtual_serial_if/serial_if.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/common/protobuf-c/protobuf-c/protobuf-c.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/common/proto/esp_hosted_rpc.pb-c.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/common/mempool/mempool_ll.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/common/mempool/mempool.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/common/utils/esp_hosted_cli.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/bt/hci_stub_drv.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/power_save/power_save_drv.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/drivers/transport/sdio/sdio_drv.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/port/esp/freertos/src/port_esp_hosted_host_init.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/port/esp/freertos/src/port_esp_hosted_host_os.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/port/esp/freertos/src/port_esp_hosted_host_transport_defaults.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted/host/port/esp/freertos/src/port_esp_hosted_host_sdio.c" ],
+            "include_dirs": [ "./host", "./host/api/include" ]
+        },
         "espressif__esp_ipa": {
             "alias": "idf::espressif__esp_ipa",
             "target": "___idf_espressif__esp_ipa",
@@ -1003,6 +1183,21 @@
             "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_sccb_intf/src/sccb.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_sccb_intf/sccb_i2c/src/sccb_i2c.c" ],
             "include_dirs": [ "include", "interface", "sccb_i2c/include" ]
         },
+        "espressif__esp_serial_slave_link": {
+            "alias": "idf::espressif__esp_serial_slave_link",
+            "target": "___idf_espressif__esp_serial_slave_link",
+            "prefix": "idf",
+            "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_serial_slave_link",
+            "type": "LIBRARY",
+            "lib": "__idf_espressif__esp_serial_slave_link",
+            "reqs": [ "sdmmc", "esp_driver_sdspi", "esp_driver_sdmmc" ],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__esp_serial_slave_link/libespressif__esp_serial_slave_link.a",
+            "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_serial_slave_link/essl.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_serial_slave_link/essl_sdio.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_serial_slave_link/essl_spi.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_serial_slave_link/essl_sdio_defs.c" ],
+            "include_dirs": [ "include" ]
+        },
         "espressif__esp_tinyusb": {
             "alias": "idf::espressif__esp_tinyusb",
             "target": "___idf_espressif__esp_tinyusb",
@@ -1031,6 +1226,21 @@
             "managed_priv_reqs": [ "espressif__cmake_utilities", "espressif__esp_cam_sensor", "espressif__esp_h264", "espressif__esp_ipa" ],
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__esp_video/libespressif__esp_video.a",
             "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/esp_video_buffer.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/esp_video_init.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/esp_video_ioctl.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/esp_video_mman.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/esp_video_vfs.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/esp_video.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/esp_video_sensor.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/data_reprocessing/esp32p4/esp_video_swap_short.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/data_reprocessing/esp32p4/esp_video_swap_short.S", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/device/esp_video_csi_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/device/esp_video_dvp_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/device/esp_video_isp_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_video/src/esp_video_isp_pipeline.c" ],
+            "include_dirs": [ "include" ]
+        },
+        "espressif__esp_wifi_remote": {
+            "alias": "idf::espressif__esp_wifi_remote",
+            "target": "___idf_espressif__esp_wifi_remote",
+            "prefix": "idf",
+            "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote",
+            "type": "LIBRARY",
+            "lib": "__idf_espressif__esp_wifi_remote",
+            "reqs": [ "esp_event", "esp_netif" ],
+            "priv_reqs": [ "esp_wifi", "esp-tls", "vfs", "espressif__esp_hosted", "espressif__wifi_remote_over_eppp" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__esp_hosted", "espressif__wifi_remote_over_eppp" ],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__esp_wifi_remote/libespressif__esp_wifi_remote.a",
+            "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote/esp_wifi_remote.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote/esp_wifi_remote_net.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote/idf_v5.5/esp_wifi_remote_weak.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote/idf_v5.5/esp_eap_client_remote_weak.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote/idf_v5.5/esp_wifi_with_remote.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote/idf_v5.5/esp_eap_client_with_remote.c", "C:/esp/v5.5.4/esp-idf/components/esp_wifi/src/wifi_default.c", "C:/esp/v5.5.4/esp-idf/components/esp_wifi/src/wifi_netif.c", "C:/esp/v5.5.4/esp-idf/components/esp_wifi/src/wifi_default_ap.c" ],
             "include_dirs": [ "include" ]
         },
         "espressif__knob": {
@@ -1077,6 +1287,21 @@
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__tinyusb/libespressif__tinyusb.a",
             "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/cdc/cdc_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/hid/hid_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/midi/midi_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/msc/msc_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/vendor/vendor_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/audio/audio_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/video/video_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/bth/bth_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/usbtmc/usbtmc_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/net/ecm_rndis_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/lib/networking/rndis_reports.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/net/ncm_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/dfu/dfu_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/class/dfu/dfu_rt_device.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/portable/synopsys/dwc2/dcd_dwc2.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/portable/synopsys/dwc2/dwc2_common.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/common/tusb_fifo.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/device/usbd_control.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/device/usbd.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__tinyusb/src/tusb.c" ],
             "include_dirs": [ "src/" ]
+        },
+        "espressif__wifi_remote_over_eppp": {
+            "alias": "idf::espressif__wifi_remote_over_eppp",
+            "target": "___idf_espressif__wifi_remote_over_eppp",
+            "prefix": "idf",
+            "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__wifi_remote_over_eppp",
+            "type": "CONFIG_ONLY",
+            "lib": "__idf_espressif__wifi_remote_over_eppp",
+            "reqs": [],
+            "priv_reqs": [ "esp_event", "esp_netif", "espressif__eppp_link", "esp-tls", "esp_wifi", "vfs" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__eppp_link" ],
+            "file": "",
+            "sources": [],
+            "include_dirs": []
         },
         "esptool_py": {
             "alias": "idf::esptool_py",
@@ -1135,7 +1360,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/hal/libhal.a",
-            "sources": [ "C:/esp/v5.5.4/esp-idf/components/hal/hal_utils.c", "C:/esp/v5.5.4/esp-idf/components/hal/efuse_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/esp32p4/efuse_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/lp_timer_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/mmu_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/cache_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/color_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_flash_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_flash_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_flash_encrypt_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/esp32p4/clk_tree_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/uart_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/uart_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/gpio_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/rtc_io_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/timer_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ledc_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ledc_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/i2c_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/i2c_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/i3c_master_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/isp_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/lp_i2s_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/rmt_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/pcnt_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/mcpwm_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/uhci_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/twai_hal_v1.c", "C:/esp/v5.5.4/esp-idf/components/hal/gdma_hal_top.c", "C:/esp/v5.5.4/esp-idf/components/hal/gdma_hal_crc_gen.c", "C:/esp/v5.5.4/esp-idf/components/hal/gdma_hal_ahb_v2.c", "C:/esp/v5.5.4/esp-idf/components/hal/gdma_hal_axi.c", "C:/esp/v5.5.4/esp-idf/components/hal/dw_gdma_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/dma2d_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/i2s_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/sdm_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/sdmmc_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/etm_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/parlio_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/adc_hal_common.c", "C:/esp/v5.5.4/esp-idf/components/hal/adc_oneshot_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/adc_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/lcd_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/mipi_dsi_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/mipi_csi_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ecc_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ecdsa_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/mpi_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/sha_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/aes_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/esp32p4/pau_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/brownout_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/vbat_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/jpeg_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ppa_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_slave_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_slave_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_slave_hd_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_flash_hal_gpspi.c", "C:/esp/v5.5.4/esp-idf/components/hal/esp32p4/pmu_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/apm_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/hmac_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ds_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/cam_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/usb_serial_jtag_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/usb_utmi_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/usb_dwc_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/usb_wrap_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/touch_sens_hal.c" ],
+            "sources": [ "C:/esp/v5.5.4/esp-idf/components/hal/hal_utils.c", "C:/esp/v5.5.4/esp-idf/components/hal/efuse_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/esp32p4/efuse_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/lp_timer_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/mmu_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/cache_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/color_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_flash_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_flash_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_flash_encrypt_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/esp32p4/clk_tree_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/uart_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/uart_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/gpio_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/rtc_io_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/timer_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ledc_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ledc_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/i2c_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/i2c_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/i3c_master_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/isp_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/lp_i2s_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/rmt_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/pcnt_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/mcpwm_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/uhci_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/twai_hal_v1.c", "C:/esp/v5.5.4/esp-idf/components/hal/gdma_hal_top.c", "C:/esp/v5.5.4/esp-idf/components/hal/gdma_hal_crc_gen.c", "C:/esp/v5.5.4/esp-idf/components/hal/gdma_hal_ahb_v2.c", "C:/esp/v5.5.4/esp-idf/components/hal/gdma_hal_axi.c", "C:/esp/v5.5.4/esp-idf/components/hal/dw_gdma_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/dma2d_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/i2s_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/sdm_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/sdmmc_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/emac_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/etm_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/parlio_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/adc_hal_common.c", "C:/esp/v5.5.4/esp-idf/components/hal/adc_oneshot_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/adc_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/lcd_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/mipi_dsi_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/mipi_csi_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ecc_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ecdsa_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/mpi_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/sha_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/aes_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/esp32p4/pau_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/brownout_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/vbat_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/jpeg_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ppa_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_slave_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_slave_hal_iram.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_slave_hd_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/spi_flash_hal_gpspi.c", "C:/esp/v5.5.4/esp-idf/components/hal/esp32p4/pmu_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/apm_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/hmac_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/ds_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/cam_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/usb_serial_jtag_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/usb_utmi_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/usb_dwc_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/usb_wrap_hal.c", "C:/esp/v5.5.4/esp-idf/components/hal/touch_sens_hal.c" ],
             "include_dirs": [ "platform_port/include", "esp32p4/include", "include" ]
         },
         "heap": {
@@ -1152,6 +1377,21 @@
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/heap/libheap.a",
             "sources": [ "C:/esp/v5.5.4/esp-idf/components/heap/heap_caps_base.c", "C:/esp/v5.5.4/esp-idf/components/heap/heap_caps.c", "C:/esp/v5.5.4/esp-idf/components/heap/heap_caps_init.c", "C:/esp/v5.5.4/esp-idf/components/heap/multi_heap.c", "C:/esp/v5.5.4/esp-idf/components/heap/tlsf/tlsf.c", "C:/esp/v5.5.4/esp-idf/components/heap/port/memory_layout_utils.c", "C:/esp/v5.5.4/esp-idf/components/heap/port/esp32p4/memory_layout.c" ],
             "include_dirs": [ "include", "tlsf" ]
+        },
+        "http_parser": {
+            "alias": "idf::http_parser",
+            "target": "___idf_http_parser",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/http_parser",
+            "type": "LIBRARY",
+            "lib": "__idf_http_parser",
+            "reqs": [],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/http_parser/libhttp_parser.a",
+            "sources": [ "C:/esp/v5.5.4/esp-idf/components/http_parser/http_parser.c" ],
+            "include_dirs": [ "." ]
         },
         "human_face_detect": {
             "alias": "idf::human_face_detect",
@@ -1220,12 +1460,12 @@
             "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main",
             "type": "LIBRARY",
             "lib": "__idf_main",
-            "reqs": [ "esp_driver_ppa", "nvs_flash", "human_face_detect", "pedestrian_detect", "coco_detect", "esp_painter", "espressif__esp_audio_codec", "espressif__esp_h264", "espressif__esp_muxer" ],
-            "priv_reqs": [ "esp32_p4_eye", "espressif__esp_tinyusb", "espressif__qma6100p" ],
+            "reqs": [ "esp_driver_ppa", "nvs_flash", "human_face_detect", "pedestrian_detect", "coco_detect", "esp_painter", "esp_http_server", "esp_wifi", "esp_netif", "esp_event", "esp_timer", "espressif__esp_audio_codec", "espressif__esp_h264", "espressif__esp_muxer" ],
+            "priv_reqs": [ "esp32_p4_eye", "espressif__esp_hosted", "espressif__esp_tinyusb", "espressif__esp_wifi_remote", "espressif__qma6100p" ],
             "managed_reqs": [ "espressif__esp_audio_codec", "espressif__esp_h264", "espressif__esp_muxer" ],
-            "managed_priv_reqs": [ "esp32_p4_eye", "espressif__esp_tinyusb", "espressif__qma6100p" ],
+            "managed_priv_reqs": [ "esp32_p4_eye", "espressif__esp_hosted", "espressif__esp_tinyusb", "espressif__esp_wifi_remote", "espressif__qma6100p" ],
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/main.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/components/ui_comp_hook.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoBold14.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoBold18.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoBold28.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoMiniBold14.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoMiniBold18.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoMiniBold22.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoMiniBold24.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_ai_detect_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_ai_detect_small_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_album_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_button_down_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_button_menu_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_button_select_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_camera_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_camera_small_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_interval_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_interval_small_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_reddot_recording_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_sdcard_no_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_sdcard_yes_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_settings_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_up_button_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_usb_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_usb_page1_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_usb_page2_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_usb_page_warning_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_video_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_video_small_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/screens/ui_ScreenAlbum.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/screens/ui_ScreenCamera.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/screens/ui_ScreenPicSave.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/screens/ui_ScreenUSB.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/ui.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/ui_extra.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/ui_helpers.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/app_album.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/app_control.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/app_isp.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/app_qma6100.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/app_storage.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_ai_detect.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_camera_pipeline.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_coco_detect.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_drawing_utils.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_humanface_detect.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_pedestrian_detect.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_video.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_video_photo.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_video_record.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_video_stream.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_video_utils.c" ],
+            "sources": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/main.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/components/ui_comp_hook.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoBold14.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoBold18.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoBold28.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoMiniBold14.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoMiniBold18.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoMiniBold22.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/fonts/ui_font_FontKoHoMiniBold24.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_ai_detect_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_ai_detect_small_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_album_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_button_down_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_button_menu_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_button_select_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_camera_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_camera_small_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_interval_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_interval_small_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_reddot_recording_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_sdcard_no_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_sdcard_yes_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_settings_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_up_button_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_usb_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_usb_page1_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_usb_page2_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_usb_page_warning_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_video_big_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/images/ui_img_video_small_png.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/screens/ui_ScreenAlbum.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/screens/ui_ScreenCamera.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/screens/ui_ScreenPicSave.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/screens/ui_ScreenUSB.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/ui.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/ui_extra.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/ui/ui_helpers.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/app_album.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/app_control.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/app_isp.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/app_qma6100.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/app_storage.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_ai_detect.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_camera_pipeline.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_coco_detect.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_drawing_utils.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_humanface_detect.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/AI/app_pedestrian_detect.cpp", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_livestream.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_video.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_video_photo.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_video_record.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_video_stream.c", "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main/app/Video/app_video_utils.c" ],
             "include_dirs": [ ".", "ui", "app", "app/AI", "app/Video" ]
         },
         "mbedtls": {
@@ -1393,6 +1633,21 @@
             "sources": [ "C:/esp/v5.5.4/esp-idf/components/spiffs/spiffs_api.c", "C:/esp/v5.5.4/esp-idf/components/spiffs/spiffs/src/spiffs_cache.c", "C:/esp/v5.5.4/esp-idf/components/spiffs/spiffs/src/spiffs_check.c", "C:/esp/v5.5.4/esp-idf/components/spiffs/spiffs/src/spiffs_gc.c", "C:/esp/v5.5.4/esp-idf/components/spiffs/spiffs/src/spiffs_hydrogen.c", "C:/esp/v5.5.4/esp-idf/components/spiffs/spiffs/src/spiffs_nucleus.c", "C:/esp/v5.5.4/esp-idf/components/spiffs/esp_spiffs.c" ],
             "include_dirs": [ "include" ]
         },
+        "tcp_transport": {
+            "alias": "idf::tcp_transport",
+            "target": "___idf_tcp_transport",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/tcp_transport",
+            "type": "LIBRARY",
+            "lib": "__idf_tcp_transport",
+            "reqs": [ "esp-tls", "lwip", "esp_timer" ],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/tcp_transport/libtcp_transport.a",
+            "sources": [ "C:/esp/v5.5.4/esp-idf/components/tcp_transport/transport.c", "C:/esp/v5.5.4/esp-idf/components/tcp_transport/transport_ssl.c", "C:/esp/v5.5.4/esp-idf/components/tcp_transport/transport_internal.c", "C:/esp/v5.5.4/esp-idf/components/tcp_transport/transport_socks_proxy.c", "C:/esp/v5.5.4/esp-idf/components/tcp_transport/transport_ws.c" ],
+            "include_dirs": [ "include" ]
+        },
         "usb": {
             "alias": "idf::usb",
             "target": "___idf_usb",
@@ -1437,6 +1692,21 @@
             "file": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/wear_levelling/libwear_levelling.a",
             "sources": [ "C:/esp/v5.5.4/esp-idf/components/wear_levelling/Partition.cpp", "C:/esp/v5.5.4/esp-idf/components/wear_levelling/SPI_Flash.cpp", "C:/esp/v5.5.4/esp-idf/components/wear_levelling/WL_Ext_Perf.cpp", "C:/esp/v5.5.4/esp-idf/components/wear_levelling/WL_Ext_Safe.cpp", "C:/esp/v5.5.4/esp-idf/components/wear_levelling/WL_Flash.cpp", "C:/esp/v5.5.4/esp-idf/components/wear_levelling/crc32.cpp", "C:/esp/v5.5.4/esp-idf/components/wear_levelling/wear_levelling.cpp" ],
             "include_dirs": [ "include" ]
+        },
+        "wpa_supplicant": {
+            "alias": "idf::wpa_supplicant",
+            "target": "___idf_wpa_supplicant",
+            "prefix": "idf",
+            "dir": "C:/esp/v5.5.4/esp-idf/components/wpa_supplicant",
+            "type": "CONFIG_ONLY",
+            "lib": "__idf_wpa_supplicant",
+            "reqs": [],
+            "priv_reqs": [ "mbedtls", "esp_timer", "esp_wifi" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "file": "",
+            "sources": [],
+            "include_dirs": [ "esp_supplicant/include" ]
         }
     },
     "all_component_info" : {
@@ -1522,7 +1792,7 @@
             "priv_reqs": [ "esp_driver_uart", "esp_driver_usb_serial_jtag" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "include_dirs": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build" ]
+            "include_dirs": [ "C:/esp/v5.5.4/esp-idf/components/console" ]
         },
         "cxx": {
             "alias": "idf::cxx",
@@ -1570,7 +1840,7 @@
             "priv_reqs": [ "http_parser", "esp_timer", "lwip" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "include_dirs": [ "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build", "esp-tls-crypto" ]
+            "include_dirs": [ "C:/esp/v5.5.4/esp-idf/components/esp-tls", "esp-tls-crypto" ]
         },
         "esp_adc": {
             "alias": "idf::esp_adc",
@@ -1954,7 +2224,7 @@
             "priv_reqs": [ "log", "esp_timer", "esp_driver_spi", "esp_driver_gpio" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "include_dirs": []
+            "include_dirs": [ "include" ]
         },
         "esp_event": {
             "alias": "idf::esp_event",
@@ -2266,7 +2536,7 @@
             "priv_reqs": [ "esptool_py", "esp_pm", "esp_timer", "nvs_flash", "wpa_supplicant", "hal", "lwip", "esp_coex" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "include_dirs": [ "include", "include/local", "wifi_apps/include", "wifi_apps/nan_app/include" ]
+            "include_dirs": [ "include", "wifi_apps/nan_app/include" ]
         },
         "espcoredump": {
             "alias": "idf::espcoredump",
@@ -2734,7 +3004,7 @@
             "priv_reqs": [ "mbedtls", "esp_timer", "esp_wifi" ],
             "managed_reqs": [],
             "managed_priv_reqs": [],
-            "include_dirs": [ "include", "port/include", "esp_supplicant/include" ]
+            "include_dirs": [ "esp_supplicant/include" ]
         },
         "xtensa": {
             "alias": "idf::xtensa",
@@ -2754,10 +3024,10 @@
             "prefix": "idf",
             "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/main",
             "lib": "__idf_main",
-            "reqs": [ "esp_driver_ppa", "nvs_flash", "human_face_detect", "pedestrian_detect", "coco_detect", "esp_painter", "espressif__esp_audio_codec", "espressif__esp_h264", "espressif__esp_muxer" ],
-            "priv_reqs": [ "esp32_p4_eye", "espressif__esp_tinyusb", "espressif__qma6100p" ],
+            "reqs": [ "esp_driver_ppa", "nvs_flash", "human_face_detect", "pedestrian_detect", "coco_detect", "esp_painter", "esp_http_server", "esp_wifi", "esp_netif", "esp_event", "esp_timer", "espressif__esp_audio_codec", "espressif__esp_h264", "espressif__esp_muxer" ],
+            "priv_reqs": [ "esp32_p4_eye", "espressif__esp_hosted", "espressif__esp_tinyusb", "espressif__esp_wifi_remote", "espressif__qma6100p" ],
             "managed_reqs": [ "espressif__esp_audio_codec", "espressif__esp_h264", "espressif__esp_muxer" ],
-            "managed_priv_reqs": [ "esp32_p4_eye", "espressif__esp_tinyusb", "espressif__qma6100p" ],
+            "managed_priv_reqs": [ "esp32_p4_eye", "espressif__esp_hosted", "espressif__esp_tinyusb", "espressif__esp_wifi_remote", "espressif__qma6100p" ],
             "include_dirs": [ ".", "ui", "app", "app/AI", "app/Video" ]
         },
         "coco_detect": {
@@ -2844,6 +3114,18 @@
             "managed_priv_reqs": [],
             "include_dirs": []
         },
+        "espressif__eppp_link": {
+            "alias": "idf::espressif__eppp_link",
+            "target": "___idf_espressif__eppp_link",
+            "prefix": "idf",
+            "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__eppp_link",
+            "lib": "__idf_espressif__eppp_link",
+            "reqs": [],
+            "priv_reqs": [ "esp_netif", "esp_timer", "esp_eth", "esp_driver_gpio", "esp_driver_spi", "esp_driver_uart", "esp_driver_sdio", "espressif__esp_serial_slave_link" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__esp_serial_slave_link" ],
+            "include_dirs": [ "include" ]
+        },
         "espressif__esp-dl": {
             "alias": "idf::espressif__esp-dl",
             "target": "___idf_espressif__esp-dl",
@@ -2903,6 +3185,18 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "include_dirs": [ "./interface/include", "./sw/include", "./port/include/", "./hw/include" ]
+        },
+        "espressif__esp_hosted": {
+            "alias": "idf::espressif__esp_hosted",
+            "target": "___idf_espressif__esp_hosted",
+            "prefix": "idf",
+            "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_hosted",
+            "lib": "__idf_espressif__esp_hosted",
+            "reqs": [ "esp_driver_sdmmc", "esp_driver_spi", "esp_driver_uart", "esp_driver_gpio", "esp_event" ],
+            "priv_reqs": [ "soc", "esp_netif", "esp_timer", "driver", "esp_wifi", "bt", "esp_http_client", "console", "wpa_supplicant" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "include_dirs": [ "./host", "./host/api/include" ]
         },
         "espressif__esp_ipa": {
             "alias": "idf::espressif__esp_ipa",
@@ -2964,6 +3258,18 @@
             "managed_priv_reqs": [],
             "include_dirs": [ "include", "interface", "sccb_i2c/include" ]
         },
+        "espressif__esp_serial_slave_link": {
+            "alias": "idf::espressif__esp_serial_slave_link",
+            "target": "___idf_espressif__esp_serial_slave_link",
+            "prefix": "idf",
+            "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_serial_slave_link",
+            "lib": "__idf_espressif__esp_serial_slave_link",
+            "reqs": [ "sdmmc", "esp_driver_sdspi", "esp_driver_sdmmc" ],
+            "priv_reqs": [],
+            "managed_reqs": [],
+            "managed_priv_reqs": [],
+            "include_dirs": [ "include" ]
+        },
         "espressif__esp_tinyusb": {
             "alias": "idf::espressif__esp_tinyusb",
             "target": "___idf_espressif__esp_tinyusb",
@@ -2986,6 +3292,18 @@
             "priv_reqs": [ "vfs", "espressif__cmake_utilities", "espressif__esp_cam_sensor", "espressif__esp_h264", "espressif__esp_ipa" ],
             "managed_reqs": [],
             "managed_priv_reqs": [ "espressif__cmake_utilities", "espressif__esp_cam_sensor", "espressif__esp_h264", "espressif__esp_ipa" ],
+            "include_dirs": [ "include" ]
+        },
+        "espressif__esp_wifi_remote": {
+            "alias": "idf::espressif__esp_wifi_remote",
+            "target": "___idf_espressif__esp_wifi_remote",
+            "prefix": "idf",
+            "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__esp_wifi_remote",
+            "lib": "__idf_espressif__esp_wifi_remote",
+            "reqs": [ "esp_event", "esp_netif" ],
+            "priv_reqs": [ "esp_wifi", "esp-tls", "vfs", "espressif__esp_hosted", "espressif__wifi_remote_over_eppp" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__esp_hosted", "espressif__wifi_remote_over_eppp" ],
             "include_dirs": [ "include" ]
         },
         "espressif__knob": {
@@ -3023,6 +3341,18 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "include_dirs": [ "src/" ]
+        },
+        "espressif__wifi_remote_over_eppp": {
+            "alias": "idf::espressif__wifi_remote_over_eppp",
+            "target": "___idf_espressif__wifi_remote_over_eppp",
+            "prefix": "idf",
+            "dir": "C:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/espressif__wifi_remote_over_eppp",
+            "lib": "__idf_espressif__wifi_remote_over_eppp",
+            "reqs": [],
+            "priv_reqs": [ "esp_event", "esp_netif", "espressif__eppp_link", "esp-tls", "esp_wifi", "vfs" ],
+            "managed_reqs": [],
+            "managed_priv_reqs": [ "espressif__eppp_link" ],
+            "include_dirs": []
         },
         "lvgl__lvgl": {
             "alias": "idf::lvgl__lvgl",

@@ -234,6 +234,81 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/http_parser/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_event/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_ringbuf/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_driver_uart/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_driver_usb_serial_jtag/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_vfs_console/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/vfs/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/lwip/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_http_server/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_phy/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_netif_stack/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_netif/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/wpa_supplicant/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_coex/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_wifi/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__esp_audio_codec/cmake_install.cmake")
 endif()
 
@@ -245,11 +320,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
   include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__esp_muxer/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_ringbuf/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
@@ -334,11 +404,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_driver_uart/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
   include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_driver_ledc/cmake_install.cmake")
 endif()
 
@@ -349,27 +414,12 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_driver_usb_serial_jtag/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
   include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_driver_twai/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
   include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/driver/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_vfs_console/cmake_install.cmake")
-endif()
-
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for the subdirectory.
-  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/vfs/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
@@ -464,22 +514,37 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_event/cmake_install.cmake")
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_gdbstub/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/lwip/cmake_install.cmake")
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/bt/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_netif_stack/cmake_install.cmake")
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp-tls/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_netif/cmake_install.cmake")
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/tcp_transport/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_http_client/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/console/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__esp_hosted/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
@@ -495,6 +560,31 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
   include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__esp_tinyusb/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/esp_eth/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__esp_serial_slave_link/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__eppp_link/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__wifi_remote_over_eppp/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/esp-idf/espressif__esp_wifi_remote/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)

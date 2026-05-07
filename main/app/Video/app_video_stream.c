@@ -26,6 +26,7 @@
 #include "app_video_record.h"
 #include "app_ai_detect.h"
 #include "app_qma6100.h"
+#include "app_livestream.h"
 
 /* Constants */
 #define ALIGN_UP(num, align)    (((num) + ((align) - 1)) & ~((align) - 1))
@@ -623,9 +624,14 @@ static void camera_video_frame_operation(uint8_t *camera_buf, uint8_t camera_buf
 
     // Handle photo request
     if (camera_state.flags.is_initialized) {
+        // Feed frame to livestream if on livestream page
+        if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM) {
+            app_livestream_feed_frame(camera_buf, camera_buf_hes, camera_buf_ves);
+        }
+
         // Handle photo request
         if (camera_state.flags.is_take_photo && 
-            (ui_extra_get_current_page() == UI_PAGE_CAMERA || ui_extra_get_current_page() == UI_PAGE_INTERVAL_CAM)) {
+            (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM || ui_extra_get_current_page() == UI_PAGE_INTERVAL_CAM)) {
             // Reset photo flag and take a photo
             camera_state.flags.is_take_photo = false;
             take_and_save_photo(camera_buf, camera_buf_hes, camera_buf_ves);

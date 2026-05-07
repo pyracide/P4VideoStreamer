@@ -19,6 +19,7 @@
 #include "app_storage.h"
 #include "app_ai_detect.h"
 #include "app_qma6100.h"
+#include "app_livestream.h"
 
 static const char *TAG = "main";
 
@@ -77,6 +78,10 @@ void app_main(void)
     // Initialize the video streaming application
     ESP_LOGI(TAG, "Initialize the video streaming application");
     ESP_ERROR_CHECK(app_video_stream_init(i2c_handle));
+    
+    // Initialize the livestream module (Wi-Fi, H.264, WebSockets)
+    ESP_LOGI(TAG, "Initialize the livestream module");
+    ESP_ERROR_CHECK(app_livestream_init());
     
     ESP_LOGI(TAG, "Application initialization completed");
 }

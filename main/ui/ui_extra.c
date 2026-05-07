@@ -25,6 +25,7 @@
 #include "app_album.h"
 #include "app_video_stream.h"
 #include "app_isp.h"
+#include "app_livestream.h"
 
 /* Constants */
 #define IMG_BASE_ZOOM       60
@@ -59,6 +60,10 @@ static bool is_ui_init = false;
 // AI Detection Mode variables
 static ai_detect_mode_t current_ai_detect_mode = AI_DETECT_PEDESTRIAN;
 static lv_obj_t *ai_mode_label = NULL;
+
+// Livestream status label
+static lv_obj_t *livestream_status_label = NULL;
+static lv_timer_t *lv_livestream_status_timer = NULL;
 
 // UI settings
 static uint16_t magnification_factor = DEFAULT_MAGNIFICATION_FACTOR;
@@ -115,7 +120,7 @@ typedef struct {
 } PageMapping;
 
 static const PageMapping page_map[] = {
-    {"CAMERA", UI_PAGE_CAMERA},
+    {"LIVESTREAM", UI_PAGE_LIVESTREAM},
     {"INTERVAL CAM", UI_PAGE_INTERVAL_CAM},
     {"VIDEO MODE", UI_PAGE_VIDEO_MODE},
     {"AI DETECT", UI_PAGE_AI_DETECT},
@@ -127,7 +132,7 @@ static const PageMapping page_map[] = {
 
 /* Forward declarations */
 static void ui_extra_redirect_to_main_page(void);
-static void ui_extra_redirect_to_camera_page(void);
+static void ui_extra_redirect_to_livestream_page(void);
 static void ui_extra_redirect_to_interval_camera_page(void);
 static void ui_extra_redirect_to_video_mode_page(void);
 static void ui_extra_redirect_to_album_page(void);
@@ -544,8 +549,8 @@ static void scroll_end_event_cb(lv_event_t * e)
                     lv_obj_clear_flag(info_label, LV_OBJ_FLAG_HIDDEN);
                 }
 
-                if(strcmp(btn_text, "CAMERA") == 0) {
-                    lv_obj_align(info_label, LV_ALIGN_CENTER, -9, 50);
+                if(strcmp(btn_text, "LIVESTREAM") == 0) {
+                    lv_obj_align(info_label, LV_ALIGN_CENTER, -12, 50);
                 } else if(strcmp(btn_text, "INTERVAL CAM") == 0) {
                     lv_obj_align(info_label, LV_ALIGN_CENTER, -12, 45);
                 } else if(strcmp(btn_text, "VIDEO MODE") == 0) {
@@ -773,7 +778,7 @@ static void lv_scroll_create(void)
     lv_label_set_text(info_label, "");  
 
     const char* btn_texts[] = {
-        "CAMERA", "INTERVAL CAM", "VIDEO MODE", "AI DETECT","ALBUM", 
+        "LIVESTREAM", "INTERVAL CAM", "VIDEO MODE", "AI DETECT","ALBUM", 
         "USB DISK", "SETTINGS"
     };
 
@@ -914,18 +919,52 @@ static void ui_extra_redirect_to_main_page(void)
 }
 
 /**
- * @brief Redirect to camera page
+ * @brief Livestream status timer callback - updates status label periodically
  */
-static void ui_extra_redirect_to_camera_page(void)
+static void livestream_status_timer_cb(lv_timer_t *timer)
 {
-    current_page = UI_PAGE_CAMERA;
+    if (livestream_status_label == NULL) return;
+    const char *status = app_livestream_get_status_str();
+    const char *url = app_livestream_get_ws_url();
+    lv_label_set_text_fmt(livestream_status_label, "%s | %s", status, url);
+}
+
+/**
+ * @brief Redirect to livestream page
+ */
+static void ui_extra_redirect_to_livestream_page(void)
+{
+    current_page = UI_PAGE_LIVESTREAM;
 
     ui_extra_clear_page();
 
-    lv_obj_clear_flag(ui_PanelCanvasPopupCamera, LV_OBJ_FLAG_HIDDEN);
-    if(!lv_popup_timer){
-        lv_popup_timer = lv_timer_create(pop_up_timer_callback, 5000, ui_PanelCanvasPopupCamera);
+    /* Create or update livestream status label at bottom of screen */
+    if (livestream_status_label == NULL) {
+        livestream_status_label = lv_label_create(ui_ScreenCamera);
+        lv_obj_set_style_text_font(livestream_status_label, &lv_font_montserrat_16, 0);
+        lv_obj_set_style_text_color(livestream_status_label, lv_color_hex(0x00FF00), 0);
+        lv_obj_set_style_bg_color(livestream_status_label, lv_color_hex(0x000000), 0);
+        lv_obj_set_style_bg_opa(livestream_status_label, LV_OPA_70, 0);
+        lv_obj_set_style_radius(livestream_status_label, 5, 0);
+        lv_obj_set_style_pad_all(livestream_status_label, 4, 0);
+        lv_obj_align(livestream_status_label, LV_ALIGN_BOTTOM_MID, 0, -5);
     }
+
+    /* Set initial text */
+    const char *status = app_livestream_get_status_str();
+    const char *url = app_livestream_get_ws_url();
+    lv_label_set_text_fmt(livestream_status_label, "%s | %s", status, url);
+    lv_obj_clear_flag(livestream_status_label, LV_OBJ_FLAG_HIDDEN);
+
+    /* Start periodic status update timer */
+    if (!lv_livestream_status_timer) {
+        lv_livestream_status_timer = lv_timer_create(livestream_status_timer_cb, 2000, NULL);
+    } else {
+        lv_timer_resume(lv_livestream_status_timer);
+    }
+
+    /* Also show the menu button */
+    lv_obj_clear_flag(ui_ImageCanvasMenu, LV_OBJ_FLAG_HIDDEN);
 }
 
 /**
@@ -1144,8 +1183,8 @@ void ui_extra_goto_page(ui_page_t page)
         case UI_PAGE_MAIN:
             ui_extra_redirect_to_main_page();
             break;
-        case UI_PAGE_CAMERA:
-            ui_extra_redirect_to_camera_page();
+        case UI_PAGE_LIVESTREAM:
+            ui_extra_redirect_to_livestream_page();
             break;
         case UI_PAGE_INTERVAL_CAM:
             ui_extra_redirect_to_interval_camera_page();
@@ -1297,7 +1336,7 @@ void ui_extra_set_sd_card_mounted(bool mounted)
 {
     is_sd_card_mounted = mounted;
     
-    if(current_page != UI_PAGE_CAMERA && current_page != UI_PAGE_INTERVAL_CAM && current_page != UI_PAGE_VIDEO_MODE && current_page != UI_PAGE_ALBUM) {
+    if(current_page != UI_PAGE_LIVESTREAM && current_page != UI_PAGE_INTERVAL_CAM && current_page != UI_PAGE_VIDEO_MODE && current_page != UI_PAGE_ALBUM) {
         return;
     }
 
@@ -1526,7 +1565,7 @@ void ui_extra_btn_up(void)
             }
             break;
             
-        case UI_PAGE_CAMERA:
+        case UI_PAGE_LIVESTREAM:
         case UI_PAGE_VIDEO_MODE:
             app_extra_set_magnification_factor(2);
             break;
@@ -1607,7 +1646,7 @@ void ui_extra_btn_down(void)
             }
             break;
             
-        case UI_PAGE_CAMERA:
+        case UI_PAGE_LIVESTREAM:
         case UI_PAGE_VIDEO_MODE:
             app_extra_set_magnification_factor(3);
             break;
@@ -1893,8 +1932,8 @@ void ui_extra_btn_encoder(void)
 
     if(!lv_obj_has_flag(ui_PanelCanvasPopupSDWarning, LV_OBJ_FLAG_HIDDEN)) {
         switch(current_page) {
-            case UI_PAGE_CAMERA:
-                ui_extra_goto_page(UI_PAGE_CAMERA);
+            case UI_PAGE_LIVESTREAM:
+                ui_extra_goto_page(UI_PAGE_LIVESTREAM);
                 break;
             case UI_PAGE_INTERVAL_CAM:
                 ui_extra_goto_page(UI_PAGE_INTERVAL_CAM);
@@ -1920,7 +1959,7 @@ void ui_extra_btn_encoder(void)
 
     if(!is_sd_card_mounted) {
         switch(current_page) {
-            case UI_PAGE_CAMERA:
+            case UI_PAGE_LIVESTREAM:
             case UI_PAGE_INTERVAL_CAM:
             case UI_PAGE_VIDEO_MODE:
                 ui_extra_clear_page();
@@ -1957,7 +1996,7 @@ void ui_extra_btn_encoder(void)
                 lv_additional_photo_timer = lv_timer_create(pop_up_additional_photo_callback, 7000, ui_PanelCanvasPopupIntervalTimerWarning);
             }
             break;
-        case UI_PAGE_CAMERA:
+        case UI_PAGE_LIVESTREAM:
             // Check if we can store a new image
             if (!app_album_can_store_new_image()) {
                 // Show warning to user that storage is full or low

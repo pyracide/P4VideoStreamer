@@ -27,7 +27,7 @@ typedef enum {
  */
 typedef enum {
     UI_PAGE_MAIN,           // Main page
-    UI_PAGE_CAMERA,         // Camera page
+    UI_PAGE_LIVESTREAM,     // Livestream page
     UI_PAGE_INTERVAL_CAM,   // Interval camera page
     UI_PAGE_VIDEO_MODE,     // Video mode page
     UI_PAGE_ALBUM,          // Album page
