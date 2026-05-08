@@ -200,6 +200,10 @@ static void rtp_broadcast(const uint8_t *data, size_t len)
 {
     if (!s_is_streaming) return;
 
+    /* Use true wall-clock time for RTP timestamp (90kHz clock).
+       This completely eliminates client-side buffering latency! */
+    s_rtp_timestamp = (uint32_t)(esp_timer_get_time() * 9LL / 100LL);
+
     const uint8_t *ptr = data;
     size_t remaining = len;
 
@@ -236,8 +240,6 @@ static void rtp_broadcast(const uint8_t *data, size_t len)
             break;
         }
     }
-    
-    s_rtp_timestamp += 90000 / STREAM_FPS;
 }
 
 /* ── RTSP Server ────────────────────────────────────────── */

@@ -25,6 +25,7 @@ esp_err_t app_video_utils_init(void)
     // Initialize PPA
     ppa_client_config_t ppa_srm_config = {
         .oper_type = PPA_OPERATION_SRM,
+        .max_pending_trans_num = 4,
     };
     
     esp_err_t ret = ppa_register_client(&ppa_srm_config, &ppa_srm_handle);
