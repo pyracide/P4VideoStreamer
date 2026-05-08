@@ -24,6 +24,10 @@
 
 #include "app_livestream.h"
 #include "app_video_utils.h"
+#undef _IO
+#undef _IOR
+#undef _IOW
+#include "app_video.h"
 #include "app_storage.h"
 #include "driver/ppa.h"
 #include <inttypes.h>
@@ -53,7 +57,6 @@ static esp_h264_enc_handle_t s_h264_enc = NULL;
 static uint8_t *s_out_buf = NULL;
 static uint8_t *s_task_rgb_buf = NULL;
 static size_t s_yuv_buf_size = 0;
-static size_t s_camera_yuv_size = 1280 * 720 * 3 / 2;
 static uint32_t s_stream_width = 1280;
 static uint32_t s_stream_height = 720;
 static size_t s_data_cache_line = 0;
@@ -81,6 +84,7 @@ static int s_active_rtsp_sock = -1;
 
 typedef struct {
     uint8_t *buf;
+    uint8_t index;
     uint32_t width;
     uint32_t height;
 } frame_req_t;
@@ -445,6 +449,7 @@ static void livestream_process_task(void *arg)
     while (1) {
         if (xQueueReceive(s_frame_queue, &req, portMAX_DELAY) == pdTRUE) {
             if (!s_is_streaming || !s_h264_enc) {
+                app_video_return_buf(req.index);
                 continue;
             }
 
@@ -469,6 +474,8 @@ static void livestream_process_task(void *arg)
             };
 
             esp_h264_err_t err = esp_h264_enc_process(s_h264_enc, &in_frame, &out_frame);
+            /* Unlock the camera buffer so the driver can reuse it */
+            app_video_return_buf(req.index);
             if (err == ESP_H264_ERR_OK) {
                 if (out_frame.raw_data.buffer && out_frame.length > 0) {
                     rtp_broadcast(out_frame.raw_data.buffer, out_frame.length);
@@ -660,19 +667,27 @@ esp_err_t app_livestream_stop_server(void)
     return ESP_OK;
 }
 
-esp_err_t app_livestream_feed_frame(uint8_t *yuv420_buf, uint32_t width, uint32_t height)
+esp_err_t app_livestream_feed_frame(uint8_t *yuv420_buf, uint8_t index, uint32_t width, uint32_t height)
 {
     if (!s_encoder_ready || !s_h264_enc || !s_is_streaming) return ESP_OK;
+
+    /* Lock the buffer index to prevent the camera driver from overwriting it while we encode */
+    if (app_video_lock_buf(index) != ESP_OK) {
+        return ESP_OK;
+    }
 
     /* TRUE ZERO-COPY: Pass the camera DMA buffer directly to the encoder queue! */
     frame_req_t req = {
         .buf = yuv420_buf,
+        .index = index,
         .width = width,
         .height = height
     };
     
     /* Queue the zero-copy pointer. Don't block if full (drop frame). */
-    xQueueSend(s_frame_queue, &req, 0);
+    if (xQueueSend(s_frame_queue, &req, 0) != pdTRUE) {
+        app_video_return_buf(index);
+    }
     return ESP_OK;
 }
 

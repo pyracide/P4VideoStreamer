@@ -6,31 +6,35 @@
 #ifndef APP_VIDEO_H
 #define APP_VIDEO_H
 
+#include "driver/i2c_master.h"
 #include "esp_err.h"
-#include "linux/videodev2.h"
 #include "esp_video_device.h"
+#include "linux/videodev2.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef enum {
-    APP_VIDEO_FMT_RAW8 = V4L2_PIX_FMT_SBGGR8,
-    APP_VIDEO_FMT_RAW10 = V4L2_PIX_FMT_SBGGR10,
-    APP_VIDEO_FMT_GREY = V4L2_PIX_FMT_GREY,
-    APP_VIDEO_FMT_RGB565 = V4L2_PIX_FMT_RGB565,
-    APP_VIDEO_FMT_RGB888 = V4L2_PIX_FMT_RGB24,
-    APP_VIDEO_FMT_YUV422 = V4L2_PIX_FMT_YUV422P,
-    APP_VIDEO_FMT_YUV420 = V4L2_PIX_FMT_YUV420,
+  APP_VIDEO_FMT_RAW8 = V4L2_PIX_FMT_SBGGR8,
+  APP_VIDEO_FMT_RAW10 = V4L2_PIX_FMT_SBGGR10,
+  APP_VIDEO_FMT_GREY = V4L2_PIX_FMT_GREY,
+  APP_VIDEO_FMT_RGB565 = V4L2_PIX_FMT_RGB565,
+  APP_VIDEO_FMT_RGB888 = V4L2_PIX_FMT_RGB24,
+  APP_VIDEO_FMT_YUV422 = V4L2_PIX_FMT_YUV422P,
+  APP_VIDEO_FMT_YUV420 = V4L2_PIX_FMT_YUV420,
 } video_fmt_t;
 
-#define EXAMPLE_CAM_DEV_PATH                (ESP_VIDEO_MIPI_CSI_DEVICE_NAME)
-#define EXAMPLE_CAM_BUF_NUM                 (2)
+#define EXAMPLE_CAM_DEV_PATH (ESP_VIDEO_MIPI_CSI_DEVICE_NAME)
+#define EXAMPLE_CAM_BUF_NUM (4)
 
-#define APP_VIDEO_FMT                       (APP_VIDEO_FMT_YUV420)
+#define APP_VIDEO_FMT (APP_VIDEO_FMT_YUV420)
 
-
-typedef void (*app_video_frame_operation_cb_t)(uint8_t *camera_buf, uint8_t camera_buf_index, uint32_t camera_buf_hes, uint32_t camera_buf_ves, size_t camera_buf_len);
+typedef void (*app_video_frame_operation_cb_t)(uint8_t *camera_buf,
+                                               uint8_t camera_buf_index,
+                                               uint32_t camera_buf_hes,
+                                               uint32_t camera_buf_ves,
+                                               size_t camera_buf_len);
 
 /**
  * @brief Initialize the video camera.
@@ -46,15 +50,17 @@ esp_err_t app_video_main(i2c_master_bus_handle_t i2c_bus_handle);
 /**
  * @brief Opens a specified video capture device and configures its format.
  *
- * This function initializes the video capture by opening the device at the given path,
- * querying its capabilities, and retrieving the current format. If the current pixel format
- * differs from the specified initial format, it sets the desired format. Additionally, it applies
- * vertical or horizontal mirroring if enabled in the configuration.
+ * This function initializes the video capture by opening the device at the
+ * given path, querying its capabilities, and retrieving the current format. If
+ * the current pixel format differs from the specified initial format, it sets
+ * the desired format. Additionally, it applies vertical or horizontal mirroring
+ * if enabled in the configuration.
  *
  * @param dev The device path of the video capture (e.g., "/dev/video0").
  * @param init_fmt The desired pixel format for the video capture.
  * @return Returns the file descriptor for the opened video device on success;
- *         returns -1 on failure, indicating an error occurred during the operation.
+ *         returns -1 on failure, indicating an error occurred during the
+ * operation.
  */
 int app_video_open(char *dev, video_fmt_t init_fmt);
 
@@ -129,7 +135,8 @@ esp_err_t app_video_stream_task_stop(int video_fd);
  * @param operation_cb Callback function to register.
  * @return ESP_OK on success.
  */
-esp_err_t app_video_register_frame_operation_cb(app_video_frame_operation_cb_t operation_cb);
+esp_err_t app_video_register_frame_operation_cb(
+    app_video_frame_operation_cb_t operation_cb);
 
 /**
  * @brief Wait for the video stream task to stop.
@@ -149,6 +156,37 @@ esp_err_t app_video_wait_video_stop(void);
  * @return ESP_OK on success.
  */
 esp_err_t app_video_close(int video_fd);
+
+/**
+ * @brief Lock a camera buffer to prevent the driver from overwriting it.
+ *
+ * @param index The buffer index to lock.
+ * @return ESP_OK on success.
+ */
+esp_err_t app_video_lock_buf(uint8_t index);
+
+/**
+ * @brief Return a locked camera buffer to the driver.
+ *
+ * @param index The buffer index to return.
+ * @return ESP_OK on success.
+ */
+esp_err_t app_video_return_buf(uint8_t index);
+
+/**
+ * @brief Enable or disable horizontal mirroring at the sensor level.
+ *
+ * @param enable True to mirror, false for normal.
+ * @return ESP_OK on success.
+ */
+esp_err_t app_video_set_mirror(bool enable);
+
+/**
+ * @brief Get the current mirroring state.
+ *
+ * @return True if mirrored.
+ */
+bool app_video_get_mirror(void);
 
 #ifdef __cplusplus
 }

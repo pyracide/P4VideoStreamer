@@ -626,7 +626,7 @@ static void camera_video_frame_operation(uint8_t *camera_buf, uint8_t camera_buf
     if (camera_state.flags.is_initialized) {
         // Feed frame to livestream if on livestream page
         if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM) {
-            app_livestream_feed_frame(camera_buf, camera_buf_hes, camera_buf_ves);
+            app_livestream_feed_frame(camera_buf, camera_buf_index, camera_buf_hes, camera_buf_ves);
         }
 
         // Handle photo request

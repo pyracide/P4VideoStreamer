@@ -68,7 +68,7 @@ esp_err_t app_livestream_stop_server(void);
  * @param height Frame height in pixels
  * @return ESP_OK on success, error code on failure
  */
-esp_err_t app_livestream_feed_frame(uint8_t *yuv420_buf, uint32_t width, uint32_t height);
+esp_err_t app_livestream_feed_frame(uint8_t *yuv420_buf, uint8_t index, uint32_t width, uint32_t height);
 
 /**
  * @brief Get the current livestream state

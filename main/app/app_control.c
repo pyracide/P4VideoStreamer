@@ -8,6 +8,7 @@
 
 #include "ui_extra.h"
 #include "app_video_stream.h"
+#include "app_video.h"
 #include "app_album.h"
 #include "app_control.h"
 
@@ -24,6 +25,7 @@ static int64_t knob_last_time = 0;   // timestamp of last rotation
 static const int knob_timeout_ms = 500;  // timeout in milliseconds
 static int knob_step_threshold = 3;  // threshold for knob step counter
 static bool s_display_suspended = false;
+static bool s_sensor_mirrored = false;
 
 /* Private function prototypes */
 static void btn_handler(void *arg, void *data);
@@ -89,10 +91,17 @@ static void btn_handler(void *arg, void *data)
                 bsp_display_unlock();
                 return;
             }
-            ui_extra_btn_down();
-            if (ui_extra_get_current_page() == UI_PAGE_ALBUM && 
-                lv_obj_has_flag(ui_PanelImageScreenAlbumDelete, LV_OBJ_FLAG_HIDDEN)) {
-                app_album_next_image();
+            /* Toggle sensor mirroring if in Livestream mode */
+            if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM) {
+                s_sensor_mirrored = !s_sensor_mirrored;
+                app_video_set_mirror(s_sensor_mirrored);
+            } else {
+                /* Normal 'Down' behavior for other pages */
+                ui_extra_btn_down();
+                if (ui_extra_get_current_page() == UI_PAGE_ALBUM && 
+                    lv_obj_has_flag(ui_PanelImageScreenAlbumDelete, LV_OBJ_FLAG_HIDDEN)) {
+                    app_album_next_image();
+                }
             }
             break;
             
