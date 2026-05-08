@@ -32,8 +32,8 @@ static const char *TAG = "app_livestream";
 
 /* Configuration */
 #define STREAM_FPS          25
-#define STREAM_BITRATE      2000000  /* 2.0 Mbps */
-#define STREAM_GOP          10
+#define STREAM_BITRATE      1000000  /* 1.0 Mbps (Better Wi-Fi stability) */
+#define STREAM_GOP          25       /* 1 I-frame per second */
 #define RTSP_SERVER_PORT    554
 #define RTP_LOCAL_PORT      55400
 #define WIFI_CONNECTED_BIT  BIT0
@@ -50,9 +50,6 @@ static bool s_wifi_connected = false;
 
 /* H.264 encoder */
 static esp_h264_enc_handle_t s_h264_enc = NULL;
-#define NUM_IN_BUFS 2
-static uint8_t *s_in_buf[NUM_IN_BUFS] = {NULL};
-static int s_write_idx = 0;
 static uint8_t *s_out_buf = NULL;
 static uint8_t *s_task_rgb_buf = NULL;
 static size_t s_yuv_buf_size = 0;
@@ -201,7 +198,7 @@ static void send_rtp_packet(const uint8_t *payload, size_t payload_len, bool mar
         s_rtp_seq++;
         
         /* Hardware-Specific Pacing: SDIO Relief */
-        esp_rom_delay_us(500); 
+        esp_rom_delay_us(150); 
     }
 }
 
@@ -537,10 +534,7 @@ static esp_err_t init_h264_encoder(void)
     }
 
     s_yuv_buf_size = s_stream_width * s_stream_height * 3 / 2;
-    for (int i = 0; i < NUM_IN_BUFS; i++) {
-        s_in_buf[i] = heap_caps_aligned_calloc(128, 1, s_camera_yuv_size, MALLOC_CAP_SPIRAM);
-        if (!s_in_buf[i]) return ESP_ERR_NO_MEM;
-    }
+    
     s_out_buf = heap_caps_aligned_calloc(128, 1, s_yuv_buf_size, MALLOC_CAP_SPIRAM);
     s_task_rgb_buf = heap_caps_aligned_calloc(128, 1, s_yuv_buf_size, MALLOC_CAP_SPIRAM);
     if (!s_out_buf || !s_task_rgb_buf) {
@@ -549,7 +543,7 @@ static esp_err_t init_h264_encoder(void)
 
     /* Dummy encode to extract SPS and PPS for SDP */
     esp_h264_enc_in_frame_t in_frame = {
-        .raw_data = { .buffer = s_in_buf[0], .len = s_yuv_buf_size },
+        .raw_data = { .buffer = s_task_rgb_buf, .len = s_yuv_buf_size },
         .pts = 0,
     };
     esp_h264_enc_out_frame_t out_frame = {
@@ -670,20 +664,15 @@ esp_err_t app_livestream_feed_frame(uint8_t *yuv420_buf, uint32_t width, uint32_
 {
     if (!s_encoder_ready || !s_h264_enc || !s_is_streaming) return ESP_OK;
 
-    /* Double-Buffered Copy: Isolate the frame before the camera driver overwrites it */
-    uint8_t *target_buf = s_in_buf[s_write_idx];
-    memcpy(target_buf, yuv420_buf, s_camera_yuv_size);
-
+    /* TRUE ZERO-COPY: Pass the camera DMA buffer directly to the encoder queue! */
     frame_req_t req = {
-        .buf = target_buf,
+        .buf = yuv420_buf,
         .width = width,
         .height = height
     };
     
-    /* Queue the isolated pointer. Don't block if full (drop frame). */
-    if (xQueueSend(s_frame_queue, &req, 0) == pdTRUE) {
-        s_write_idx = (s_write_idx + 1) % NUM_IN_BUFS;
-    }
+    /* Queue the zero-copy pointer. Don't block if full (drop frame). */
+    xQueueSend(s_frame_queue, &req, 0);
     return ESP_OK;
 }
 
