@@ -78,6 +78,7 @@ esp_err_t app_image_process_scale_crop(
     uint8_t *in_buf, uint32_t in_width, uint32_t in_height, ppa_srm_color_mode_t in_color_mode,
     uint32_t crop_width, uint32_t crop_height,
     uint8_t *out_buf, uint32_t out_width, uint32_t out_height, size_t out_buf_size,
+    ppa_srm_color_mode_t out_color_mode,
     ppa_srm_rotation_angle_t rotation_angle)
 {
     ppa_srm_oper_config_t srm_config = {
@@ -95,7 +96,7 @@ esp_err_t app_image_process_scale_crop(
         .out.pic_h = out_height,
         .out.block_offset_x = 0,
         .out.block_offset_y = 0,
-        .out.srm_cm = PPA_SRM_COLOR_MODE_RGB565,
+        .out.srm_cm = out_color_mode,
         .rotation_angle = rotation_angle,
         .scale_x = (float)out_width / crop_width,
         .scale_y = (float)out_height / crop_height,
@@ -121,7 +122,8 @@ esp_err_t app_image_process_scale_crop(
 esp_err_t app_image_process_magnify(
     uint8_t *in_buf, uint32_t in_width, uint32_t in_height, ppa_srm_color_mode_t in_color_mode,
     uint16_t magnification_factor,
-    uint8_t *out_buf, size_t out_buf_size)
+    uint8_t *out_buf, size_t out_buf_size,
+    ppa_srm_color_mode_t out_color_mode)
 {
     if (magnification_factor < 1 || magnification_factor > SCALE_LEVELS) {
         return ESP_ERR_INVALID_ARG;
@@ -134,6 +136,7 @@ esp_err_t app_image_process_magnify(
         in_buf, in_width, in_height, in_color_mode,
         crop_width, crop_height,
         out_buf, in_width, in_height, out_buf_size,
+        out_color_mode,
         PPA_SRM_ROTATION_ANGLE_0
     );
 }
@@ -166,6 +169,7 @@ esp_err_t app_image_process_video_frame(
         in_buf, in_width, in_height, in_color_mode,
         res_width, res_height,
         out_buf, BSP_LCD_H_RES, BSP_LCD_V_RES, out_buf_size,
+        PPA_SRM_COLOR_MODE_RGB565,
         rotation_angle
     );
 }

@@ -120,15 +120,13 @@ static esp_err_t ws_handler(httpd_req_t *req)
         return ESP_OK;
     }
 
-    /* Handle incoming WS frames (ping/pong/close) */
-    httpd_ws_frame_t ws_pkt;
-    memset(&ws_pkt, 0, sizeof(ws_pkt));
-    ws_pkt.type = HTTPD_WS_TYPE_BINARY;
-    esp_err_t ret = httpd_ws_recv_frame(req, &ws_pkt, 0);
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "WS recv failed: %s", esp_err_to_name(ret));
-        return ret;
-    }
+    /* Consume any incoming data (pings/messages) to prevent protocol desync.
+       Clients often send pings which must be read to keep the session alive. */
+    uint8_t buf[64];
+    httpd_ws_frame_t ws_pkt = {
+        .payload = buf,
+    };
+    httpd_ws_recv_frame(req, &ws_pkt, sizeof(buf));
     return ESP_OK;
 }
 
@@ -139,35 +137,97 @@ static const httpd_uri_t ws_uri = {
     .is_websocket = true,
 };
 
-/* Send data to all connected WS clients */
+/* Helper to find H.264 NAL start code */
+static const uint8_t* find_nal_start_code(const uint8_t *data, size_t len, size_t *start_code_len)
+{
+    for (size_t i = 0; i + 2 < len; i++) {
+        if (data[i] == 0x00 && data[i+1] == 0x00) {
+            if (data[i+2] == 0x01) {
+                if (start_code_len) *start_code_len = 3;
+                return &data[i];
+            }
+            if (i + 3 < len && data[i+2] == 0x00 && data[i+3] == 0x01) {
+                if (start_code_len) *start_code_len = 4;
+                return &data[i];
+            }
+        }
+    }
+    return NULL;
+}
+
+/* Send data to all connected WS clients via NAL Unit Chunking */
 static void ws_broadcast(const uint8_t *data, size_t len)
 {
-    if (!s_server || !s_ws_mutex) return;
-
-    httpd_ws_frame_t ws_pkt = {
-        .payload = (uint8_t *)data,
-        .len = len,
-        .type = HTTPD_WS_TYPE_BINARY,
-        .final = true,
-    };
+    if (!s_server || !s_ws_mutex || len == 0) return;
 
     xSemaphoreTake(s_ws_mutex, portMAX_DELAY);
+    
+    for (int i = 0; i < s_ws_client_count; i++) {
+        int client_fd = s_ws_fds[i];
+        const uint8_t *ptr = data;
+        size_t remaining = len;
+
+        size_t sc_len = 0;
+        const uint8_t *nal_start = find_nal_start_code(ptr, remaining, &sc_len);
+
+        while (nal_start != NULL) {
+            /* Find the next start code to determine the end of this NAL unit */
+            const uint8_t *next_nal_start = NULL;
+            size_t next_sc_len = 0;
+            
+            size_t search_offset = (nal_start - ptr) + sc_len;
+            if (search_offset < remaining) {
+                next_nal_start = find_nal_start_code(ptr + search_offset, remaining - search_offset, &next_sc_len);
+            }
+
+            size_t nal_len = 0;
+            if (next_nal_start != NULL) {
+                nal_len = next_nal_start - nal_start;
+            } else {
+                nal_len = remaining - (nal_start - ptr);
+            }
+
+            if (nal_len > 0) {
+                httpd_ws_frame_t ws_pkt = {
+                    .payload = (uint8_t *)nal_start,
+                    .len = nal_len,
+                    .type = HTTPD_WS_TYPE_BINARY,
+                    .final = true, /* Complete WS frame per NAL unit */
+                };
+
+                esp_err_t ret = httpd_ws_send_frame_async(s_server, client_fd, &ws_pkt);
+                if (ret != ESP_OK) {
+                    ESP_LOGW(TAG, "Client %d NAL send failed", client_fd);
+                    break;
+                }
+                
+                /* Brief pacing to avoid TCP buffer saturation on large I-frames */
+                vTaskDelay(pdMS_TO_TICKS(1));
+            }
+
+            if (next_nal_start != NULL) {
+                remaining -= (next_nal_start - ptr);
+                ptr = next_nal_start;
+                nal_start = ptr;
+                sc_len = next_sc_len;
+            } else {
+                break;
+            }
+        }
+    }
+    
+    /* Clean up dead clients using a PING check */
     for (int i = 0; i < s_ws_client_count; ) {
-        esp_err_t ret = httpd_ws_send_frame_async(s_server, s_ws_fds[i], &ws_pkt);
-        if (ret != ESP_OK) {
-            ESP_LOGW(TAG, "Client %d send failed, removing", s_ws_fds[i]);
-            /* Remove dead client by shifting array */
-            for (int j = i; j < s_ws_client_count - 1; j++) {
-                s_ws_fds[j] = s_ws_fds[j + 1];
-            }
+        httpd_ws_frame_t ping = { .type = HTTPD_WS_TYPE_PING };
+        if (httpd_ws_send_frame_async(s_server, s_ws_fds[i], &ping) != ESP_OK) {
+            for (int j = i; j < s_ws_client_count - 1; j++) s_ws_fds[j] = s_ws_fds[j + 1];
             s_ws_client_count--;
-            if (s_ws_client_count == 0) {
-                s_state = LIVESTREAM_STATE_READY;
-            }
         } else {
             i++;
         }
     }
+    if (s_ws_client_count == 0) s_state = LIVESTREAM_STATE_READY;
+    
     xSemaphoreGive(s_ws_mutex);
 }
 
@@ -185,17 +245,13 @@ static void livestream_process_task(void *arg)
                 continue;
             }
 
-            /* Convert YUV422 to O_UYY_E_VYY via Hardware PPA */
-            esp_err_t ppa_err = app_image_process_yuv422_to_ouyy_evyy(s_task_rgb_buf, STREAM_WIDTH, STREAM_HEIGHT, s_yuv_buf, s_yuv_buf_size);
-            if (ppa_err != ESP_OK) {
-                ESP_LOGE(TAG, "PPA hardware conversion failed");
-                s_is_processing = false;
-                continue;
-            }
+            /* Zero-Copy: Input is already YUV420 (O_UYY_E_VYY) from camera */
+            /* We just need to ensure the buffer is the correct size */
+            uint8_t *encoding_buf = s_task_rgb_buf;
 
             /* Encode with H.264 */
             esp_h264_enc_in_frame_t in_frame = {
-                .raw_data = { .buffer = s_yuv_buf, .len = s_yuv_buf_size },
+                .raw_data = { .buffer = encoding_buf, .len = s_yuv_buf_size },
                 .pts = (uint64_t)(esp_timer_get_time() / 1000),
             };
             esp_h264_enc_out_frame_t out_frame = {
@@ -257,12 +313,10 @@ static esp_err_t init_h264_encoder(void)
         return ESP_FAIL;
     }
 
-    /* Allocate YUV420 buffer: W * H * 1.5 */
+    /* Allocate buffers with 128-byte alignment for hardware efficiency */
     s_yuv_buf_size = STREAM_WIDTH * STREAM_HEIGHT * 3 / 2;
-    s_yuv_buf = heap_caps_aligned_calloc(s_data_cache_line, 1, s_yuv_buf_size,
-                                         MALLOC_CAP_SPIRAM);
-    s_out_buf = heap_caps_aligned_calloc(s_data_cache_line, 1, s_yuv_buf_size,
-                                         MALLOC_CAP_SPIRAM);
+    s_yuv_buf = heap_caps_aligned_calloc(128, 1, s_yuv_buf_size, MALLOC_CAP_SPIRAM);
+    s_out_buf = heap_caps_aligned_calloc(128, 1, s_yuv_buf_size, MALLOC_CAP_SPIRAM);
     if (!s_yuv_buf || !s_out_buf) {
         ESP_LOGE(TAG, "Failed to allocate encoder buffers");
         if (s_yuv_buf) heap_caps_free(s_yuv_buf);
@@ -295,7 +349,7 @@ esp_err_t app_livestream_init(void)
         return ret;
     }
 
-    s_task_rgb_buf = heap_caps_aligned_calloc(s_data_cache_line, 1, 
+    s_task_rgb_buf = heap_caps_aligned_calloc(128, 1, 
         STREAM_WIDTH * STREAM_HEIGHT * 2, MALLOC_CAP_SPIRAM);
     if (!s_task_rgb_buf) {
         ESP_LOGE(TAG, "Task RGB buffer allocation failed");
@@ -376,7 +430,10 @@ esp_err_t app_livestream_start_server(void)
     httpd_config_t config = HTTPD_DEFAULT_CONFIG();
     config.server_port = WS_SERVER_PORT;
     config.max_open_sockets = MAX_WS_CLIENTS + 1;
-    config.stack_size = 8192;
+    config.stack_size = 10240;
+    config.task_priority = 6;      // Higher priority than processing task
+    config.core_id = 0;            // Pinned to Core 0 (Processing is on Core 1)
+    config.lru_purge_enable = true;
 
     esp_err_t ret = httpd_start(&s_server, &config);
     if (ret != ESP_OK) {
@@ -403,7 +460,7 @@ esp_err_t app_livestream_stop_server(void)
     return ESP_OK;
 }
 
-esp_err_t app_livestream_feed_frame(uint8_t *yuv422_buf, uint32_t width, uint32_t height)
+esp_err_t app_livestream_feed_frame(uint8_t *yuv420_buf, uint32_t width, uint32_t height)
 {
     if (!s_encoder_ready || !s_h264_enc) return ESP_ERR_INVALID_STATE;
     if (s_ws_client_count == 0) return ESP_OK;  /* No clients, skip encoding */
@@ -416,15 +473,15 @@ esp_err_t app_livestream_feed_frame(uint8_t *yuv422_buf, uint32_t width, uint32_
     
     s_is_processing = true;
 
-    /* Downscale if needed directly into task buffer, otherwise memcpy */
+    /* Input is now YUV420 (O_UYY_E_VYY) */
     if (width != STREAM_WIDTH || height != STREAM_HEIGHT) {
-        /* If the camera is 720p or 1080p, we use PPA to downscale it */
-        app_image_process_scale_crop(yuv422_buf, width, height, PPA_SRM_COLOR_MODE_YUV422_YUYV,
+        /* Downscale if needed via PPA (YUV420 -> YUV420) */
+        app_image_process_scale_crop(yuv420_buf, width, height, PPA_SRM_COLOR_MODE_YUV420,
                                      STREAM_WIDTH, STREAM_HEIGHT,
                                      s_task_rgb_buf, STREAM_WIDTH, STREAM_HEIGHT, 
-                                     STREAM_WIDTH * STREAM_HEIGHT * 2, PPA_SRM_ROTATION_ANGLE_0);
+                                     s_yuv_buf_size, PPA_SRM_COLOR_MODE_YUV420, PPA_SRM_ROTATION_ANGLE_0);
     } else {
-        memcpy(s_task_rgb_buf, yuv422_buf, STREAM_WIDTH * STREAM_HEIGHT * 2);
+        memcpy(s_task_rgb_buf, yuv420_buf, s_yuv_buf_size);
     }
 
     /* Signal the processing task that a new frame is ready */
