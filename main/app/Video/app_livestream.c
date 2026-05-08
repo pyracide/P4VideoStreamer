@@ -29,10 +29,10 @@
 static const char *TAG = "app_livestream";
 
 /* Configuration */
-#define STREAM_WIDTH        640
-#define STREAM_HEIGHT       360
-#define STREAM_FPS          15
-#define STREAM_BITRATE      1500000  /* 1.5 Mbps */
+#define STREAM_WIDTH        1280
+#define STREAM_HEIGHT       720
+#define STREAM_FPS          25
+#define STREAM_BITRATE      2000000  /* 2.0 Mbps */
 #define STREAM_GOP          10
 #define RTSP_SERVER_PORT    554
 #define RTP_LOCAL_PORT      55400
@@ -50,9 +50,10 @@ static bool s_wifi_connected = false;
 
 /* H.264 encoder */
 static esp_h264_enc_handle_t s_h264_enc = NULL;
-static uint8_t *s_yuv_buf = NULL;
+#define NUM_IN_BUFS 2
+static uint8_t *s_in_buf[NUM_IN_BUFS] = {NULL};
+static int s_write_idx = 0;
 static uint8_t *s_out_buf = NULL;
-static uint8_t *s_task_rgb_buf = NULL;
 static size_t s_yuv_buf_size = 0;
 static size_t s_data_cache_line = 0;
 static bool s_encoder_ready = false;
@@ -391,13 +392,7 @@ static void livestream_process_task(void *arg)
 
             uint8_t *encoding_buf = req.buf;
 
-            if (req.width != STREAM_WIDTH || req.height != STREAM_HEIGHT) {
-                app_image_process_scale_crop(req.buf, req.width, req.height, PPA_SRM_COLOR_MODE_YUV420,
-                                             req.width, req.height, /* Use full sensor frame for source block */
-                                             s_task_rgb_buf, STREAM_WIDTH, STREAM_HEIGHT, 
-                                             s_yuv_buf_size, PPA_SRM_COLOR_MODE_YUV420, PPA_SRM_ROTATION_ANGLE_0);
-                encoding_buf = s_task_rgb_buf;
-            }
+            /* Native 720p Mode: Bypass PPA scaling completely! */
 
             /* Encode with H.264 */
             esp_h264_enc_in_frame_t in_frame = {
@@ -459,15 +454,18 @@ static esp_err_t init_h264_encoder(void)
     }
 
     s_yuv_buf_size = STREAM_WIDTH * STREAM_HEIGHT * 3 / 2;
-    s_task_rgb_buf = heap_caps_aligned_calloc(128, 1, s_yuv_buf_size, MALLOC_CAP_SPIRAM);
+    for (int i = 0; i < NUM_IN_BUFS; i++) {
+        s_in_buf[i] = heap_caps_aligned_calloc(128, 1, s_yuv_buf_size, MALLOC_CAP_SPIRAM);
+        if (!s_in_buf[i]) return ESP_ERR_NO_MEM;
+    }
     s_out_buf = heap_caps_aligned_calloc(128, 1, s_yuv_buf_size, MALLOC_CAP_SPIRAM);
-    if (!s_task_rgb_buf || !s_out_buf) {
+    if (!s_out_buf) {
         return ESP_ERR_NO_MEM;
     }
 
     /* Dummy encode to extract SPS and PPS for SDP */
     esp_h264_enc_in_frame_t in_frame = {
-        .raw_data = { .buffer = s_task_rgb_buf, .len = s_yuv_buf_size },
+        .raw_data = { .buffer = s_in_buf[0], .len = s_yuv_buf_size },
         .pts = 0,
     };
     esp_h264_enc_out_frame_t out_frame = {
@@ -588,14 +586,20 @@ esp_err_t app_livestream_feed_frame(uint8_t *yuv420_buf, uint32_t width, uint32_
 {
     if (!s_encoder_ready || !s_h264_enc || !s_is_streaming) return ESP_OK;
 
+    /* Double-Buffered Copy: Isolate the frame before the camera driver overwrites it */
+    uint8_t *target_buf = s_in_buf[s_write_idx];
+    memcpy(target_buf, yuv420_buf, s_yuv_buf_size);
+
     frame_req_t req = {
-        .buf = yuv420_buf,
+        .buf = target_buf,
         .width = width,
         .height = height
     };
     
-    /* Zero-copy queue: push actual pointer. Don't block if full (drop frame). */
-    xQueueSend(s_frame_queue, &req, 0);
+    /* Queue the isolated pointer. Don't block if full (drop frame). */
+    if (xQueueSend(s_frame_queue, &req, 0) == pdTRUE) {
+        s_write_idx = (s_write_idx + 1) % NUM_IN_BUFS;
+    }
     return ESP_OK;
 }
 

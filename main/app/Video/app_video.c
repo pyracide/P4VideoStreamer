@@ -104,21 +104,19 @@ int app_video_open(char *dev, video_fmt_t init_fmt)
 
     ESP_LOGI(TAG, "width=%" PRIu32 " height=%" PRIu32, default_format.fmt.pix.width, default_format.fmt.pix.height);
 
-    app_camera_video.camera_buf_hes = default_format.fmt.pix.width;
-    app_camera_video.camera_buf_ves = default_format.fmt.pix.height;
+    app_camera_video.camera_buf_hes = 1280;
+    app_camera_video.camera_buf_ves = 720;
 
-    if (default_format.fmt.pix.pixelformat != init_fmt) {
-        struct v4l2_format format = {
-            .type = type,
-            .fmt.pix.width = default_format.fmt.pix.width,
-            .fmt.pix.height = default_format.fmt.pix.height,
-            .fmt.pix.pixelformat = init_fmt,
-        };
+    struct v4l2_format format = {
+        .type = type,
+        .fmt.pix.width = 1280, // Force Native 720p
+        .fmt.pix.height = 720,
+        .fmt.pix.pixelformat = init_fmt,
+    };
 
-        if (ioctl(fd, VIDIOC_S_FMT, &format) != 0) {
-            ESP_LOGE(TAG, "failed to set format");
-            goto exit_0;
-        }
+    if (ioctl(fd, VIDIOC_S_FMT, &format) != 0) {
+        ESP_LOGE(TAG, "failed to set format");
+        goto exit_0;
     }
 
     app_camera_video.video_stop_sem = xSemaphoreCreateBinary();

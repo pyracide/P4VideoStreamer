@@ -23,7 +23,7 @@ static const char *TAG = "app_video_photo";
 #define ALIGN_UP(num, align)    (((num) + ((align) - 1)) & ~((align) - 1))
 #define DEBUG_MODE              0
 #define CROP_PHOTO_WIDTH        1280
-#define CROP_PHOTO_HEIGHT       960
+#define CROP_PHOTO_HEIGHT       720
 #define JPEG_PHOTO_QUALITY      90            // JPEG quality setting
 
 /* Static variables */

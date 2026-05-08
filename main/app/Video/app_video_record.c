@@ -33,7 +33,7 @@
 #define ALIGN_UP(num, align)       (((num) + ((align) - 1)) & ~((align) - 1))
 #define JPEG_VIDEO_QUALITY         80            // JPEG quality setting
 #define CROP_PHOTO_WIDTH           1280
-#define CROP_PHOTO_HEIGHT          960
+#define CROP_PHOTO_HEIGHT          720
 #define FILE_SLICE_DURATION        600000
 #define VIDEO_BUF_MULTIPLIER       10
 #define VIDEO_FRAME_RATE           30

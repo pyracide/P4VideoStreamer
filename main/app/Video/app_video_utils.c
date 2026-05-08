@@ -16,9 +16,9 @@ static const char *TAG = "app_video_utils";
 static ppa_client_handle_t ppa_srm_handle = NULL;
 static jpeg_encoder_handle_t jpeg_handle;
 
-static int scale_level_res[SCALE_LEVELS] = {960, 480, 240, 120};
-static const uint32_t adj_resolution_width[SCALE_LEVELS] = {1920, 960, 480, 240};
-static const uint32_t adj_resolution_height[SCALE_LEVELS] = {1080, 540, 270, 135};
+static int scale_level_res[SCALE_LEVELS] = {720, 360, 180, 90};
+static const uint32_t adj_resolution_width[SCALE_LEVELS] = {1280, 640, 320, 160};
+static const uint32_t adj_resolution_height[SCALE_LEVELS] = {720, 360, 180, 90};
 
 esp_err_t app_video_utils_init(void)
 {
