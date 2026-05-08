@@ -188,20 +188,45 @@ static void ws_broadcast(const uint8_t *data, size_t len)
             }
 
             if (nal_len > 0) {
-                httpd_ws_frame_t ws_pkt = {
-                    .payload = (uint8_t *)nal_start,
-                    .len = nal_len,
-                    .type = HTTPD_WS_TYPE_BINARY,
-                    .final = true, /* Complete WS frame per NAL unit */
-                };
+                /* Fragmentation logic: slice large NAL units into smaller WS frames */
+                const size_t max_ws_chunk = 2048;
+                size_t nal_offset = 0;
+                bool client_error = false;
 
-                esp_err_t ret = httpd_ws_send_frame_async(s_server, client_fd, &ws_pkt);
-                if (ret != ESP_OK) {
-                    ESP_LOGW(TAG, "Client %d NAL send failed", client_fd);
-                    break;
+                while (nal_offset < nal_len) {
+                    size_t chunk_size = MIN(max_ws_chunk, nal_len - nal_offset);
+                    bool is_first = (nal_offset == 0);
+                    bool is_last = (nal_offset + chunk_size >= nal_len);
+
+                    httpd_ws_frame_t ws_pkt = {
+                        .payload = (uint8_t *)(nal_start + nal_offset),
+                        .len = chunk_size,
+                        .type = is_first ? HTTPD_WS_TYPE_BINARY : HTTPD_WS_TYPE_CONTINUE,
+                        .fragmented = !is_last,
+                        .final = is_last,
+                    };
+
+                    esp_err_t ret = httpd_ws_send_frame_async(s_server, client_fd, &ws_pkt);
+                    if (ret != ESP_OK) {
+                        if (ret == ESP_ERR_NO_MEM || ret == ESP_ERR_INVALID_STATE || ret == ESP_FAIL) {
+                            ESP_LOGW(TAG, "Network choked, dropping NAL for client %d", client_fd);
+                        } else {
+                            ESP_LOGW(TAG, "Client %d send failed: 0x%x", client_fd, ret);
+                        }
+                        client_error = true;
+                        break;
+                    }
+
+                    nal_offset += chunk_size;
+                    /* Pacing within a NAL unit if it's large */
+                    if (!is_last) {
+                        vTaskDelay(pdMS_TO_TICKS(1));
+                    }
                 }
                 
-                /* Brief pacing to avoid TCP buffer saturation on large I-frames */
+                if (client_error) break; /* Skip rest of the frame for this client */
+                
+                /* Brief pacing between NAL units */
                 vTaskDelay(pdMS_TO_TICKS(1));
             }
 

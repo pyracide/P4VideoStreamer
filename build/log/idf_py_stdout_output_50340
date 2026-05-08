@@ -582,4 +582,127 @@ E BOD: Brownout detector was triggered
 [0;33mW (36596) httpd_ws: httpd_ws_recv_frame: WS Message too long[0m
 [0;33mW (36597) httpd_ws: httpd_ws_recv_frame: WS frame is not properly masked.[0m
 [0;33mW (36793) httpd_ws: httpd_ws_recv_frame: WS Message too long[0m
-[0;33mW (36987) httpd_ws: httpd_ws_recv
+[0;33mW (36987) httpd_ws: httpd_ws_recv_frame: WS Message too long[0m
+[0;33mW (37022) httpd_ws: httpd_ws_recv_frame: WS frame is not properly masked.[0m
+[0;33mW (37023) httpd_ws: httpd_ws_recv_frame: WS frame is not properly masked.[0m
+[0;33mW (37055) app_livestream: Client 57 NAL send failed[0m
+E BOD: Brownout detector was triggered
+[0;32mI (1153) app_storage: Settings loaded from NVS successfully[0m
+[0;32mI (1153) app_video_photo: Photo resolution set to 1920x1080[0m
+[0;32mI (1154) app_video_record: Video resolution set to 1920x1080[0m
+[0;32mI (1154) app_storage: Settings saved to NVS successfully[0m
+[0;32mI (1155) app_storage: Settings saved to NVS successfully[0m
+[0;32mI (1155) app_storage: Settings saved to NVS successfully[0m
+[0;32mI (1156) app_storage: Settings saved to NVS successfully[0m
+[0;32mI (1156) app_storage: Camera settings loaded from NVS successfully[0m
+[0;32mI (1167) main: Initialize the QMA6100 IMU sensor with display auto-rotation[0m
+[0;32mI (1167) APP_QMA6100: Initializing QMA6100 sensor...[0m
+[0;32mI (1168) APP_QMA6100: QMA6100 sensor initialized successfully[0m
+[0;32mI (1168) APP_QMA6100: Starting integrated display auto-rotation...[0m
+[0;32mI (1168) APP_QMA6100: Display rotation task started with simplified single-axis detection[0m
+[0;32mI (1168) APP_QMA6100: Display auto-rotation task started successfully[0m
+[0;32mI (1168) APP_QMA6100: Display auto-rotation started successfully[0m
+[0;32mI (1168) APP_QMA6100: QMA6100 initialization complete with integrated display rotation[0m
+[0;32mI (1169) main: Initialize the storage[0m
+[0;32mI (1169) app_storage: other wake up[0m
+[0;32mI (1169) app_storage: Interval state loaded: active=0, next_wake=0[0m
+[0;32mI (1169) app_storage: Interval state saved: active=0, next_wake=0[0m
+[0;32mI (1170) app_storage: Photo count saved: 0[0m
+[0;32mI (1170) app_video_stream: Interval photo stopped[0m
+[0;32mI (1170) app_storage: Photo count saved: 0[0m
+[0;32mI (1170) p4-eye: Setting LCD backlight: 100%[0m
+[0;32mI (1170) main: Initialize the application control module[0m
+[0;32mI (1170) button: IoT Button Version: 3.5.0[0m
+[0;32mI (1170) button: IoT Button Version: 3.5.0[0m
+[0;32mI (1170) button: IoT Button Version: 3.5.0[0m
+[0;32mI (1171) button: IoT Button Version: 3.5.0[0m
+[0;32mI (1171) Knob: Iot Knob Config Succeed, encoder A:48, encoder B:47, direction:0, Version: 1.0.2[0m
+[0;32mI (1171) main: Initialize the video streaming application[0m
+[0;32mI (1173) ov2710: Detected Camera sensor PID=0x2710[0m
+[0;32mI (1318) app_video: version: 0.9.0[0m
+[0;32mI (1318) app_video: driver:  MIPI-CSI[0m
+[0;32mI (1318) app_video: card:    MIPI-CSI[0m
+[0;32mI (1318) app_video: bus:     esp32p4:MIPI-CSI[0m
+[0;32mI (1318) app_video: width=1920 height=1080[0m
+[0;32mI (1319) app_storage: Camera settings loaded from NVS successfully[0m
+[0;32mI (1375) app_video_stream: Allocated shared photo buffer: 1843200 bytes (1280x720)[0m
+[0;32mI (1380) app_storage: Photo count loaded: 0[0m
+[0;32mI (1380) app_storage: Photo count saved: 0[0m
+[0;32mI (1380) app_video_photo: Using shared photo buffer: 1843200 bytes[0m
+[0;32mI (1380) app_video_record: Using shared photo buffer: 1843200 bytes[0m
+[0;32mI (1380) p4-eye: bsp_microphone_init: 0[0m
+[0;33mW (1380) i2s_common: dma frame num is adjusted to 256 to align the dma buffer with 64, bufsize = 512[0m
+[0;32mI (1381) I2S_IF: Auto get out handle 0x0 from in handle 0x48288c30 when duplex mode[0m
+[0;32mI (1381) I2S_IF: No paired data, current mode: record[0m
+[0;32mI (1381) I2S_IF: PDM RX mode, data_bit: 16, slot_bit: 16, sample_rate: 16000, slot_mask: 0x3[0m
+[0;32mI (1382) Adev_Codec: Open codec device OK[0m
+[0;32mI (1382) app_video: Video Stream Start[0m
+[0;32mI (1384) APP_QMA6100: Registered rotation callback at slot 0[0m
+[0;32mI (1384) app_video_stream: Registered rotation callback for video stream synchronization[0m
+[0;32mI (1384) app_video_stream: Video stream synchronized with display rotation: LVGL 0° -> PPA 0°[0m
+[0;32mI (1384) main: Initialize the livestream module[0m
+[0;32mI (1407) app_livestream: H.264 encoder initialized: 640x480 @ 15fps, 1500000 bps[0m
+[0;32mI (1408) transport: Attempt connection with slave: retry[0][0m
+[0;33mW (1408) H_SDIO_DRV: Reset slave using GPIO[9][0m
+[0;32mI (1408) os_wrapper_esp: GPIO [9] configured[0m
+[0;32mI (2932) sdio_wrapper: SDIO master: Slot 1, Data-Lines: 4-bit Freq(KHz)[40000 KHz][0m
+[0;32mI (2932) sdio_wrapper: GPIOs: CLK[28] CMD[27] D0[29] D1[30] D2[31] D3[32] Slave_Reset[9][0m
+[0;32mI (2932) sdio_wrapper: Queues: Tx[20] Rx[20] SDIO-Rx-Mode[1][0m
+[0;32mI (2976) sdio_wrapper: Function 0 Blocksize: 512[0m
+[0;32mI (2976) sdio_wrapper: Function 1 Blocksize: 512[0m
+[0;32mI (3082) H_SDIO_DRV: Card init success, TRANSPORT_RX_ACTIVE[0m
+[0;32mI (3083) transport: set_transport_state: 1[0m
+[0;32mI (3083) transport: Waiting for esp_hosted slave to be ready[0m
+[0;32mI (3093) H_SDIO_DRV: SDIO Host operating in STREAMING MODE[0m
+[0;32mI (3093) H_SDIO_DRV: Open data path at slave[0m
+[0;32mI (3093) H_SDIO_DRV: Starting SDIO process rx task[0m
+[0;32mI (3100) H_SDIO_DRV: Received ESP_PRIV_IF type message[0m
+[0;32mI (3100) transport: Received INIT event from ESP32 peripheral[0m
+[0;32mI (3100) transport: EVENT: 12[0m
+[0;32mI (3100) transport: Identified slave [esp32c6][0m
+[0;32mI (3100) transport: EVENT: 11[0m
+[0;32mI (3101) transport: capabilities: 0xd[0m
+[0;32mI (3101) transport: Features supported are:[0m
+[0;32mI (3101) transport: 	 * WLAN[0m
+[0;32mI (3101) transport: 	   - HCI over SDIO[0m
+[0;32mI (3101) transport: 	   - BLE only[0m
+[0;32mI (3101) transport: EVENT: 13[0m
+[0;33mW (3101) transport: Version mismatch: Host [2.12.0] > Co-proc [0.0.0] ==> Upgrade co-proc to avoid RPC timeouts[0m
+[0;32mI (3101) transport: ESP board type is : 13 [0m
+
+[0;32mI (3101) transport: Base transport is set-up, TRANSPORT_TX_ACTIVE[0m
+[0;32mI (3102) H_API: Transport active[0m
+[0;32mI (3102) transport: Slave chip Id[12][0m
+[0;32mI (3102) transport: raw_tp_dir[-], flow_ctrl: low[60] high[80][0m
+[0;32mI (3102) transport: transport_delayed_init[0m
+[0;32mI (3102) esp_cli: Registering command: crash[0m
+[0;32mI (3102) esp_cli: Registering command: reboot[0m
+[0;32mI (3102) esp_cli: Registering command: mem-dump[0m
+[0;32mI (3102) esp_cli: Registering command: task-dump[0m
+[0;32mI (3102) esp_cli: Registering command: cpu-dump[0m
+[0;32mI (3102) esp_cli: Registering command: heap-trace[0m
+[0;32mI (3103) esp_cli: Registering command: sock-dump[0m
+[0;32mI (3103) esp_cli: Registering command: host-power-save[0m
+[0;32mI (3103) hci_stub_drv: Host BT Support: Disabled[0m
+[0;32mI (3103) H_SDIO_DRV: Received INIT event[0m
+[0;32mI (3103) H_SDIO_DRV: Event type: 0x22[0m
+[0;32mI (3103) H_SDIO_DRV: Write thread started[0m
+[0;32mI (3420) app_video_stream: Camera initialized after 50 frames[0m
+[0;32mI (3793) RPC_WRAP: Coprocessor Boot-up[0m
+[0;32mI (4019) app_livestream: Wi-Fi STA started, connecting to CommunityFibre69420...[0m
+[0;32mI (4026) RPC_WRAP: ESP Event: wifi station started[0m
+[0;32mI (4040) H_API: esp_wifi_remote_connect[0m
+[0;32mI (6857) RPC_WRAP: ESP Event: Station mode: Connected[0m
+[0;32mI (6857) esp_wifi_remote: esp_wifi_internal_reg_rxcb: sta: 0x480deeb2[0m
+[0;32mI (7885) esp_netif_handlers: sta ip: 192.168.1.251, mask: 255.255.255.0, gw: 192.168.1.1[0m
+[0;32mI (7885) app_livestream: Wi-Fi connected! IP: 192.168.1.251[0m
+[0;32mI (7885) app_livestream: WebSocket URL: ws://192.168.1.251:8080/stream[0m
+[0;32mI (7885) app_livestream: Wi-Fi connected to CommunityFibre69420[0m
+[0;32mI (7886) app_livestream: WebSocket server started on port 8080[0m
+[0;32mI (7886) app_livestream: Stream URL: ws://192.168.1.251:8080/stream[0m
+[0;32mI (7887) main: Application initialization completed[0m
+[0;32mI (7887) main_task: Returned from app_main()[0m
+[0;32mI (17332) app_livestream: WS handshake from client[0m
+[0;32mI (17332) app_livestream: Client connected (total: 1)[0m
+[0;33mW (17795) httpd_ws: httpd_ws_recv_frame: WS frame is not properly masked.[0m
+[0;33mW (17817) app_livestream: Client 57 NAL send failed[0m

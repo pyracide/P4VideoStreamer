@@ -1,0 +1,43 @@
+Command: C:\Espressif\tools\python\v5.5.4\venv\Scripts\python.exe C:\esp\v5.5.4\esp-idf\tools/idf_monitor.py -p COM5 -b 115200 --toolchain-prefix riscv32-esp-elf- --target esp32p4 --revision 301 --decode-panic backtrace C:\Users\samgr\ArduinoProjects\P4VideoStreamer\build\factory_demo.elf C:\Users\samgr\ArduinoProjects\P4VideoStreamer\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\tools\python\v5.5.4\venv\Scripts\python.exe' 'C:\esp\v5.5.4\esp-idf\tools\idf.py'
+[0;33m--- Warning: GDB cannot open serial ports accessed as COMx[0m
+[0;33m--- Using \\.\COM5 instead...[0m
+[0;33m--- esp-idf-monitor 1.9.0 on \\.\COM5 115200[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
+[0m--- 0x4ff47988: [0;33mesp_cpu_wait_for_intr[0m[0m at [0;32mC:/esp/v5.5.4/esp-idf/components/esp_hw_support/cpu.c[0m[0m:[1;31m57[0m
+[0m--- 0x4ff47988: [0;33mesp_cpu_wait_for_intr[0m[0m at [0;32mC:/esp/v5.5.4/esp-idf/components/esp_hw_support/cpu.c[0m[0m:[1;31m57[0m
+[0m--- 0x4ffac2c0: [0;33mesp_bootloader_get_description[0m[0m at [0;32mC:/esp/v5.5.4/esp-idf/components/esp_bootloader_format/esp_bootloader_desc.c[0m[0m:[1;31m39[0m
+[0m--- 0x4ffaefc0: [0;33mesp_flash_encryption_enabled[0m[0m at [0;32mC:/esp/v5.5.4/esp-idf/components/bootloader_support/src/flash_encrypt.c[0m[0m:[1;31m89[0m
+[0m--- 0x4ffac2ca: [0;33mcall_start_cpu0[0m[0m at [0;32mC:/esp/v5.5.4/esp-idf/components/bootloader/subproject/main/bootloader_start.c[0m[0m:[1;31m27[0m
+[0m--- 0x480deeb2: [0;33mwifi_sta_receive[0m[0m at [0;32mC:/esp/v5.5.4/esp-idf/components/esp_wifi/src/wifi_netif.c[0m[0m:[1;31m38[0m
+[0;33m--- Stack dump detected[0m
+[0m--- 0x4804a40c: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m710[0m
+[0m--- 0x4804a360: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m698[0m
+[0m--- 0x4ff40003: [0;33m_vector_table[0m[0m at [0;32m??[0m[0m:[1;31m?[0m
+[0m--- 0x4804a400: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m709[0m
+[0m--- 0x4804a360: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m698[0m
+[0m--- 0x4ff40003: [0;33m_vector_table[0m[0m at [0;32m??[0m[0m:[1;31m?[0m
+[0m--- 0x4804a402: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m710[0m
+[0m--- 0x4804a360: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m698[0m
+[0m--- 0x4ff40003: [0;33m_vector_table[0m[0m at [0;32m??[0m[0m:[1;31m?[0m
+[0m--- 0x4804a406: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m710[0m
+[0m--- 0x4804a360: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m698[0m
+[0m--- 0x4ff40003: [0;33m_vector_table[0m[0m at [0;32m??[0m[0m:[1;31m?[0m
+[0m--- 0x4804a3fe: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m709[0m
+[0m--- 0x4804a360: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m698[0m
+[0m--- 0x4ff40003: [0;33m_vector_table[0m[0m at [0;32m??[0m[0m:[1;31m?[0m
+[0m--- 0x4804a40c: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m710[0m
+[0m--- 0x4804a360: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m698[0m
+[0m--- 0x4ff40003: [0;33m_vector_table[0m[0m at [0;32m??[0m[0m:[1;31m?[0m
+[1;31m--- Error: ClearCommError failed (PermissionError(13, 'The device does not recognize the command.', None, 22))[0m
+[0;33m--- Waiting for the device to reconnect[0m[0m--- 0x4804a40e: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m710[0m
+[0m--- 0x4804a360: [0;33mrefr_area_part[0m[0m at [0;32mC:/Users/samgr/ArduinoProjects/P4VideoStreamer/managed_components/lvgl__lvgl/src/core/lv_refr.c[0m[0m:[1;31m698[0m
+[0m--- 0x4ff40003: [0;33m_vector_table[0m[0m at [0;32m??[0m[0m:[1;31m?[0m
+[0;33m.[0m[0;33m.[0m[0;33m[0m
+[0m--- 0x480deeb2: [0;33mwifi_sta_receive[0m[0m at [0;32mC:/esp/v5.5.4/esp-idf/components/esp_wifi/src/wifi_netif.c[0m[0m:[1;31m38[0m
+[1;31m--- Error: ClearCommError failed (PermissionError(13, 'The device does not recognize the command.', None, 22))[0m
+[0;33m--- Waiting for the device to reconnect[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m.[0m[0;33m[0m
+[0m--- 0x480deeb2: [0;33mwifi_sta_receive[0m[0m at [0;32mC:/esp/v5.5.4/esp-idf/components/esp_wifi/src/wifi_netif.c[0m[0m:[1;31m38[0m
+[1;31m--- Error: ClearCommError failed (PermissionError(13, 'The device does not recognize the command.', None, 22))[0m
+[0;33m--- Waiting for the device to reconnect[0m[0;33m.[0m[0;33m.[0m[0;33m[0m
+[0m--- 0x480deeb2: [0;33mwifi_sta_receive[0m[0m at [0;32mC:/esp/v5.5.4/esp-idf/components/esp_wifi/src/wifi_netif.c[0m[0m:[1;31m38[0m
+[0m
