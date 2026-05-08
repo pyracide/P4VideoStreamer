@@ -112,6 +112,13 @@ esp_err_t bsp_display_backlight_off(void);
  */
 esp_err_t bsp_display_enter_sleep(void);
 
+/**
+ * @brief Exit sleep mode
+ *
+ * @return esp_err_t 
+ */
+esp_err_t bsp_display_exit_sleep(void);
+
 #ifdef __cplusplus
 }
 #endif

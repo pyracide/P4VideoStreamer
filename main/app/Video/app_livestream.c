@@ -24,13 +24,13 @@
 
 #include "app_livestream.h"
 #include "app_video_utils.h"
+#include "app_storage.h"
 #include "driver/ppa.h"
+#include <inttypes.h>
 
 static const char *TAG = "app_livestream";
 
 /* Configuration */
-#define STREAM_WIDTH        1280
-#define STREAM_HEIGHT       720
 #define STREAM_FPS          25
 #define STREAM_BITRATE      2000000  /* 2.0 Mbps */
 #define STREAM_GOP          10
@@ -54,13 +54,15 @@ static esp_h264_enc_handle_t s_h264_enc = NULL;
 static uint8_t *s_in_buf[NUM_IN_BUFS] = {NULL};
 static int s_write_idx = 0;
 static uint8_t *s_out_buf = NULL;
+static uint8_t *s_task_rgb_buf = NULL;
 static size_t s_yuv_buf_size = 0;
+static size_t s_camera_yuv_size = 1280 * 720 * 3 / 2;
+static uint32_t s_stream_width = 1280;
+static uint32_t s_stream_height = 720;
 static size_t s_data_cache_line = 0;
 static bool s_encoder_ready = false;
 
 /* SPS/PPS storage for SDP */
-static uint8_t s_sps_pps_buf[256];
-static size_t s_sps_pps_len = 0;
 static char s_sps_b64[128] = {0};
 static char s_pps_b64[128] = {0};
 
@@ -76,6 +78,9 @@ static bool s_is_streaming = false;
 static uint16_t s_rtp_seq = 0;
 static uint32_t s_rtp_timestamp = 0;
 static float s_actual_fps = 0;
+static bool s_is_tcp_interleaved = false;
+static int s_interleaved_ch = 0;
+static int s_active_rtsp_sock = -1;
 
 typedef struct {
     uint8_t *buf;
@@ -137,32 +142,67 @@ static const uint8_t* find_nal_start_code(const uint8_t *data, size_t len, size_
 
 static void send_rtp_packet(const uint8_t *payload, size_t payload_len, bool marker)
 {
-    if (s_udp_sock < 0 || !s_is_streaming) return;
+    if (!s_is_streaming) return;
 
-    /* Build RTP packet in a flat buffer to ensure LwIP compatibility */
-    uint8_t packet[1500];
-    if (12 + payload_len > sizeof(packet)) return;
+    if (s_is_tcp_interleaved) {
+        if (s_active_rtsp_sock < 0) return;
+        
+        uint8_t packet[1500];
+        size_t rtp_len = 12 + payload_len;
+        if (4 + rtp_len > sizeof(packet)) return;
+        
+        // Interleaved header
+        packet[0] = 0x24; // '$'
+        packet[1] = s_interleaved_ch;
+        packet[2] = (rtp_len >> 8) & 0xFF;
+        packet[3] = rtp_len & 0xFF;
+        
+        // RTP Header
+        packet[4] = 0x80; // V=2
+        packet[5] = (marker ? 0x80 : 0x00) | 96; // PT=96
+        packet[6] = (s_rtp_seq >> 8) & 0xFF;
+        packet[7] = s_rtp_seq & 0xFF;
+        packet[8] = (s_rtp_timestamp >> 24) & 0xFF;
+        packet[9] = (s_rtp_timestamp >> 16) & 0xFF;
+        packet[10] = (s_rtp_timestamp >> 8) & 0xFF;
+        packet[11] = s_rtp_timestamp & 0xFF;
+        packet[12] = 0; // SSRC = 1
+        packet[13] = 0;
+        packet[14] = 0;
+        packet[15] = 1;
+        
+        memcpy(packet + 16, payload, payload_len);
+        
+        send(s_active_rtsp_sock, packet, 4 + rtp_len, 0);
+        s_rtp_seq++;
+    } else {
+        if (s_udp_sock < 0) return;
+        
+        /* Build RTP packet in a flat buffer to ensure LwIP compatibility */
+        uint8_t packet[1500];
+        if (12 + payload_len > sizeof(packet)) return;
 
-    packet[0] = 0x80; // V=2
-    packet[1] = (marker ? 0x80 : 0x00) | 96; // PT=96
-    packet[2] = (s_rtp_seq >> 8) & 0xFF;
-    packet[3] = s_rtp_seq & 0xFF;
-    packet[4] = (s_rtp_timestamp >> 24) & 0xFF;
-    packet[5] = (s_rtp_timestamp >> 16) & 0xFF;
-    packet[6] = (s_rtp_timestamp >> 8) & 0xFF;
-    packet[7] = s_rtp_timestamp & 0xFF;
-    packet[8] = 0; // SSRC = 1
-    packet[9] = 0;
-    packet[10] = 0;
-    packet[11] = 1;
+        packet[0] = 0x80; // V=2
+        packet[1] = (marker ? 0x80 : 0x00) | 96; // PT=96
+        packet[2] = (s_rtp_seq >> 8) & 0xFF;
+        packet[3] = s_rtp_seq & 0xFF;
+        packet[4] = (s_rtp_timestamp >> 24) & 0xFF;
+        packet[5] = (s_rtp_timestamp >> 16) & 0xFF;
+        packet[6] = (s_rtp_timestamp >> 8) & 0xFF;
+        packet[7] = s_rtp_timestamp & 0xFF;
+        packet[8] = 0; // SSRC = 1
+        packet[9] = 0;
+        packet[10] = 0;
+        packet[11] = 1;
 
-    memcpy(packet + 12, payload, payload_len);
+        memcpy(packet + 12, payload, payload_len);
 
-    sendto(s_udp_sock, packet, 12 + payload_len, 0, (struct sockaddr *)&s_rtp_dest_addr, sizeof(s_rtp_dest_addr));
-    s_rtp_seq++;
-    
-    /* Hardware-Specific Pacing: SDIO Relief */
-    esp_rom_delay_us(500); 
+        sendto(s_udp_sock, packet, 12 + payload_len, 0, (struct sockaddr *)&s_rtp_dest_addr, sizeof(s_rtp_dest_addr));
+        s_rtp_seq++;
+        
+        /* Hardware-Specific Pacing: SDIO Relief */
+        esp_rom_delay_us(500); 
+    }
 }
 
 static void send_nal_rtp(const uint8_t *nal_data, size_t nal_len, bool is_last_nal)
@@ -278,6 +318,8 @@ static void rtsp_server_task(void *arg)
             if (len <= 0) break;
             rx_buffer[len] = 0;
             
+            s_active_rtsp_sock = sock;
+            
             /* Extract CSeq */
             int cseq = 0;
             char *cseq_ptr = strstr(rx_buffer, "CSeq: ");
@@ -315,31 +357,49 @@ static void rtsp_server_task(void *arg)
                 send(sock, tx_buffer, strlen(tx_buffer), 0);
             }
             else if (strncmp(rx_buffer, "SETUP", 5) == 0) {
-                int client_port = 0;
-                char *port_ptr = strstr(rx_buffer, "client_port=");
-                if (port_ptr) sscanf(port_ptr, "client_port=%d", &client_port);
-                
-                /* Create UDP socket */
-                if (s_udp_sock >= 0) close(s_udp_sock);
-                s_udp_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
-                struct sockaddr_in local_addr = {
-                    .sin_family = AF_INET,
-                    .sin_port = htons(RTP_LOCAL_PORT),
-                    .sin_addr.s_addr = htonl(INADDR_ANY)
-                };
-                bind(s_udp_sock, (struct sockaddr *)&local_addr, sizeof(local_addr));
-                
-                s_rtp_dest_addr.sin_family = AF_INET;
-                s_rtp_dest_addr.sin_port = htons(client_port);
-                s_rtp_dest_addr.sin_addr.s_addr = source_addr.sin_addr.s_addr;
-                
-                snprintf(tx_buffer, sizeof(tx_buffer),
-                         "RTSP/1.0 200 OK\r\n"
-                         "CSeq: %d\r\n"
-                         "Transport: RTP/AVP;unicast;client_port=%d-%d;server_port=%d-%d\r\n"
-                         "Session: 12345678\r\n"
-                         "\r\n", cseq, client_port, client_port+1, RTP_LOCAL_PORT, RTP_LOCAL_PORT+1);
-                send(sock, tx_buffer, strlen(tx_buffer), 0);
+                char *interleaved_ptr = strstr(rx_buffer, "interleaved=");
+                if (interleaved_ptr) {
+                    int interleaved_ch = 0;
+                    sscanf(interleaved_ptr, "interleaved=%d", &interleaved_ch);
+                    s_is_tcp_interleaved = true;
+                    s_interleaved_ch = interleaved_ch;
+                    
+                    snprintf(tx_buffer, sizeof(tx_buffer),
+                             "RTSP/1.0 200 OK\r\n"
+                             "CSeq: %d\r\n"
+                             "Transport: RTP/AVP/TCP;unicast;interleaved=%d-%d\r\n"
+                             "Session: 12345678\r\n"
+                             "\r\n", cseq, interleaved_ch, interleaved_ch+1);
+                    send(sock, tx_buffer, strlen(tx_buffer), 0);
+                } else {
+                    int client_port = 0;
+                    char *port_ptr = strstr(rx_buffer, "client_port=");
+                    if (port_ptr) sscanf(port_ptr, "client_port=%d", &client_port);
+                    
+                    s_is_tcp_interleaved = false;
+                    
+                    /* Create UDP socket */
+                    if (s_udp_sock >= 0) close(s_udp_sock);
+                    s_udp_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+                    struct sockaddr_in local_addr = {
+                        .sin_family = AF_INET,
+                        .sin_port = htons(RTP_LOCAL_PORT),
+                        .sin_addr.s_addr = htonl(INADDR_ANY)
+                    };
+                    bind(s_udp_sock, (struct sockaddr *)&local_addr, sizeof(local_addr));
+                    
+                    s_rtp_dest_addr.sin_family = AF_INET;
+                    s_rtp_dest_addr.sin_port = htons(client_port);
+                    s_rtp_dest_addr.sin_addr.s_addr = source_addr.sin_addr.s_addr;
+                    
+                    snprintf(tx_buffer, sizeof(tx_buffer),
+                             "RTSP/1.0 200 OK\r\n"
+                             "CSeq: %d\r\n"
+                             "Transport: RTP/AVP;unicast;client_port=%d-%d;server_port=%d-%d\r\n"
+                             "Session: 12345678\r\n"
+                             "\r\n", cseq, client_port, client_port+1, RTP_LOCAL_PORT, RTP_LOCAL_PORT+1);
+                    send(sock, tx_buffer, strlen(tx_buffer), 0);
+                }
             }
             else if (strncmp(rx_buffer, "PLAY", 4) == 0) {
                 snprintf(tx_buffer, sizeof(tx_buffer),
@@ -366,6 +426,7 @@ static void rtsp_server_task(void *arg)
         }
         
         close(sock);
+        s_active_rtsp_sock = -1;
         s_is_streaming = false;
         if (s_udp_sock >= 0) {
             close(s_udp_sock);
@@ -392,7 +453,14 @@ static void livestream_process_task(void *arg)
 
             uint8_t *encoding_buf = req.buf;
 
-            /* Native 720p Mode: Bypass PPA scaling completely! */
+            /* Dynamically downscale if stream resolution is lower than camera resolution */
+            if (s_stream_width != req.width || s_stream_height != req.height) {
+                app_image_process_scale_crop(req.buf, req.width, req.height, PPA_SRM_COLOR_MODE_YUV420,
+                                             req.width, req.height, /* Use full sensor frame for source block */
+                                             s_task_rgb_buf, s_stream_width, s_stream_height, 
+                                             s_yuv_buf_size, PPA_SRM_COLOR_MODE_YUV420, PPA_SRM_ROTATION_ANGLE_0);
+                encoding_buf = s_task_rgb_buf;
+            }
 
             /* Encode with H.264 */
             esp_h264_enc_in_frame_t in_frame = {
@@ -427,10 +495,25 @@ static void livestream_process_task(void *arg)
 
 static esp_err_t init_h264_encoder(void)
 {
+    // Load resolution setting from NVS
+    settings_info_t settings;
+    uint16_t dummy_interval, dummy_mag;
+    if (app_storage_load_settings(&settings, &dummy_interval, &dummy_mag) == ESP_OK) {
+        if (strcmp(settings.resolution, "720P") == 0) {
+            s_stream_width = 1280; s_stream_height = 720;
+        } else if (strcmp(settings.resolution, "540P") == 0) {
+            s_stream_width = 960; s_stream_height = 540;
+        } else if (strcmp(settings.resolution, "480P") == 0) {
+            s_stream_width = 848; s_stream_height = 480;
+        } else if (strcmp(settings.resolution, "360P") == 0) {
+            s_stream_width = 640; s_stream_height = 360;
+        }
+    }
+
     esp_h264_enc_cfg_hw_t cfg = {
         .gop = STREAM_GOP,
         .fps = STREAM_FPS,
-        .res = { .width = STREAM_WIDTH, .height = STREAM_HEIGHT },
+        .res = { .width = s_stream_width, .height = s_stream_height },
         .rc = {
             .bitrate = STREAM_BITRATE,
             .qp_min = 22,
@@ -453,13 +536,14 @@ static esp_err_t init_h264_encoder(void)
         return ESP_FAIL;
     }
 
-    s_yuv_buf_size = STREAM_WIDTH * STREAM_HEIGHT * 3 / 2;
+    s_yuv_buf_size = s_stream_width * s_stream_height * 3 / 2;
     for (int i = 0; i < NUM_IN_BUFS; i++) {
-        s_in_buf[i] = heap_caps_aligned_calloc(128, 1, s_yuv_buf_size, MALLOC_CAP_SPIRAM);
+        s_in_buf[i] = heap_caps_aligned_calloc(128, 1, s_camera_yuv_size, MALLOC_CAP_SPIRAM);
         if (!s_in_buf[i]) return ESP_ERR_NO_MEM;
     }
     s_out_buf = heap_caps_aligned_calloc(128, 1, s_yuv_buf_size, MALLOC_CAP_SPIRAM);
-    if (!s_out_buf) {
+    s_task_rgb_buf = heap_caps_aligned_calloc(128, 1, s_yuv_buf_size, MALLOC_CAP_SPIRAM);
+    if (!s_out_buf || !s_task_rgb_buf) {
         return ESP_ERR_NO_MEM;
     }
 
@@ -506,8 +590,8 @@ static esp_err_t init_h264_encoder(void)
         }
     }
 
-    ESP_LOGI(TAG, "H.264 encoder initialized: %dx%d @ %dfps, %d bps",
-             STREAM_WIDTH, STREAM_HEIGHT, STREAM_FPS, STREAM_BITRATE);
+    ESP_LOGI(TAG, "H.264 encoder initialized: %" PRIu32 "x%" PRIu32 " @ %dfps, %d bps",
+             s_stream_width, s_stream_height, STREAM_FPS, STREAM_BITRATE);
     return ESP_OK;
 }
 
@@ -588,7 +672,7 @@ esp_err_t app_livestream_feed_frame(uint8_t *yuv420_buf, uint32_t width, uint32_
 
     /* Double-Buffered Copy: Isolate the frame before the camera driver overwrites it */
     uint8_t *target_buf = s_in_buf[s_write_idx];
-    memcpy(target_buf, yuv420_buf, s_yuv_buf_size);
+    memcpy(target_buf, yuv420_buf, s_camera_yuv_size);
 
     frame_req_t req = {
         .buf = target_buf,

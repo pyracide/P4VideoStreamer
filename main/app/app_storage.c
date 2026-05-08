@@ -247,10 +247,14 @@ esp_err_t app_storage_save_settings(settings_info_t *settings, uint16_t interval
     
     // Save resolution settings
     uint8_t resolution_idx = 0;
-    if (strcmp(settings->resolution, "1080P") == 0) {
+    if (strcmp(settings->resolution, "720P") == 0) {
+        resolution_idx = 0;
+    } else if (strcmp(settings->resolution, "540P") == 0) {
         resolution_idx = 1;
     } else if (strcmp(settings->resolution, "480P") == 0) {
         resolution_idx = 2;
+    } else {
+        resolution_idx = 3;
     }
     err = nvs_set_u8(nvs_handle, NVS_KEY_RESOLUTION, resolution_idx);
     if (err != ESP_OK) {
@@ -354,9 +358,11 @@ esp_err_t app_storage_load_settings(settings_info_t *settings, uint16_t *interva
         if (resolution_idx == 0) {
             settings->resolution = "720P";
         } else if (resolution_idx == 1) {
-            settings->resolution = "1080P";
-        } else {
+            settings->resolution = "540P";
+        } else if (resolution_idx == 2) {
             settings->resolution = "480P";
+        } else {
+            settings->resolution = "360P";
         }
     } else if (err != ESP_ERR_NVS_NOT_FOUND) {
         ESP_LOGE(TAG, "Error loading resolution: %s", esp_err_to_name(err));

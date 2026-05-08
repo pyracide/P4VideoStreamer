@@ -23,6 +23,7 @@ static int knob_last_direction = 0;  // 0: no direction, 1: right, -1: left
 static int64_t knob_last_time = 0;   // timestamp of last rotation
 static const int knob_timeout_ms = 500;  // timeout in milliseconds
 static int knob_step_threshold = 3;  // threshold for knob step counter
+static bool s_display_suspended = false;
 
 /* Private function prototypes */
 static void btn_handler(void *arg, void *data);
@@ -53,18 +54,41 @@ static void btn_handler(void *arg, void *data)
     
     switch (button_id) {
         case BSP_BUTTON_1:
+            if (s_display_suspended) {
+                bsp_display_unlock();
+                return;
+            }
             ui_extra_btn_menu();
             break;
             
         case BSP_BUTTON_2:
-            ui_extra_btn_up();
-            if (ui_extra_get_current_page() == UI_PAGE_ALBUM && 
-                lv_obj_has_flag(ui_PanelImageScreenAlbumDelete, LV_OBJ_FLAG_HIDDEN)) {
-                app_album_prev_image();
+            /* Only allow display suspension (Stealth Mode) while on the Livestream page */
+            if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM || s_display_suspended) {
+                s_display_suspended = !s_display_suspended;
+                if (s_display_suspended) {
+                    lvgl_port_stop();
+                    bsp_display_enter_sleep();
+                    ESP_LOGI(TAG, "Display DMA Halted - Maximum PSRAM bandwidth reclaimed");
+                } else {
+                    bsp_display_exit_sleep();
+                    lvgl_port_resume();
+                    ESP_LOGI(TAG, "Display resumed");
+                }
+            } else {
+                /* Normal 'Up' button behavior for other pages */
+                ui_extra_btn_up();
+                if (ui_extra_get_current_page() == UI_PAGE_ALBUM && 
+                    lv_obj_has_flag(ui_PanelImageScreenAlbumDelete, LV_OBJ_FLAG_HIDDEN)) {
+                    app_album_prev_image();
+                }
             }
             break;
             
         case BSP_BUTTON_3:
+            if (s_display_suspended) {
+                bsp_display_unlock();
+                return;
+            }
             ui_extra_btn_down();
             if (ui_extra_get_current_page() == UI_PAGE_ALBUM && 
                 lv_obj_has_flag(ui_PanelImageScreenAlbumDelete, LV_OBJ_FLAG_HIDDEN)) {
@@ -73,6 +97,10 @@ static void btn_handler(void *arg, void *data)
             break;
             
         case BSP_BUTTON_ED:
+            if (s_display_suspended) {
+                bsp_display_unlock();
+                return;
+            }
             ui_extra_btn_encoder();
             break;
             
@@ -87,6 +115,9 @@ static void btn_handler(void *arg, void *data)
 /* Helper function to handle knob rotation */
 static void handle_knob_rotation(int direction, void (*action_camera)(void), void (*action_main)(void), void (*action_settings)(void))
 {
+    if (s_display_suspended) {
+        return;
+    }
     if (ui_extra_get_current_page() == UI_PAGE_ALBUM || 
         ui_extra_get_current_page() == UI_PAGE_USB_DISK) {
         return;

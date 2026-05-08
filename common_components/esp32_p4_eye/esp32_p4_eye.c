@@ -581,7 +581,16 @@ lv_disp_t *bsp_display_start(void) {
 
 esp_err_t bsp_display_enter_sleep(void) {
   bsp_display_backlight_off();
+  esp_lcd_panel_disp_on_off(panel_handle, false);
   esp_lcd_panel_disp_sleep(panel_handle, true);
+
+  return ESP_OK;
+}
+
+esp_err_t bsp_display_exit_sleep(void) {
+  esp_lcd_panel_disp_sleep(panel_handle, false);
+  esp_lcd_panel_disp_on_off(panel_handle, true);
+  bsp_display_backlight_on();
 
   return ESP_OK;
 }

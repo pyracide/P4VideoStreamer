@@ -94,7 +94,7 @@ static lv_timer_t *lv_usb_disk_timer = NULL;
 // Settings options
 static const char* const gyroscope_options[] = {"Off", "On"};
 static const char* const od_options[] = {"Off", "On"};
-static const char* const resolution_options[] = {"720P", "1080P", "480P"};
+static const char* const resolution_options[] = {"720P", "540P", "480P", "360P"};
 static const char* const flash_options[] = {"Off", "On"};
 
 // Settings state
@@ -298,7 +298,7 @@ static void init_settings_options(void) {
     // Resolution options
     settings_options[2].options = resolution_options;
     settings_options[2].option_count = sizeof(resolution_options) / sizeof(resolution_options[0]);
-    settings_options[2].current_option = 1;    // Set to 1, corresponds to "1080P"
+    settings_options[2].current_option = 0;    // Set to 0, corresponds to "720P"
     settings_options[2].label = ui_LabelPanelPanelSettingsResBody;
     
     // Flash options
@@ -316,7 +316,7 @@ static void init_settings_options(void) {
     // Initialize the current settings info
     current_settings.gyroscope = gyroscope_options[0]; // Set to "Off"
     current_settings.od = od_options[1];           // Set to "On"
-    current_settings.resolution = resolution_options[1];  // Set to "1080P"
+    current_settings.resolution = resolution_options[0];  // Set to "720P"
     current_settings.flash = flash_options[1];    // Set to "On"
 }
 
@@ -2123,7 +2123,7 @@ void ui_extra_init(void)
     // Set default values
     settings.gyroscope = gyroscope_options[0];     // Set to "Off"
     settings.od = od_options[1];           // Set to "On"
-    settings.resolution = resolution_options[1];  // Set to "1080P"
+    settings.resolution = resolution_options[0];  // Set to "720P"
     settings.flash = flash_options[1];     // Set to "On"
 
     loaded_interval_time = DEFAULT_INTERVAL_TIME;
@@ -2207,7 +2207,7 @@ void ui_extra_init(void)
         // Update current settings with default values
         current_settings.gyroscope = gyroscope_options[0];     // Set to "Off"
         current_settings.od = od_options[1];           // Set to "On"
-        current_settings.resolution = resolution_options[1];  // Set to "1080P"
+        current_settings.resolution = resolution_options[0];  // Set to "720P"
         current_settings.flash = flash_options[1];     // Set to "On"
 
         if(strcmp(current_settings.flash, "On") == 0) {
