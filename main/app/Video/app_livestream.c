@@ -30,10 +30,10 @@ static const char *TAG = "app_livestream";
 
 /* Configuration */
 #define STREAM_WIDTH        640
-#define STREAM_HEIGHT       480
+#define STREAM_HEIGHT       360
 #define STREAM_FPS          15
 #define STREAM_BITRATE      1500000  /* 1.5 Mbps */
-#define STREAM_GOP          30
+#define STREAM_GOP          10
 #define RTSP_SERVER_PORT    554
 #define RTP_LOCAL_PORT      55400
 #define WIFI_CONNECTED_BIT  BIT0
@@ -393,7 +393,7 @@ static void livestream_process_task(void *arg)
 
             if (req.width != STREAM_WIDTH || req.height != STREAM_HEIGHT) {
                 app_image_process_scale_crop(req.buf, req.width, req.height, PPA_SRM_COLOR_MODE_YUV420,
-                                             STREAM_WIDTH, STREAM_HEIGHT,
+                                             req.width, req.height, /* Use full sensor frame for source block */
                                              s_task_rgb_buf, STREAM_WIDTH, STREAM_HEIGHT, 
                                              s_yuv_buf_size, PPA_SRM_COLOR_MODE_YUV420, PPA_SRM_ROTATION_ANGLE_0);
                 encoding_buf = s_task_rgb_buf;
