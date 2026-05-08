@@ -929,7 +929,7 @@ static void livestream_status_timer_cb(lv_timer_t *timer)
 {
     if (livestream_status_label == NULL) return;
     const char *status = app_livestream_get_status_str();
-    const char *url = app_livestream_get_ws_url();
+    const char *url = app_livestream_get_rtsp_url();
     lv_label_set_text_fmt(livestream_status_label, "%s | %s", status, url);
 
     if (fps_label) {
@@ -961,7 +961,7 @@ static void ui_extra_redirect_to_livestream_page(void)
 
     /* Set initial text */
     const char *status = app_livestream_get_status_str();
-    const char *url = app_livestream_get_ws_url();
+    const char *url = app_livestream_get_rtsp_url();
     lv_label_set_text_fmt(livestream_status_label, "%s | %s", status, url);
     lv_obj_clear_flag(livestream_status_label, LV_OBJ_FLAG_HIDDEN);
 

@@ -1,0 +1,93 @@
+Command: ninja flash
+[1/5] C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\samgr\ArduinoProjects\P4VideoStreamer\build\esp-idf\esptool_py && C:\Espressif\tools\python\v5.5.4\venv\Scripts\python.exe C:/esp/v5.5.4/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/partition_table/partition-table.bin C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/factory_demo.bin"
+factory_demo.bin binary size 0x294ac0 bytes. Smallest app partition is 0xa00000 bytes. 0x76b540 bytes (74%) free.
+[2/5] Performing build step for 'bootloader'
+[1/1] C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\samgr\ArduinoProjects\P4VideoStreamer\build\bootloader\esp-idf\esptool_py && C:\Espressif\tools\python\v5.5.4\venv\Scripts\python.exe C:/esp/v5.5.4/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x2000 C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build/bootloader/bootloader.bin"
+Bootloader binary size 0x5a70 bytes. 0x590 bytes (6%) free.
+[3/5] No install step for 'bootloader'
+[4/5] Completed 'bootloader'
+[4/5] C:\WINDOWS\system32\cmd.exe /C "cd /D C:\esp\v5.5.4\esp-idf\components\esptool_py && C:\Espressif\tools\cmake\3.30.2\bin\cmake.exe -D IDF_PATH=C:/esp/v5.5.4/esp-idf -D SERIAL_TOOL=C:/Espressif/tools/python/v5.5.4/venv/Scripts/python.exe;;C:/esp/v5.5.4/esp-idf/components/esptool_py/esptool/esptool.py;--chip;esp32p4 -D SERIAL_TOOL_ARGS=--before=default_reset;--after=hard_reset;write_flash;@flash_args -D WORKING_DIRECTORY=C:/Users/samgr/ArduinoProjects/P4VideoStreamer/build -P C:/esp/v5.5.4/esp-idf/components/esptool_py/run_serial_tool.cmake"
+esptool.py --chip esp32p4 -p COM5 -b 460800 --before=default_reset --after=hard_reset write_flash --flash_mode dio --flash_freq 80m --flash_size 16MB 0x2000 bootloader/bootloader.bin 0x10000 factory_demo.bin 0x8000 partition_table/partition-table.bin
+esptool.py v4.12.dev1
+Serial port COM5
+Connecting...
+Chip is ESP32-P4 (revision v3.1)
+Features: High-Performance MCU
+Crystal is 40MHz
+USB mode: USB-Serial/JTAG
+MAC: e8:f6:0a:e1:76:27
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00002000 to 0x00007fff...
+Flash will be erased from 0x00010000 to 0x002a4fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+SHA digest in image updated
+Compressed 23152 bytes to 14358...
+Writing at 0x00002000... (100 %)
+Wrote 23152 bytes (14358 compressed) at 0x00002000 in 0.2 seconds (effective 756.2 kbit/s)...
+Hash of data verified.
+Compressed 2706112 bytes to 823354...
+Writing at 0x00010000... (1 %)
+Writing at 0x0001e5f3... (3 %)
+Writing at 0x0002d1e5... (5 %)
+Writing at 0x0003cdbd... (7 %)
+Writing at 0x000482ec... (9 %)
+Writing at 0x00059832... (11 %)
+Writing at 0x000e01e4... (13 %)
+Writing at 0x000e89b9... (15 %)
+Writing at 0x0012cc85... (17 %)
+Writing at 0x0017535c... (19 %)
+Writing at 0x0017e495... (21 %)
+Writing at 0x001870ec... (23 %)
+Writing at 0x0018d566... (25 %)
+Writing at 0x00194112... (27 %)
+Writing at 0x0019be4f... (29 %)
+Writing at 0x001a693e... (31 %)
+Writing at 0x001af5ee... (33 %)
+Writing at 0x001b74a0... (35 %)
+Writing at 0x001bf51c... (37 %)
+Writing at 0x001c61e0... (39 %)
+Writing at 0x001cda38... (41 %)
+Writing at 0x001d4f00... (43 %)
+Writing at 0x001db87e... (45 %)
+Writing at 0x001e301a... (47 %)
+Writing at 0x001e91ef... (49 %)
+Writing at 0x001ef9da... (50 %)
+Writing at 0x001f6035... (52 %)
+Writing at 0x001fcb92... (54 %)
+Writing at 0x0020372b... (56 %)
+Writing at 0x0020bb41... (58 %)
+Writing at 0x00213298... (60 %)
+Writing at 0x0021c475... (62 %)
+Writing at 0x0022303c... (64 %)
+Writing at 0x00229111... (66 %)
+Writing at 0x00231338... (68 %)
+Writing at 0x002388ea... (70 %)
+Writing at 0x0023f392... (72 %)
+Writing at 0x00246255... (74 %)
+Writing at 0x0024d14e... (76 %)
+Writing at 0x0025441f... (78 %)
+Writing at 0x0025b7d2... (80 %)
+Writing at 0x00263c96... (82 %)
+Writing at 0x0026b32c... (84 %)
+Writing at 0x00271327... (86 %)
+Writing at 0x0027734b... (88 %)
+Writing at 0x0027ddb9... (90 %)
+Writing at 0x002843fe... (92 %)
+Writing at 0x0028b946... (94 %)
+Writing at 0x00292a80... (96 %)
+Writing at 0x00299dfe... (98 %)
+Writing at 0x002a1d31... (100 %)
+Wrote 2706112 bytes (823354 compressed) at 0x00010000 in 10.4 seconds (effective 2085.3 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 105...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (105 compressed) at 0x00008000 in 0.1 seconds (effective 237.5 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
