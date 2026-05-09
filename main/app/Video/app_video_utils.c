@@ -109,6 +109,42 @@ esp_err_t app_image_process_scale_crop(
     return ppa_do_scale_rotate_mirror(ppa_srm_handle, &srm_config);
 }
 
+esp_err_t app_image_process_scale_crop_mirror(
+    uint8_t *in_buf, uint32_t in_width, uint32_t in_height, ppa_srm_color_mode_t in_color_mode,
+    uint32_t crop_width, uint32_t crop_height,
+    uint8_t *out_buf, uint32_t out_width, uint32_t out_height, size_t out_buf_size,
+    ppa_srm_color_mode_t out_color_mode,
+    ppa_srm_rotation_angle_t rotation_angle,
+    bool mirror_x)
+{
+    ppa_srm_oper_config_t srm_config = {
+        .in.buffer = in_buf,
+        .in.pic_w = in_width,
+        .in.pic_h = in_height,
+        .in.block_w = crop_width,
+        .in.block_h = crop_height,
+        .in.block_offset_x = (in_width - crop_width) / 2,
+        .in.block_offset_y = (in_height - crop_height) / 2,
+        .in.srm_cm = in_color_mode,
+        .out.buffer = out_buf,
+        .out.buffer_size = out_buf_size,
+        .out.pic_w = out_width,
+        .out.pic_h = out_height,
+        .out.block_offset_x = 0,
+        .out.block_offset_y = 0,
+        .out.srm_cm = out_color_mode,
+        .rotation_angle = rotation_angle,
+        .scale_x = (float)out_width / crop_width,
+        .scale_y = (float)out_height / crop_height,
+        .mirror_x = mirror_x ? 1 : 0,
+        .rgb_swap = 0,
+        .byte_swap = 0,
+        .mode = PPA_TRANS_MODE_BLOCKING,
+    };
+
+    return ppa_do_scale_rotate_mirror(ppa_srm_handle, &srm_config);
+}
+
 /**
  * @brief Perform image magnification processing
  * 

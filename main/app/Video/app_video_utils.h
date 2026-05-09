@@ -15,6 +15,14 @@ esp_err_t app_image_process_scale_crop(
     ppa_srm_color_mode_t out_color_mode,
     ppa_srm_rotation_angle_t rotation_angle);
 
+esp_err_t app_image_process_scale_crop_mirror(
+    uint8_t *in_buf, uint32_t in_width, uint32_t in_height, ppa_srm_color_mode_t in_color_mode,
+    uint32_t crop_width, uint32_t crop_height,
+    uint8_t *out_buf, uint32_t out_width, uint32_t out_height, size_t out_buf_size,
+    ppa_srm_color_mode_t out_color_mode,
+    ppa_srm_rotation_angle_t rotation_angle,
+    bool mirror_x);
+
 esp_err_t app_image_process_magnify(
     uint8_t *in_buf, uint32_t in_width, uint32_t in_height, ppa_srm_color_mode_t in_color_mode,
     uint16_t magnification_factor,

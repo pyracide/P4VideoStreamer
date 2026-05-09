@@ -455,12 +455,14 @@ static void livestream_process_task(void *arg)
 
             uint8_t *encoding_buf = req.buf;
 
-            /* Dynamically downscale if stream resolution is lower than camera resolution */
-            if (s_stream_width != req.width || s_stream_height != req.height) {
-                app_image_process_scale_crop(req.buf, req.width, req.height, PPA_SRM_COLOR_MODE_YUV420,
+            /* Dynamically downscale OR mirror using PPA hardware */
+            bool needs_mirror = app_video_get_mirror();
+            if (s_stream_width != req.width || s_stream_height != req.height || needs_mirror) {
+                app_image_process_scale_crop_mirror(req.buf, req.width, req.height, PPA_SRM_COLOR_MODE_YUV420,
                                              req.width, req.height, /* Use full sensor frame for source block */
                                              s_task_rgb_buf, s_stream_width, s_stream_height, 
-                                             s_yuv_buf_size, PPA_SRM_COLOR_MODE_YUV420, PPA_SRM_ROTATION_ANGLE_0);
+                                             s_yuv_buf_size, PPA_SRM_COLOR_MODE_YUV420, PPA_SRM_ROTATION_ANGLE_0,
+                                             needs_mirror);
                 encoding_buf = s_task_rgb_buf;
             }
 

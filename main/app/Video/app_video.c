@@ -421,20 +421,8 @@ esp_err_t app_video_return_buf(uint8_t index) {
 }
 
 esp_err_t app_video_set_mirror(bool enable) {
-  if (s_video_fd < 0)
-    return ESP_ERR_INVALID_STATE;
-
-  struct v4l2_control ctrl;
-  ctrl.id = V4L2_CID_HFLIP;
-  ctrl.value = enable ? 1 : 0;
-
-  if (ioctl(s_video_fd, VIDIOC_S_CTRL, &ctrl) != 0) {
-    ESP_LOGE(TAG, "failed to set sensor mirror: %d", errno);
-    return ESP_FAIL;
-  }
-
   s_sensor_mirrored = enable;
-  ESP_LOGI(TAG, "Sensor Mirror %s", enable ? "Enabled" : "Disabled");
+  ESP_LOGI(TAG, "Hardware PPA Mirror %s", enable ? "Enabled" : "Disabled");
   return ESP_OK;
 }
 
