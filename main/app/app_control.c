@@ -10,10 +10,81 @@
 #include "app_video_stream.h"
 #include "app_video.h"
 #include "app_album.h"
+#include "app_livestream.h"
 #include "app_control.h"
+
+#include "driver/i2c_master.h"
 
 /* Private definitions */
 static const char *TAG = "app_control";
+
+/* DRV2605L Haptic Variables */
+static i2c_master_dev_handle_t s_drv2605_dev = NULL;
+
+static esp_err_t drv_write_reg(uint8_t reg, uint8_t val) {
+    uint8_t buf[2] = {reg, val};
+    esp_err_t err = i2c_master_transmit(s_drv2605_dev, buf, 2, -1);
+    if (err != ESP_OK) {
+        ESP_LOGE(TAG, "DRV2605L I2C write error reg 0x%02X: %s", reg, esp_err_to_name(err));
+    }
+    return err;
+}
+
+static void trigger_haptic_buzz(void)
+{
+    if (s_drv2605_dev == NULL) {
+        i2c_master_bus_handle_t bus_handle;
+        if (bsp_get_i2c_bus_handle(&bus_handle) != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to get I2C bus handle for DRV2605L");
+            return;
+        }
+
+        i2c_device_config_t dev_cfg = {
+            .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+            .device_address = 0x5A,
+            .scl_speed_hz = 100000, // standard 100kHz
+        };
+        if (i2c_master_bus_add_device(bus_handle, &dev_cfg, &s_drv2605_dev) != ESP_OK) {
+            ESP_LOGE(TAG, "Failed to add DRV2605L to I2C bus");
+            return;
+        }
+        
+        ESP_LOGI(TAG, "Initializing DRV2605L...");
+
+        // 1. Take out of standby (Mode Register 0x01 = 0x00)
+        if (drv_write_reg(0x01, 0x00) != ESP_OK) return;
+
+        // 2. Select LRA ROM library (Library Selection Register 0x03 = 0x06)
+        if (drv_write_reg(0x03, 0x06) != ESP_OK) return;
+
+        uint8_t read_buf[1] = {0};
+        uint8_t reg = 0x1A;
+
+        // 3. Enable LRA Mode (0x1A: Feedback Control)
+        if (i2c_master_transmit_receive(s_drv2605_dev, &reg, 1, read_buf, 1, -1) == ESP_OK) {
+            drv_write_reg(0x1A, read_buf[0] | 0x80);
+        } else {
+            ESP_LOGE(TAG, "Failed to read Feedback Control reg 0x1A");
+            return;
+        }
+
+        // 4. Set Rated Voltage (0x16) to 2.5V = 0x7D
+        drv_write_reg(0x16, 0x7D);
+
+        // 5. Set Overdrive Clamp (0x17) to 2.5V = 0x7D
+        drv_write_reg(0x17, 0x7D);
+        
+        ESP_LOGI(TAG, "DRV2605L Configured for LRA");
+    }
+
+    if (s_drv2605_dev) {
+        drv_write_reg(0x04, 0x01);  // sequence 1 = 1 (strong click)
+        drv_write_reg(0x05, 0x00);  // sequence 2 = 0 (stop)
+        drv_write_reg(0x0C, 0x01);  // GO
+
+        ESP_LOGI(TAG, "DRV2605L Haptic pulsing!");
+    }
+}
 
 /* Button related variables */
 static button_handle_t btns[BSP_BUTTON_NUM];
@@ -25,7 +96,6 @@ static int64_t knob_last_time = 0;   // timestamp of last rotation
 static const int knob_timeout_ms = 500;  // timeout in milliseconds
 static int knob_step_threshold = 3;  // threshold for knob step counter
 static bool s_display_suspended = false;
-static bool s_sensor_mirrored = false;
 
 /* Private function prototypes */
 static void btn_handler(void *arg, void *data);
@@ -64,18 +134,10 @@ static void btn_handler(void *arg, void *data)
             break;
             
         case BSP_BUTTON_2:
-            /* Only allow display suspension (Stealth Mode) while on the Livestream page */
-            if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM || s_display_suspended) {
-                s_display_suspended = !s_display_suspended;
-                if (s_display_suspended) {
-                    lvgl_port_stop();
-                    bsp_display_enter_sleep();
-                    ESP_LOGI(TAG, "Display DMA Halted - Maximum PSRAM bandwidth reclaimed");
-                } else {
-                    bsp_display_exit_sleep();
-                    lvgl_port_resume();
-                    ESP_LOGI(TAG, "Display resumed");
-                }
+            /* Network Switch Button: Disconnect and switch to Hotspot */
+            if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM) {
+                app_livestream_switch_network();
+                ESP_LOGI(TAG, "Network switch triggered by button 2");
             } else {
                 /* Normal 'Up' button behavior for other pages */
                 ui_extra_btn_up();
@@ -87,14 +149,16 @@ static void btn_handler(void *arg, void *data)
             break;
             
         case BSP_BUTTON_3:
+            ESP_LOGI(TAG, "BSP_BUTTON_3 (Down button) pressed. Current page: %d, Livestream page ID: %d", ui_extra_get_current_page(), UI_PAGE_LIVESTREAM);
+            
             if (s_display_suspended) {
                 bsp_display_unlock();
                 return;
             }
-            /* Toggle sensor mirroring if in Livestream mode */
+            /* Trigger haptic test if in Livestream mode */
             if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM) {
-                s_sensor_mirrored = !s_sensor_mirrored;
-                app_video_set_mirror(s_sensor_mirrored);
+                ESP_LOGI(TAG, "Triggering haptic buzz...");
+                trigger_haptic_buzz();
             } else {
                 /* Normal 'Down' behavior for other pages */
                 ui_extra_btn_down();

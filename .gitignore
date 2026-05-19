@@ -1,6 +1,32 @@
+# ESP-IDF build directory
 build/
+
+# SDK config files
 sdkconfig
 sdkconfig.old
+
+# Component manager directories
 managed_components/
 dependencies.lock
+
+# Local cache
 .cache/
+
+# VS Code
+.vscode/
+.history/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Core dumps and logs
+*.core
+*.log
+
+# Temporary files
+*~
+*.swp
+.DS_Store

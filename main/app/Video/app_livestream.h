@@ -99,6 +99,7 @@ const char* app_livestream_get_rtsp_url(void);
  */
 bool app_livestream_has_clients(void);
 float app_livestream_get_actual_fps(void);
+void app_livestream_switch_network(void);
 
 #ifdef __cplusplus
 }

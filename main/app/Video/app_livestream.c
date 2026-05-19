@@ -313,6 +313,9 @@ static void rtsp_server_task(void *arg)
         }
         
         ESP_LOGI(TAG, "RTSP client connected");
+
+        int flag = 1;
+        setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *)&flag, sizeof(int));
         
         while (1) {
             int len = recv(sock, rx_buffer, sizeof(rx_buffer) - 1, 0);
@@ -642,6 +645,7 @@ esp_err_t app_livestream_init(void)
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_start());
+    esp_wifi_set_ps(WIFI_PS_NONE);
 
     s_state = LIVESTREAM_STATE_WIFI_CONNECTING;
     ESP_LOGI(TAG, "Wi-Fi STA started, connecting to %s...", CONFIG_ESP_WIFI_SSID);
@@ -724,4 +728,24 @@ bool app_livestream_has_clients(void)
 float app_livestream_get_actual_fps(void)
 {
     return s_actual_fps;
+}
+
+/**
+ * @brief Switch Wi-Fi network to the predefined SamGaysHotspot
+ *
+ * Disconnects from the current network and attempts to connect to the hotspot.
+ * This is used to bypass restricted corporate/university Wi-Fi.
+ */
+void app_livestream_switch_network(void)
+{
+    wifi_config_t wifi_config = {
+        .sta = {
+            .ssid = "SamGaysHotspot",
+            .password = "not12345678",
+        },
+    };
+    ESP_LOGI(TAG, "Switching network to SamGaysHotspot...");
+    esp_wifi_disconnect();
+    esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
+    esp_wifi_connect();
 }
