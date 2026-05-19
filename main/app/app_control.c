@@ -20,6 +20,27 @@ static const char *TAG = "app_control";
 
 /* DRV2605L Haptic Variables */
 static i2c_master_dev_handle_t s_drv2605_dev = NULL;
+static esp_timer_handle_t s_haptic_timer = NULL;
+
+typedef struct {
+    uint8_t effect;
+    const char* name;
+    bool continuous;
+} haptic_test_state_t;
+
+static const haptic_test_state_t s_haptic_states[] = {
+    {1,  "Effect 1 (Current pulse - strong click 100%)", false},
+    {24, "Effect 24 (Double Click 100%)", false},
+    {27, "Effect 27 (Short Double Click Strong)", false},
+    {16, "Effect 16 (Long Alert)", false},
+    {52, "Effect 52 (Pulsing Strong)", false},
+    {55, "Effect 55 (Transition Hum)", false},
+    {1,  "Effect 1 (Continuous)", true},
+    {2,  "Effect 2 (Continuous - 60% click)", true},
+    {3,  "Effect 3 (Continuous - 30% click)", true}
+};
+static const int NUM_HAPTIC_STATES = sizeof(s_haptic_states) / sizeof(s_haptic_states[0]);
+static int s_current_haptic_state = -1; // starts at -1 so first press goes to 0
 
 static esp_err_t drv_write_reg(uint8_t reg, uint8_t val) {
     uint8_t buf[2] = {reg, val};
@@ -30,8 +51,21 @@ static esp_err_t drv_write_reg(uint8_t reg, uint8_t val) {
     return err;
 }
 
+static void haptic_timer_cb(void* arg) {
+    if (s_drv2605_dev) {
+        drv_write_reg(0x0C, 0x01); // GO
+    }
+}
+
 static void trigger_haptic_buzz(void)
 {
+    // If timer is running, stop and delete it
+    if (s_haptic_timer != NULL) {
+        esp_timer_stop(s_haptic_timer);
+        esp_timer_delete(s_haptic_timer);
+        s_haptic_timer = NULL;
+    }
+
     if (s_drv2605_dev == NULL) {
         i2c_master_bus_handle_t bus_handle;
         if (bsp_get_i2c_bus_handle(&bus_handle) != ESP_OK) {
@@ -78,11 +112,26 @@ static void trigger_haptic_buzz(void)
     }
 
     if (s_drv2605_dev) {
-        drv_write_reg(0x04, 0x01);  // sequence 1 = 1 (strong click)
-        drv_write_reg(0x05, 0x00);  // sequence 2 = 0 (stop)
-        drv_write_reg(0x0C, 0x01);  // GO
+        // Advance to next state
+        s_current_haptic_state = (s_current_haptic_state + 1) % NUM_HAPTIC_STATES;
+        const haptic_test_state_t* state = &s_haptic_states[s_current_haptic_state];
+        
+        ESP_LOGI(TAG, "=== Haptic Test Phase %d/8: %s ===", s_current_haptic_state, state->name);
 
-        ESP_LOGI(TAG, "DRV2605L Haptic pulsing!");
+        drv_write_reg(0x04, state->effect);  // sequence 1 = our current effect
+        drv_write_reg(0x05, 0x00);           // sequence 2 = stop
+        drv_write_reg(0x0C, 0x01);           // GO
+
+        if (state->continuous) {
+            ESP_LOGI(TAG, "Starting continuous pulse timer... Press again to stop/advance.");
+            esp_timer_create_args_t timer_args = {
+                .callback = &haptic_timer_cb,
+                .name = "haptic_cont"
+            };
+            esp_timer_create(&timer_args, &s_haptic_timer);
+            // 200ms period (200,000 microseconds)
+            esp_timer_start_periodic(s_haptic_timer, 200000); 
+        }
     }
 }
 
