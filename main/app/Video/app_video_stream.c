@@ -62,7 +62,6 @@ typedef struct {
     uint8_t *jpg_buf;
     uint32_t jpg_size;
     size_t rx_buffer_size;
-    uint8_t *scaled_camera_buf;
     uint8_t *shared_photo_buf;                // Shared buffer for photo and record modules (720P max)
     int video_cam_fd;
 } camera_buffer_t;
@@ -263,8 +262,8 @@ esp_err_t app_video_stream_start_interval_photo(uint16_t interval_minutes)
  */
 void app_video_stream_get_scaled_camera_buf(uint8_t **buf, uint32_t *size)
 {
-    *buf = camera_buffer.scaled_camera_buf;
-    *size = ALIGN_UP(PHOTO_WIDTH_1080P * PHOTO_HEIGHT_1080P * 2, data_cache_line_size);
+    *buf = NULL;
+    *size = 0;
 }
 
 /**
@@ -394,25 +393,19 @@ esp_err_t app_video_stream_init(i2c_master_bus_handle_t i2c_handle)
         app_isp_set_hue(loaded_hue);
     }
 
-    // Allocate canvas buffers
-    for (int i = 0; i < EXAMPLE_CAM_BUF_NUM; i++) {
-        camera_buffer.canvas_buf[i] = heap_caps_aligned_calloc(data_cache_line_size, 1, 
-                                                             BSP_LCD_H_RES * BSP_LCD_V_RES * 2, 
-                                                             MALLOC_CAP_SPIRAM);
-        if (camera_buffer.canvas_buf[i] == NULL) {
-            ESP_LOGE(TAG, "Failed to allocate canvas buffer %d", i);
-            ret = ESP_FAIL;
-            goto cleanup;
-        }
-    }
+// // Allocate canvas buffers
+    // for (int i = 0; i < EXAMPLE_CAM_BUF_NUM; i++) {
+    //     camera_buffer.canvas_buf[i] = heap_caps_aligned_calloc(data_cache_line_size, 1, 
+    //                                                            BSP_LCD_H_RES * BSP_LCD_V_RES * 2, 
+    //                                                            MALLOC_CAP_SPIRAM);
+    //     if (camera_buffer.canvas_buf[i] == NULL) {
+    //         ESP_LOGE(TAG, "Failed to allocate canvas buffer %d", i);
+    //         ret = ESP_FAIL;
+    //         goto cleanup;
+    //     }
+    // }
 
-    // Allocate scaled camera buffer
-    camera_buffer.scaled_camera_buf = heap_caps_aligned_calloc(data_cache_line_size, 1, PHOTO_WIDTH_1080P * PHOTO_HEIGHT_1080P * 2, MALLOC_CAP_SPIRAM);
-    if (camera_buffer.scaled_camera_buf == NULL) {
-        ESP_LOGE(TAG, "Failed to allocate adjusted camera buffer");
-        ret = ESP_FAIL;
-        goto cleanup;
-    }
+    // scaled_camera_buf allocation removed to save memory at boot. Allocated dynamically when digital zoom is active.
 
     // Allocate shared photo buffer for record and photo modules (720P max: 1280x720)
     uint32_t shared_photo_buf_size = SHARED_PHOTO_BUF_WIDTH * SHARED_PHOTO_BUF_HEIGHT * 2;  // RGB565 format
@@ -514,17 +507,14 @@ cleanup:
             camera_buffer.shared_photo_buf = NULL;
         }
         
-        if (camera_buffer.scaled_camera_buf != NULL) {
-            heap_caps_free(camera_buffer.scaled_camera_buf);
-            camera_buffer.scaled_camera_buf = NULL;
-        }
+        // scaled_camera_buf cleanup removed
         
-        for (int i = 0; i < EXAMPLE_CAM_BUF_NUM; i++) {
-            if (camera_buffer.canvas_buf[i] != NULL) {
-                heap_caps_free(camera_buffer.canvas_buf[i]);
-                camera_buffer.canvas_buf[i] = NULL;
-            }
-        }
+        // for (int i = 0; i < EXAMPLE_CAM_BUF_NUM; i++) {
+        //     if (camera_buffer.canvas_buf[i] != NULL) {
+        //         heap_caps_free(camera_buffer.canvas_buf[i]);
+        //         camera_buffer.canvas_buf[i] = NULL;
+        //     }
+        // }
         
         // Clean up AI detection resources
         app_ai_detection_deinit();
@@ -589,43 +579,54 @@ static void camera_video_frame_operation(uint8_t *camera_buf, uint8_t camera_buf
     ppa_srm_rotation_angle_t rotation_angle = current_ppa_rotation;
 
     // Process video frame with rotation compensation (hardware conversion YUV422 -> RGB565)
-    esp_err_t ret = app_image_process_video_frame(
-        camera_buf, camera_buf_hes, camera_buf_ves, PPA_SRM_COLOR_MODE_YUV420,
-        scale_level, rotation_angle,
-        camera_buffer.canvas_buf[camera_buf_index], 
-        ALIGN_UP(BSP_LCD_H_RES * BSP_LCD_V_RES * 2, data_cache_line_size)
-    );
-    if (ret != ESP_OK) {
-        ESP_LOGE(TAG, "Failed to process frame: 0x%x", ret);
-        return;
-    }
+    // esp_err_t ret = app_image_process_video_frame(
+    //     camera_buf, camera_buf_hes, camera_buf_ves, PPA_SRM_COLOR_MODE_YUV420,
+    //     scale_level, rotation_angle,
+    //     camera_buffer.canvas_buf[camera_buf_index], 
+    //     ALIGN_UP(BSP_LCD_H_RES * BSP_LCD_V_RES * 2, data_cache_line_size)
+    // );
+    // if (ret != ESP_OK) {
+    //     ESP_LOGE(TAG, "Failed to process frame: 0x%x", ret);
+    //     return;
+    // }
 
     // Process frame for AI detection if we're on the AI detection page
-    if (camera_state.flags.is_initialized && ui_extra_get_current_page() == UI_PAGE_AI_DETECT) {
-        ret = app_ai_detection_process_frame(
-            camera_buffer.canvas_buf[camera_buf_index],
-            BSP_LCD_H_RES,
-            BSP_LCD_V_RES,
-            ui_extra_get_ai_detect_mode()
-        );
-        if (ret != ESP_OK) {
-            ESP_LOGW(TAG, "AI detection processing failed: 0x%x", ret);
-        }
-    }
+    // if (camera_state.flags.is_initialized && ui_extra_get_current_page() == UI_PAGE_AI_DETECT) {
+    //     ret = app_ai_detection_process_frame(
+    //         camera_buffer.canvas_buf[camera_buf_index],
+    //         BSP_LCD_H_RES,
+    //         BSP_LCD_V_RES,
+    //         ui_extra_get_ai_detect_mode()
+    //     );
+    //     if (ret != ESP_OK) {
+    //         ESP_LOGW(TAG, "AI detection processing failed: 0x%x", ret);
+    //     }
+    // }
 
     // Swap RGB565 bytes
-    swap_rgb565_bytes(camera_buffer.canvas_buf[camera_buf_index], BSP_LCD_H_RES * BSP_LCD_V_RES);
+    // swap_rgb565_bytes(camera_buffer.canvas_buf[camera_buf_index], BSP_LCD_H_RES * BSP_LCD_V_RES);
 
     // Update display (no rotation needed as it's handled in image processing)
-    bsp_display_lock(0);
-    lv_canvas_set_buffer(ui_PanelCanvas, camera_buffer.canvas_buf[camera_buf_index], BSP_LCD_H_RES, BSP_LCD_V_RES, LV_IMG_CF_TRUE_COLOR);
-    lv_refr_now(NULL);
-    bsp_display_unlock();
+    // bsp_display_lock(0);
+    // lv_canvas_set_buffer(ui_PanelCanvas, camera_buffer.canvas_buf[camera_buf_index], BSP_LCD_H_RES, BSP_LCD_V_RES, LV_IMG_CF_TRUE_COLOR);
+    // lv_refr_now(NULL);
+    // bsp_display_unlock();
 
     // Handle photo request
     if (camera_state.flags.is_initialized) {
-        // Feed frame to livestream if on livestream page
-        if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM) {
+        // Feed frame to livestream if on livestream page OR if actively streaming to an RTSP client
+        bool is_rtsp_streaming = (app_livestream_get_state() == LIVESTREAM_STATE_STREAMING);
+        if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM || is_rtsp_streaming) {
+            static bool s_page_warn = false;
+            if (ui_extra_get_current_page() != UI_PAGE_LIVESTREAM && is_rtsp_streaming) {
+                if (!s_page_warn) {
+                    ESP_LOGW(TAG, "RTSP streaming is active but UI page is %d. Feeding frames anyway (headless mode).", 
+                             ui_extra_get_current_page());
+                    s_page_warn = true;
+                }
+            } else {
+                s_page_warn = false;
+            }
             app_livestream_feed_frame(camera_buf, camera_buf_index, camera_buf_hes, camera_buf_ves);
         }
 

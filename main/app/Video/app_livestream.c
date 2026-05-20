@@ -32,6 +32,8 @@
 #include "driver/ppa.h"
 #include <inttypes.h>
 
+#include "app_control.h"
+
 static const char *TAG = "app_livestream";
 
 /* Configuration */
@@ -45,7 +47,7 @@ static const char *TAG = "app_livestream";
 #define MAX_RETRY           10
 
 /* State */
-static livestream_state_t s_state = LIVESTREAM_STATE_IDLE;
+static volatile livestream_state_t s_state = LIVESTREAM_STATE_IDLE;
 static char s_rtsp_url[64] = "No IP";
 static char s_ip_str[16] = "";
 static EventGroupHandle_t s_wifi_event_group = NULL;
@@ -57,10 +59,10 @@ static esp_h264_enc_handle_t s_h264_enc = NULL;
 static uint8_t *s_out_buf = NULL;
 static uint8_t *s_task_rgb_buf = NULL;
 static size_t s_yuv_buf_size = 0;
-static uint32_t s_stream_width = 1280;
-static uint32_t s_stream_height = 720;
+static uint32_t s_stream_width = 848;
+static uint32_t s_stream_height = 480;
 static size_t s_data_cache_line = 0;
-static bool s_encoder_ready = false;
+static volatile bool s_encoder_ready = false;
 
 /* SPS/PPS storage for SDP */
 static char s_sps_b64[128] = {0};
@@ -74,7 +76,7 @@ static QueueHandle_t s_frame_queue = NULL;
 static int s_rtsp_sock = -1;
 static int s_udp_sock = -1;
 static struct sockaddr_in s_rtp_dest_addr;
-static bool s_is_streaming = false;
+static volatile bool s_is_streaming = false;
 static uint16_t s_rtp_seq = 0;
 static uint32_t s_rtp_timestamp = 0;
 static float s_actual_fps = 0;
@@ -174,10 +176,24 @@ static void send_rtp_packet(const uint8_t *payload, size_t payload_len, bool mar
         
         memcpy(packet + 16, payload, payload_len);
         
-        send(s_active_rtsp_sock, packet, 4 + rtp_len, 0);
+        int sent = send(s_active_rtsp_sock, packet, 4 + rtp_len, 0);
+        if (sent < 0) {
+            ESP_LOGW(TAG, "RTSP TCP Interleaved send failed: %d (errno=%d)", sent, errno);
+        } else {
+            static uint32_t tcp_packets = 0;
+            if (++tcp_packets % 100 == 0) {
+                ESP_LOGI(TAG, "RTSP TCP Interleaved sent 100 packets, last len=%zu", rtp_len);
+            }
+        }
         s_rtp_seq++;
     } else {
-        if (s_udp_sock < 0) return;
+        if (s_udp_sock < 0) {
+            static uint32_t udp_sock_errs = 0;
+            if (++udp_sock_errs % 50 == 0) {
+                ESP_LOGW(TAG, "RTP UDP send skipped: socket not created");
+            }
+            return;
+        }
         
         /* Build RTP packet in a flat buffer to ensure LwIP compatibility */
         uint8_t packet[1500];
@@ -198,7 +214,15 @@ static void send_rtp_packet(const uint8_t *payload, size_t payload_len, bool mar
 
         memcpy(packet + 12, payload, payload_len);
 
-        sendto(s_udp_sock, packet, 12 + payload_len, 0, (struct sockaddr *)&s_rtp_dest_addr, sizeof(s_rtp_dest_addr));
+        int sent = sendto(s_udp_sock, packet, 12 + payload_len, 0, (struct sockaddr *)&s_rtp_dest_addr, sizeof(s_rtp_dest_addr));
+        if (sent < 0) {
+            ESP_LOGW(TAG, "RTP UDP sendto failed: %d (errno=%d)", sent, errno);
+        } else {
+            static uint32_t udp_packets = 0;
+            if (++udp_packets % 100 == 0) {
+                ESP_LOGI(TAG, "RTP UDP sent 100 packets, last len=%zu to port %d", 12 + payload_len, ntohs(s_rtp_dest_addr.sin_port));
+            }
+        }
         s_rtp_seq++;
         
         /* Hardware-Specific Pacing: SDIO Relief */
@@ -449,8 +473,16 @@ static void livestream_process_task(void *arg)
     static int frame_count = 0;
     frame_req_t req;
 
+    ESP_LOGI(TAG, "livestream_process_task started on Core %d", xPortGetCoreID());
+
     while (1) {
         if (xQueueReceive(s_frame_queue, &req, portMAX_DELAY) == pdTRUE) {
+            static uint32_t total_recv_frames = 0;
+            if (++total_recv_frames % 50 == 0) {
+                ESP_LOGI(TAG, "livestream_task: received 50 frames from queue, current index=%d, s_is_streaming=%d", 
+                         req.index, s_is_streaming);
+            }
+
             if (!s_is_streaming || !s_h264_enc) {
                 app_video_return_buf(req.index);
                 continue;
@@ -461,11 +493,49 @@ static void livestream_process_task(void *arg)
             /* Dynamically downscale OR mirror using PPA hardware */
             bool needs_mirror = app_video_get_mirror();
             if (s_stream_width != req.width || s_stream_height != req.height || needs_mirror) {
-                app_image_process_scale_crop_mirror(req.buf, req.width, req.height, PPA_SRM_COLOR_MODE_YUV420,
-                                             req.width, req.height, /* Use full sensor frame for source block */
+                // Calculate optimal crop width/height to avoid PPA hardware fractional scaling hangs.
+                // The PPA SRM engine uses 4-bit fractional scaling (increments of 1/16).
+                // To prevent hangs, the scaled output (crop * scale) must exactly match s_stream_width/height.
+                uint32_t crop_w = req.width;
+                uint32_t crop_h = req.height;
+                
+                // Find even scale fraction (f/16) that maximizes FOV (largest crop_w <= req.width)
+                // and results in exact integer dimensions.
+                for (int f = 2; f <= 16; f += 2) {
+                    if ((s_stream_width * 16) % f == 0) {
+                        uint32_t candidate = (s_stream_width * 16) / f;
+                        if (candidate <= req.width && (candidate % 2 == 0)) {
+                            crop_w = candidate;
+                            break;
+                        }
+                    }
+                }
+                for (int f = 2; f <= 16; f += 2) {
+                    if ((s_stream_height * 16) % f == 0) {
+                        uint32_t candidate = (s_stream_height * 16) / f;
+                        if (candidate <= req.height && (candidate % 2 == 0)) {
+                            crop_h = candidate;
+                            break;
+                        }
+                    }
+                }
+
+                static bool s_crop_logged = false;
+                if (!s_crop_logged) {
+                    ESP_LOGI(TAG, "PPA auto-crop: scaling input %dx%d (cropped to %dx%d) to output %dx%d", 
+                             req.width, req.height, crop_w, crop_h, s_stream_width, s_stream_height);
+                    s_crop_logged = true;
+                }
+
+                esp_err_t ppa_err = app_image_process_scale_crop_mirror(req.buf, req.width, req.height, PPA_SRM_COLOR_MODE_YUV420,
+                                             crop_w, crop_h,
                                              s_task_rgb_buf, s_stream_width, s_stream_height, 
                                              s_yuv_buf_size, PPA_SRM_COLOR_MODE_YUV420, PPA_SRM_ROTATION_ANGLE_0,
                                              needs_mirror);
+                if (ppa_err != ESP_OK) {
+                    ESP_LOGE(TAG, "PPA scale/crop failed immediately with error 0x%x (in: %dx%d -> crop: %dx%d -> out: %dx%d)", 
+                             ppa_err, req.width, req.height, crop_w, crop_h, s_stream_width, s_stream_height);
+                }
                 encoding_buf = s_task_rgb_buf;
             }
 
@@ -481,6 +551,7 @@ static void livestream_process_task(void *arg)
             esp_h264_err_t err = esp_h264_enc_process(s_h264_enc, &in_frame, &out_frame);
             /* Unlock the camera buffer so the driver can reuse it */
             app_video_return_buf(req.index);
+            
             if (err == ESP_H264_ERR_OK) {
                 if (out_frame.raw_data.buffer && out_frame.length > 0) {
                     rtp_broadcast(out_frame.raw_data.buffer, out_frame.length);
@@ -489,12 +560,21 @@ static void livestream_process_task(void *arg)
                     int64_t now = esp_timer_get_time();
                     if (now - last_time >= 1000000) {
                         s_actual_fps = (float)frame_count * 1000000.0f / (float)(now - last_time);
+                        ESP_LOGI(TAG, "Livestream encoding status: FPS=%.2f, last out_len=%d", s_actual_fps, out_frame.length);
                         last_time = now;
                         frame_count = 0;
                     }
+                } else {
+                    static uint32_t empty_out_cnt = 0;
+                    if (++empty_out_cnt % 50 == 0) {
+                        ESP_LOGW(TAG, "H.264 encode succeeded but returned 0 bytes output");
+                    }
                 }
             } else {
-                ESP_LOGW(TAG, "H.264 encode failed: %d", err);
+                static uint32_t enc_fail_cnt = 0;
+                if (++enc_fail_cnt % 25 == 0) {
+                    ESP_LOGW(TAG, "H.264 encode failed with error: %d", err);
+                }
             }
         }
     }
@@ -507,17 +587,9 @@ static esp_err_t init_h264_encoder(void)
     // Load resolution setting from NVS
     settings_info_t settings;
     uint16_t dummy_interval, dummy_mag;
-    if (app_storage_load_settings(&settings, &dummy_interval, &dummy_mag) == ESP_OK) {
-        if (strcmp(settings.resolution, "720P") == 0) {
-            s_stream_width = 1280; s_stream_height = 720;
-        } else if (strcmp(settings.resolution, "540P") == 0) {
-            s_stream_width = 960; s_stream_height = 540;
-        } else if (strcmp(settings.resolution, "480P") == 0) {
-            s_stream_width = 848; s_stream_height = 480;
-        } else if (strcmp(settings.resolution, "360P") == 0) {
-            s_stream_width = 640; s_stream_height = 360;
-        }
-    }
+    app_storage_load_settings(&settings, &dummy_interval, &dummy_mag); // Load to prevent warnings, but ignore resolution
+    s_stream_width = 848; 
+    s_stream_height = 480;
 
     esp_h264_enc_cfg_hw_t cfg = {
         .gop = STREAM_GOP,
@@ -651,6 +723,10 @@ esp_err_t app_livestream_init(void)
     ESP_LOGI(TAG, "Wi-Fi STA started, connecting to %s...", CONFIG_ESP_WIFI_SSID);
 
     EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT | WIFI_FAIL_BIT, pdFALSE, pdFALSE, pdMS_TO_TICKS(15000));
+    
+    // LWIP is completely initialized at this point. Safe to start the UDP socket.
+    app_control_start_udp_server();
+
     if (bits & WIFI_CONNECTED_BIT) {
         app_livestream_start_server();
     }
@@ -675,10 +751,20 @@ esp_err_t app_livestream_stop_server(void)
 
 esp_err_t app_livestream_feed_frame(uint8_t *yuv420_buf, uint8_t index, uint32_t width, uint32_t height)
 {
-    if (!s_encoder_ready || !s_h264_enc || !s_is_streaming) return ESP_OK;
+    if (!s_encoder_ready || !s_h264_enc || !s_is_streaming) {
+        static uint32_t feed_skip_cnt = 0;
+        if (++feed_skip_cnt % 100 == 0) {
+            ESP_LOGD(TAG, "Feed skipped: ready=%d, enc=%p, streaming=%d", s_encoder_ready, s_h264_enc, s_is_streaming);
+        }
+        return ESP_OK;
+    }
 
     /* Lock the buffer index to prevent the camera driver from overwriting it while we encode */
     if (app_video_lock_buf(index) != ESP_OK) {
+        static uint32_t lock_err_cnt = 0;
+        if (++lock_err_cnt % 50 == 0) {
+            ESP_LOGW(TAG, "Feed skip: failed to lock camera buffer %d", index);
+        }
         return ESP_OK;
     }
 
@@ -692,7 +778,16 @@ esp_err_t app_livestream_feed_frame(uint8_t *yuv420_buf, uint8_t index, uint32_t
     
     /* Queue the zero-copy pointer. Don't block if full (drop frame). */
     if (xQueueSend(s_frame_queue, &req, 0) != pdTRUE) {
+        static uint32_t drop_cnt = 0;
+        if (++drop_cnt % 50 == 0) {
+            ESP_LOGW(TAG, "Feed drop: livestream process queue is full");
+        }
         app_video_return_buf(index);
+    } else {
+        static uint32_t feed_ok_cnt = 0;
+        if (++feed_ok_cnt % 100 == 0) {
+            ESP_LOGI(TAG, "Feed frame: successfully queued index=%d, size=%dx%d", index, width, height);
+        }
     }
     return ESP_OK;
 }

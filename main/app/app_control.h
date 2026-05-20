@@ -23,6 +23,13 @@ extern "C" {
  */
 esp_err_t app_control_init(void);
 
+/**
+ * @brief Start the UDP server for haptic commands
+ * 
+ * Must be called AFTER lwIP is initialized
+ */
+void app_control_start_udp_server(void);
+
 #ifdef __cplusplus
 }
 #endif

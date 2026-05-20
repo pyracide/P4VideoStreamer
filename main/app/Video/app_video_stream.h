@@ -37,9 +37,9 @@ typedef enum {
 /* JPEG encoder aligned height (16-byte aligned) */
 #define PHOTO_HEIGHT_1088P  1088
 
-/* Default shared photo buffer size (720P max) */
-#define SHARED_PHOTO_BUF_WIDTH   PHOTO_WIDTH_720P
-#define SHARED_PHOTO_BUF_HEIGHT  PHOTO_HEIGHT_720P
+/* Default shared photo buffer size (1080P max) */
+#define SHARED_PHOTO_BUF_WIDTH   PHOTO_WIDTH_1080P
+#define SHARED_PHOTO_BUF_HEIGHT  PHOTO_HEIGHT_1080P
 
 /* Initialization */
 /**

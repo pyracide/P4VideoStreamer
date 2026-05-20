@@ -259,7 +259,9 @@ esp_err_t take_and_save_video(uint8_t *camera_buf, uint32_t width, uint32_t heig
         }
     }
 
-    ret = app_image_encode_jpeg(pic_buf, photo_width, photo_height, JPEG_ENCODE_IN_FORMAT_RGB565,
+    jpeg_enc_input_format_t in_format = (current_resolution == PHOTO_RESOLUTION_1080P && magnification_factor == 1) ? 
+                                        JPEG_ENCODE_IN_FORMAT_YUV420 : JPEG_ENCODE_IN_FORMAT_RGB565;
+    ret = app_image_encode_jpeg(pic_buf, photo_width, photo_height, in_format,
         JPEG_VIDEO_QUALITY,
         jpg_buf,
         rx_buffer_size,
@@ -371,6 +373,20 @@ esp_err_t app_video_stream_start_recording(void)
         return ret;
     }
 
+    // Allocate scaled_camera_buf for zoom/magnification during recording
+    scaled_camera_buf = heap_caps_aligned_calloc(data_cache_line_size, 1, 
+                                                 PHOTO_WIDTH_1080P * PHOTO_HEIGHT_1080P * 2, 
+                                                 MALLOC_CAP_SPIRAM);
+    if (scaled_camera_buf == NULL) {
+        ESP_LOGE(TAG, "Failed to allocate scaled camera buffer for recording");
+        deinit_mp4_muxer();
+        if (recorder_ctx.recording_mutex) {
+            vSemaphoreDelete(recorder_ctx.recording_mutex);
+            recorder_ctx.recording_mutex = NULL;
+        }
+        return ESP_ERR_NO_MEM;
+    }
+
     // Reset timing variables for new recording
     recorder_ctx.video_frame_count = 0;
     recorder_ctx.last_video_pts = 0;
@@ -426,6 +442,12 @@ esp_err_t app_video_stream_stop_recording(void)
     if (recorder_ctx.encoder != NULL) {
         esp_audio_enc_close(recorder_ctx.encoder);
         recorder_ctx.encoder = NULL;
+    }
+
+    // Free scaled camera buffer
+    if (scaled_camera_buf != NULL) {
+        heap_caps_free(scaled_camera_buf);
+        scaled_camera_buf = NULL;
     }
 
     recorder_ctx.video_frame_count = 0;

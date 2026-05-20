@@ -570,11 +570,11 @@ lv_disp_t *bsp_display_start(void) {
               .timer_period_ms = LVGL_TICK_PERIOD_MS,
               .task_max_sleep_ms = LVGL_MAX_SLEEP_MS,
           },
-      .buffer_size = BSP_LCD_DRAW_BUFF_SIZE,
+      .buffer_size = 2400,
       .double_buffer = BSP_LCD_DRAW_BUFF_DOUBLE,
       .flags = {
-          .buff_dma = false,
-          .buff_spiram = true,
+          .buff_dma = true,
+          .buff_spiram = false,
       }};
   return bsp_display_start_with_config(&cfg);
 }

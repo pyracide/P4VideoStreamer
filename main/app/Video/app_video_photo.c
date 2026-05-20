@@ -131,13 +131,20 @@ esp_err_t take_and_save_photo(uint8_t *camera_buf, uint32_t width, uint32_t heig
 
     uint16_t magnification_factor = app_extra_get_magnification_factor();
     uint8_t *pre_handle_buf = camera_buf;
+    uint8_t *local_scaled_buf = NULL;
 
     // Apply magnification if needed
     if(magnification_factor > 1) {
+        local_scaled_buf = heap_caps_aligned_calloc(data_cache_line_size, 1, width * height * 2, MALLOC_CAP_SPIRAM);
+        if (local_scaled_buf == NULL) {
+            ESP_LOGE(TAG, "Failed to allocate local scaled buffer");
+            ret = ESP_ERR_NO_MEM;
+            goto cleanup;
+        }
         ret = app_image_process_magnify(
             camera_buf, width, height, PPA_SRM_COLOR_MODE_YUV420,
             magnification_factor,
-            scaled_camera_buf, 
+            local_scaled_buf, 
             ALIGN_UP(width * height * 2, data_cache_line_size),
             PPA_SRM_COLOR_MODE_RGB565
         );
@@ -147,7 +154,7 @@ esp_err_t take_and_save_photo(uint8_t *camera_buf, uint32_t width, uint32_t heig
             goto cleanup;
         }
 
-        pre_handle_buf = scaled_camera_buf;
+        pre_handle_buf = local_scaled_buf;
     } else {
         pre_handle_buf = camera_buf;
     }
@@ -182,14 +189,16 @@ esp_err_t take_and_save_photo(uint8_t *camera_buf, uint32_t width, uint32_t heig
         pic_buf = photo_buf;
     } else {
         if(magnification_factor > 1) {
-            pic_buf = scaled_camera_buf;
+            pic_buf = local_scaled_buf;
         } else {
             pic_buf = camera_buf;
         }
     }
 
     // Perform JPEG encoding using the encapsulated function
-    ret = app_image_encode_jpeg(pic_buf, photo_width, photo_height, JPEG_ENCODE_IN_FORMAT_RGB565,
+    jpeg_enc_input_format_t in_format = (current_resolution == PHOTO_RESOLUTION_1080P && magnification_factor == 1) ? 
+                                        JPEG_ENCODE_IN_FORMAT_YUV420 : JPEG_ENCODE_IN_FORMAT_RGB565;
+    ret = app_image_encode_jpeg(pic_buf, photo_width, photo_height, in_format,
         JPEG_PHOTO_QUALITY,
         jpg_buf,
         rx_buffer_size,
@@ -214,6 +223,9 @@ esp_err_t take_and_save_photo(uint8_t *camera_buf, uint32_t width, uint32_t heig
     }
 
 cleanup:
+    if (local_scaled_buf != NULL) {
+        heap_caps_free(local_scaled_buf);
+    }
     // Note: photo_buf is pre-allocated and managed by init/deinit functions, don't free it here
 
     bsp_flashlight_set(false);

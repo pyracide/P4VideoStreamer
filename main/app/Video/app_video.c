@@ -109,13 +109,13 @@ int app_video_open(char *dev, video_fmt_t init_fmt) {
   ESP_LOGI(TAG, "width=%" PRIu32 " height=%" PRIu32,
            default_format.fmt.pix.width, default_format.fmt.pix.height);
 
-  app_camera_video.camera_buf_hes = 1280;
-  app_camera_video.camera_buf_ves = 720;
+  app_camera_video.camera_buf_hes = 1920;
+  app_camera_video.camera_buf_ves = 1080;
 
   struct v4l2_format format = {
       .type = type,
-      .fmt.pix.width = 1280, // Force Native 720p
-      .fmt.pix.height = 720,
+      .fmt.pix.width = 1920, // Full 1080p FOV
+      .fmt.pix.height = 1080,
       .fmt.pix.pixelformat = init_fmt,
   };
 
@@ -186,7 +186,7 @@ esp_err_t app_video_set_bufs(int video_fd, uint32_t fb_num, const void **fb) {
     }
 
     app_camera_video.camera_buf_size = buf.length;
-
+      ESP_LOGE(TAG, "DEBUG_CSI: buf.length from QUERYBUF = %u", buf.length);
     if (ioctl(video_fd, VIDIOC_QBUF, &buf) != 0) {
       ESP_LOGE(TAG, "queue frame buffer failed");
       goto errout_req_bufs;

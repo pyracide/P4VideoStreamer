@@ -26,7 +26,7 @@ typedef enum {
 } video_fmt_t;
 
 #define EXAMPLE_CAM_DEV_PATH (ESP_VIDEO_MIPI_CSI_DEVICE_NAME)
-#define EXAMPLE_CAM_BUF_NUM (6)
+#define EXAMPLE_CAM_BUF_NUM (3) // Reduced to 3 to save memory at 1080p
 
 #define APP_VIDEO_FMT (APP_VIDEO_FMT_YUV420)
 

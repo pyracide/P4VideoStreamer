@@ -1,10 +1,17 @@
 #include <stdio.h>
+#include <string.h>
 #include "esp_log.h"
 #include "esp_timer.h"
 #include "esp_sleep.h"
 #include "esp_system.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "driver/gpio.h"
 #include "bsp/esp-bsp.h"
+#include "lwip/sockets.h"
+#include "lwip/netdb.h"
+#include "nvs_flash.h"
+#include "nvs.h"
 
 #include "ui_extra.h"
 #include "app_video_stream.h"
@@ -25,22 +32,28 @@ static esp_timer_handle_t s_haptic_timer = NULL;
 typedef struct {
     uint8_t effect;
     const char* name;
-    bool continuous;
+    uint32_t period_ms;
 } haptic_test_state_t;
 
 static const haptic_test_state_t s_haptic_states[] = {
-    {1,  "Effect 1 (Current pulse - strong click 100%)", false},
-    {24, "Effect 24 (Double Click 100%)", false},
-    {27, "Effect 27 (Short Double Click Strong)", false},
-    {16, "Effect 16 (Long Alert)", false},
-    {52, "Effect 52 (Pulsing Strong)", false},
-    {55, "Effect 55 (Transition Hum)", false},
-    {1,  "Effect 1 (Continuous)", true},
-    {2,  "Effect 2 (Continuous - 60% click)", true},
-    {3,  "Effect 3 (Continuous - 30% click)", true}
+    {1,  "Proximity Phase 1 (Very Slow Clicks 800ms)", 800},
+    {1,  "Proximity Phase 2 (Slow Clicks 600ms)", 600},
+    {1,  "Proximity Phase 3 (Medium Clicks 400ms)", 400},
+    {1,  "Proximity Phase 4 (Fast Clicks 200ms)", 200},
+    {1,  "Proximity Phase 5 (Ultra Fast Clicks 100ms)", 100},
+    {55, "Effect 55 (Transition Hum)", 0},
+    {12, "Effect 12 (Triple Click 100%)", 0},
+    {15, "Effect 15 (Strong Buzz 100%)", 0},
+    {64, "Effect 64 (Transient Click 100%)", 0}
 };
 static const int NUM_HAPTIC_STATES = sizeof(s_haptic_states) / sizeof(s_haptic_states[0]);
 static int s_current_haptic_state = -1; // starts at -1 so first press goes to 0
+
+static esp_timer_handle_t s_double_press_timer = NULL;
+static esp_timer_handle_t s_proxim_watchdog_timer = NULL;
+static int s_current_proxim = -1;
+
+static void play_haptic_effect(uint8_t effect, uint32_t period_ms);
 
 static esp_err_t drv_write_reg(uint8_t reg, uint8_t val) {
     uint8_t buf[2] = {reg, val};
@@ -51,86 +64,307 @@ static esp_err_t drv_write_reg(uint8_t reg, uint8_t val) {
     return err;
 }
 
+static uint8_t drv_read_reg(uint8_t reg) {
+    uint8_t read_buf[1] = {0};
+    if (i2c_master_transmit_receive(s_drv2605_dev, &reg, 1, read_buf, 1, -1) != ESP_OK) {
+        ESP_LOGE(TAG, "DRV2605L I2C read error reg 0x%02X", reg);
+    }
+    return read_buf[0];
+}
+
 static void haptic_timer_cb(void* arg) {
     if (s_drv2605_dev) {
         drv_write_reg(0x0C, 0x01); // GO
     }
 }
 
-static void trigger_haptic_buzz(void)
-{
-    // If timer is running, stop and delete it
+static void stop_haptic_timer(void) {
     if (s_haptic_timer != NULL) {
         esp_timer_stop(s_haptic_timer);
         esp_timer_delete(s_haptic_timer);
         s_haptic_timer = NULL;
     }
+}
 
-    if (s_drv2605_dev == NULL) {
-        i2c_master_bus_handle_t bus_handle;
-        if (bsp_get_i2c_bus_handle(&bus_handle) != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to get I2C bus handle for DRV2605L");
-            return;
-        }
+static void proxim_watchdog_cb(void* arg) {
+    // 500ms without PROXIM packets, stop continuous pulsing
+    ESP_LOGI(TAG, "Proximity watchdog timeout, stopping haptics.");
+    stop_haptic_timer();
+    
+    if (s_current_proxim > 0) {
+        play_haptic_effect(64, 0); // Play transient click to signal tracking lost
+    }
+    
+    s_current_proxim = -1;
+}
 
-        i2c_device_config_t dev_cfg = {
-            .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-            .device_address = 0x5A,
-            .scl_speed_hz = 100000, // standard 100kHz
-        };
-        if (i2c_master_bus_add_device(bus_handle, &dev_cfg, &s_drv2605_dev) != ESP_OK) {
-            ESP_LOGE(TAG, "Failed to add DRV2605L to I2C bus");
-            return;
-        }
-        
-        ESP_LOGI(TAG, "Initializing DRV2605L...");
+static void init_drv2605l_safe(void) {
+    if (s_drv2605_dev != NULL) return;
 
-        // 1. Take out of standby (Mode Register 0x01 = 0x00)
-        if (drv_write_reg(0x01, 0x00) != ESP_OK) return;
-
-        // 2. Select LRA ROM library (Library Selection Register 0x03 = 0x06)
-        if (drv_write_reg(0x03, 0x06) != ESP_OK) return;
-
-        uint8_t read_buf[1] = {0};
-        uint8_t reg = 0x1A;
-
-        // 3. Enable LRA Mode (0x1A: Feedback Control)
-        if (i2c_master_transmit_receive(s_drv2605_dev, &reg, 1, read_buf, 1, -1) == ESP_OK) {
-            drv_write_reg(0x1A, read_buf[0] | 0x80);
-        } else {
-            ESP_LOGE(TAG, "Failed to read Feedback Control reg 0x1A");
-            return;
-        }
-
-        // 4. Set Rated Voltage (0x16) to 2.5V = 0x7D
-        drv_write_reg(0x16, 0x7D);
-
-        // 5. Set Overdrive Clamp (0x17) to 2.5V = 0x7D
-        drv_write_reg(0x17, 0x7D);
-        
-        ESP_LOGI(TAG, "DRV2605L Configured for LRA");
+    i2c_master_bus_handle_t bus_handle;
+    if (bsp_get_i2c_bus_handle(&bus_handle) != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to get I2C bus handle for DRV2605L");
+        return;
     }
 
-    if (s_drv2605_dev) {
-        // Advance to next state
-        s_current_haptic_state = (s_current_haptic_state + 1) % NUM_HAPTIC_STATES;
-        const haptic_test_state_t* state = &s_haptic_states[s_current_haptic_state];
+    i2c_device_config_t dev_cfg = {
+        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+        .device_address = 0x5A,
+        .scl_speed_hz = 100000, 
+    };
+    if (i2c_master_bus_add_device(bus_handle, &dev_cfg, &s_drv2605_dev) != ESP_OK) {
+        ESP_LOGE(TAG, "Failed to add DRV2605L to I2C bus");
+        return;
+    }
+    
+    ESP_LOGI(TAG, "Initializing DRV2605L...");
+    
+    // NVS storage keys for auto-calibration
+    const char* nvs_ns = "drv_calib";
+    nvs_handle_t nvs_handle;
+    uint8_t comp = 0, bemf = 0, fb = 0, calibrated = 0;
+
+    // Load from NVS
+    if (nvs_open(nvs_ns, NVS_READONLY, &nvs_handle) == ESP_OK) {
+        nvs_get_u8(nvs_handle, "calibrated", &calibrated);
+        if (calibrated) {
+            nvs_get_u8(nvs_handle, "comp", &comp);
+            nvs_get_u8(nvs_handle, "bemf", &bemf);
+            nvs_get_u8(nvs_handle, "fb", &fb);
+        }
+        nvs_close(nvs_handle);
+    }
+
+    // Wake up chip
+    drv_write_reg(0x01, 0x00);
+    
+    if (calibrated) {
+        ESP_LOGI(TAG, "Using saved DRV2605L Auto-Calibration: Comp=0x%02X, BEMF=0x%02X, FB=0x%02X", comp, bemf, fb);
+        drv_write_reg(0x18, comp);
+        drv_write_reg(0x19, bemf);
+        drv_write_reg(0x1A, fb);
+    } else {
+        ESP_LOGI(TAG, "No calibration found. Running DRV2605L Auto-Calibration...");
         
-        ESP_LOGI(TAG, "=== Haptic Test Phase %d/8: %s ===", s_current_haptic_state, state->name);
+        // Setup Rated Voltage & Clamp
+        drv_write_reg(0x16, 0x7D);
+        drv_write_reg(0x17, 0x7D);
 
-        drv_write_reg(0x04, state->effect);  // sequence 1 = our current effect
-        drv_write_reg(0x05, 0x00);           // sequence 2 = stop
-        drv_write_reg(0x0C, 0x01);           // GO
+        // Put in Auto-calibration mode
+        drv_write_reg(0x01, 0x07); 
+        
+        // Start calibration
+        drv_write_reg(0x0C, 0x01); // GO
 
-        if (state->continuous) {
-            ESP_LOGI(TAG, "Starting continuous pulse timer... Press again to stop/advance.");
-            esp_timer_create_args_t timer_args = {
-                .callback = &haptic_timer_cb,
-                .name = "haptic_cont"
+        // Poll GO register until calibration finishes
+        bool success = false;
+        for (int i = 0; i < 200; i++) {
+            vTaskDelay(pdMS_TO_TICKS(10));
+            if ((drv_read_reg(0x0C) & 0x01) == 0) {
+                // Done! Check status for error bit (bit 3)
+                if ((drv_read_reg(0x00) & 0x08) == 0) {
+                    success = true;
+                }
+                break;
+            }
+        }
+
+        if (success) {
+            comp = drv_read_reg(0x18);
+            bemf = drv_read_reg(0x19);
+            fb   = drv_read_reg(0x1A);
+            ESP_LOGI(TAG, "Calibration SUCCESS. Comp=0x%02X, BEMF=0x%02X, FB=0x%02X", comp, bemf, fb);
+
+            // Save to NVS
+            if (nvs_open(nvs_ns, NVS_READWRITE, &nvs_handle) == ESP_OK) {
+                nvs_set_u8(nvs_handle, "comp", comp);
+                nvs_set_u8(nvs_handle, "bemf", bemf);
+                nvs_set_u8(nvs_handle, "fb", fb);
+                nvs_set_u8(nvs_handle, "calibrated", 1);
+                nvs_commit(nvs_handle);
+                nvs_close(nvs_handle);
+            }
+        } else {
+            ESP_LOGE(TAG, "Calibration FAILED or timed out.");
+            // Fallback to manual LRA mode setup if it fails
+            uint8_t current_fb = drv_read_reg(0x1A);
+            drv_write_reg(0x1A, current_fb | 0x80);
+        }
+        
+        // Put back in standby, then wake in active mode
+        drv_write_reg(0x01, 0x00);
+    }
+
+    // Select LRA ROM library 6
+    drv_write_reg(0x03, 0x06);
+
+    // Apply Voltage
+    drv_write_reg(0x16, 0x7D);
+    drv_write_reg(0x17, 0x7D);
+}
+
+static void play_haptic_effect(uint8_t effect, uint32_t period_ms) {
+    init_drv2605l_safe();
+    stop_haptic_timer();
+
+    if (s_drv2605_dev == NULL) return;
+
+    drv_write_reg(0x04, effect);
+    drv_write_reg(0x05, 0x00);
+    drv_write_reg(0x0C, 0x01);
+
+    if (period_ms > 0) {
+        esp_timer_create_args_t timer_args = {
+            .callback = &haptic_timer_cb,
+            .name = "haptic_cont"
+        };
+        esp_timer_create(&timer_args, &s_haptic_timer);
+        esp_timer_start_periodic(s_haptic_timer, period_ms * 1000); 
+    }
+}
+
+static void fire_haptic_effect(void) {
+    const haptic_test_state_t* state = &s_haptic_states[s_current_haptic_state];
+    ESP_LOGI(TAG, "=== Haptic Test Phase %d/%d: %s ===", s_current_haptic_state + 1, NUM_HAPTIC_STATES, state->name);
+    play_haptic_effect(state->effect, state->period_ms);
+}
+
+static void double_press_timeout_cb(void* arg) {
+    // 300ms has elapsed without a second press. Safe to advance and fire!
+    s_current_haptic_state = (s_current_haptic_state + 1) % NUM_HAPTIC_STATES;
+    fire_haptic_effect();
+}
+
+static void udp_haptic_server_task(void *pvParameters)
+{
+    char rx_buffer[128];
+    int port = 8282;
+
+    if (s_proxim_watchdog_timer == NULL) {
+        esp_timer_create_args_t wd_args = {
+            .callback = &proxim_watchdog_cb,
+            .name = "proxim_wd"
+        };
+        esp_timer_create(&wd_args, &s_proxim_watchdog_timer);
+    }
+
+    while (1) {
+        struct sockaddr_in dest_addr;
+        dest_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        dest_addr.sin_family = AF_INET;
+        dest_addr.sin_port = htons(port);
+
+        int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_IP);
+        if (sock < 0) {
+            ESP_LOGE(TAG, "Unable to create socket: errno %d", errno);
+            vTaskDelay(pdMS_TO_TICKS(1000));
+            continue;
+        }
+
+        int err = bind(sock, (struct sockaddr *)&dest_addr, sizeof(dest_addr));
+        if (err < 0) {
+            ESP_LOGE(TAG, "Socket unable to bind: errno %d", errno);
+            close(sock);
+            vTaskDelay(pdMS_TO_TICKS(1000));
+            continue;
+        }
+
+        ESP_LOGI(TAG, "Haptic UDP server listening on port %d", port);
+
+        while (1) {
+            struct sockaddr_storage source_addr;
+            socklen_t socklen = sizeof(source_addr);
+            int len = recvfrom(sock, rx_buffer, sizeof(rx_buffer) - 1, 0, (struct sockaddr *)&source_addr, &socklen);
+
+            if (len < 0) {
+                ESP_LOGE(TAG, "recvfrom failed: errno %d", errno);
+                break;
+            }
+
+            rx_buffer[len] = 0; // Null-terminate
+            
+            // Parse Commands
+            if (strncmp(rx_buffer, "HAND_DETECTED", 13) == 0) {
+                ESP_LOGI(TAG, "UDP Command: HAND_DETECTED");
+                esp_timer_stop(s_proxim_watchdog_timer); // clear watchdog
+                s_current_proxim = -1; // reset state
+                play_haptic_effect(12, 0); // Triple Click 100%
+            } 
+            else if (strncmp(rx_buffer, "HAND_LOST", 9) == 0) {
+                ESP_LOGI(TAG, "UDP Command: HAND_LOST");
+                esp_timer_stop(s_proxim_watchdog_timer);
+                if (s_current_proxim > 0) {
+                    play_haptic_effect(64, 0); // Transient Click 100%
+                } else {
+                    stop_haptic_timer(); // ensure silence if it was already lost
+                }
+                s_current_proxim = 0; // sync state to avoid double-trigger
+            } 
+            else if (strncmp(rx_buffer, "PROXIM:", 7) == 0) {
+                int dist = rx_buffer[7] - '0'; // parse 0-3
+                
+                // Restart watchdog (must stop first to reset an active esp_timer)
+                esp_timer_stop(s_proxim_watchdog_timer);
+                esp_timer_start_once(s_proxim_watchdog_timer, 500000); // 500ms 
+
+                if (dist != s_current_proxim) {
+                    int prev_proxim = s_current_proxim;
+                    s_current_proxim = dist;
+                    if (dist == 0) {
+                        stop_haptic_timer(); // Stop continuous effect
+                        if (prev_proxim > 0) {
+                            play_haptic_effect(64, 0); // Lost hand effect (only if we were actively tracking)
+                        }
+                    } else if (dist == 1) {
+                        stop_haptic_timer(); // Overkill fix: distance 1 is COMPLETELY silent, but keeps tracker active (>0)
+                    } else {
+                        int period = 0;
+                        if (dist == 2) period = 500; // 500ms ping
+                        else if (dist == 3) period = 250; // 250ms ping
+
+                        if (period > 0) {
+                            play_haptic_effect(1, period); // ROM Effect 1 (Proximity Phase)
+                        }
+                    }
+                }
+            }
+        }
+
+        if (sock != -1) {
+            close(sock);
+        }
+    }
+    vTaskDelete(NULL);
+}
+
+static void trigger_haptic_buzz(void)
+{
+    init_drv2605l_safe();
+
+    if (s_drv2605_dev) {
+        if (s_double_press_timer != NULL && esp_timer_is_active(s_double_press_timer)) {
+            // A second press happened before the 300ms timer fired! 
+            // Cancel the timer so we don't advance.
+            esp_timer_stop(s_double_press_timer);
+            esp_timer_delete(s_double_press_timer);
+            s_double_press_timer = NULL;
+
+            if (s_current_haptic_state != -1) {
+                ESP_LOGI(TAG, ">>> Double-press detected! Repeating current effect... <<<");
+                fire_haptic_effect();
+            }
+        } else {
+            // First press. Start the 300ms waiting window.
+            if (s_double_press_timer != NULL) {
+                esp_timer_delete(s_double_press_timer);
+            }
+            
+            esp_timer_create_args_t dp_timer_args = {
+                .callback = &double_press_timeout_cb,
+                .name = "double_press_wait"
             };
-            esp_timer_create(&timer_args, &s_haptic_timer);
-            // 200ms period (200,000 microseconds)
-            esp_timer_start_periodic(s_haptic_timer, 200000); 
+            esp_timer_create(&dp_timer_args, &s_double_press_timer);
+            esp_timer_start_once(s_double_press_timer, 300000); // 300ms in microseconds
         }
     }
 }
@@ -350,4 +584,15 @@ esp_err_t app_control_init(void)
     ESP_ERROR_CHECK(bsp_knob_register_cb(KNOB_RIGHT, knob_right_cb, NULL));
 
     return ESP_OK;
+}
+
+/**
+ * @brief Start the UDP server for haptic commands
+ * 
+ * Must be called AFTER lwIP is initialized (e.g., after esp_netif_init / esp_event_loop_create_default).
+ */
+void app_control_start_udp_server(void)
+{
+    ESP_LOGI(TAG, "Starting UDP Haptic server task");
+    xTaskCreate(udp_haptic_server_task, "udp_haptic_server", 4096, NULL, 5, NULL);
 }

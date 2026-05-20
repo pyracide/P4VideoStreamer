@@ -83,5 +83,9 @@ void app_main(void)
     ESP_LOGI(TAG, "Initialize the livestream module");
     ESP_ERROR_CHECK(app_livestream_init());
     
+    // Jump straight to livestreaming mode on boot
+    ESP_LOGI(TAG, "Entering livestream mode");
+    ui_extra_goto_page(UI_PAGE_LIVESTREAM);
+
     ESP_LOGI(TAG, "Application initialization completed");
 }
