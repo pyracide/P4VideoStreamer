@@ -224,7 +224,7 @@ esp_err_t bsp_i2c_init(void) {
       .i2c_port = BSP_I2C_NUM,
       .scl_io_num = BSP_I2C_SCL,
       .sda_io_num = BSP_I2C_SDA,
-      .flags.enable_internal_pullup = false, // no pull-up
+      .flags.enable_internal_pullup = true, // enable internal pull-up
   };
   BSP_ERROR_CHECK_RETURN_ERR(
       i2c_new_master_bus(&i2c_mst_config, &i2c_bus_handle));
