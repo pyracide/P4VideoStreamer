@@ -54,6 +54,15 @@ static EventGroupHandle_t s_wifi_event_group = NULL;
 static int s_retry_count = 0;
 static bool s_wifi_connected = false;
 
+static const char* WIFI_SSID_PRIMARY     = "CommunityFibre69420";
+static const char* WIFI_PASSWORD_PRIMARY = "43SketleyRoad";
+
+static const char* WIFI_SSID_FALLBACK    = "SamGraysHotspot";
+static const char* WIFI_PASSWORD_FALLBACK = "not12345678";
+
+static bool s_using_fallback = false;
+static bool s_rtsp_server_started = false;
+
 /* H.264 encoder */
 static esp_h264_enc_handle_t s_h264_enc = NULL;
 static uint8_t *s_out_buf = NULL;
@@ -106,9 +115,25 @@ static void wifi_event_handler(void *arg, esp_event_base_t base,
             s_retry_count++;
             ESP_LOGI(TAG, "Retry Wi-Fi connect (%d/%d)", s_retry_count, MAX_RETRY);
         } else {
-            xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
-            s_state = LIVESTREAM_STATE_ERROR;
-            ESP_LOGE(TAG, "Wi-Fi connect failed after %d retries", MAX_RETRY);
+            if (!s_using_fallback) {
+                s_using_fallback = true;
+                s_retry_count = 0;
+                ESP_LOGW(TAG, "Failed to connect to primary network %s. Switching to fallback %s...", 
+                         WIFI_SSID_PRIMARY, WIFI_SSID_FALLBACK);
+                wifi_config_t wifi_config = {
+                    .sta = {
+                        .threshold.authmode = WIFI_AUTH_WPA2_PSK,
+                    },
+                };
+                strlcpy((char*)wifi_config.sta.ssid, WIFI_SSID_FALLBACK, sizeof(wifi_config.sta.ssid));
+                strlcpy((char*)wifi_config.sta.password, WIFI_PASSWORD_FALLBACK, sizeof(wifi_config.sta.password));
+                esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
+                esp_wifi_connect();
+            } else {
+                xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
+                s_state = LIVESTREAM_STATE_ERROR;
+                ESP_LOGE(TAG, "Wi-Fi connect failed after %d retries on fallback network", MAX_RETRY);
+            }
         }
     } else if (base == IP_EVENT && id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t *event = (ip_event_got_ip_t *)data;
@@ -120,6 +145,9 @@ static void wifi_event_handler(void *arg, esp_event_base_t base,
         s_wifi_connected = true;
         s_state = LIVESTREAM_STATE_WIFI_CONNECTED;
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+        
+        // Dynamically start the RTSP server if it is not already running
+        app_livestream_start_server();
     }
 }
 
@@ -708,11 +736,11 @@ esp_err_t app_livestream_init(void)
 
     wifi_config_t wifi_config = {
         .sta = {
-            .ssid = CONFIG_ESP_WIFI_SSID,
-            .password = CONFIG_ESP_WIFI_PASSWORD,
             .threshold.authmode = WIFI_AUTH_WPA2_PSK,
         },
     };
+    strlcpy((char*)wifi_config.sta.ssid, WIFI_SSID_PRIMARY, sizeof(wifi_config.sta.ssid));
+    strlcpy((char*)wifi_config.sta.password, WIFI_PASSWORD_PRIMARY, sizeof(wifi_config.sta.password));
 
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
@@ -720,7 +748,8 @@ esp_err_t app_livestream_init(void)
     esp_wifi_set_ps(WIFI_PS_NONE);
 
     s_state = LIVESTREAM_STATE_WIFI_CONNECTING;
-    ESP_LOGI(TAG, "Wi-Fi STA started, connecting to %s...", CONFIG_ESP_WIFI_SSID);
+    s_using_fallback = false;
+    ESP_LOGI(TAG, "Wi-Fi STA started, connecting to %s...", WIFI_SSID_PRIMARY);
 
     EventBits_t bits = xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT | WIFI_FAIL_BIT, pdFALSE, pdFALSE, pdMS_TO_TICKS(15000));
     
@@ -736,9 +765,13 @@ esp_err_t app_livestream_init(void)
 
 esp_err_t app_livestream_start_server(void)
 {
-    if (s_state >= LIVESTREAM_STATE_READY) return ESP_OK;
+    if (s_rtsp_server_started) {
+        s_state = LIVESTREAM_STATE_READY;
+        return ESP_OK;
+    }
     
     xTaskCreatePinnedToCore(rtsp_server_task, "rtsp_server", 8192, NULL, 6, NULL, 0);
+    s_rtsp_server_started = true;
     s_state = LIVESTREAM_STATE_READY;
     return ESP_OK;
 }
@@ -826,7 +859,7 @@ float app_livestream_get_actual_fps(void)
 }
 
 /**
- * @brief Switch Wi-Fi network to the predefined SamGaysHotspot
+ * @brief Switch Wi-Fi network to the predefined SamGraysHotspot
  *
  * Disconnects from the current network and attempts to connect to the hotspot.
  * This is used to bypass restricted corporate/university Wi-Fi.
@@ -835,11 +868,14 @@ void app_livestream_switch_network(void)
 {
     wifi_config_t wifi_config = {
         .sta = {
-            .ssid = "SamGaysHotspot",
-            .password = "not12345678",
+            .threshold.authmode = WIFI_AUTH_WPA2_PSK,
         },
     };
-    ESP_LOGI(TAG, "Switching network to SamGaysHotspot...");
+    strlcpy((char*)wifi_config.sta.ssid, WIFI_SSID_FALLBACK, sizeof(wifi_config.sta.ssid));
+    strlcpy((char*)wifi_config.sta.password, WIFI_PASSWORD_FALLBACK, sizeof(wifi_config.sta.password));
+    ESP_LOGI(TAG, "Switching network to %s...", WIFI_SSID_FALLBACK);
+    s_using_fallback = true;
+    s_retry_count = 0;
     esp_wifi_disconnect();
     esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
     esp_wifi_connect();

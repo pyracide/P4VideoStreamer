@@ -428,28 +428,46 @@ static void udp_haptic_server_task(void *pvParameters) {
 
       // Parse Commands
       if (strncmp(rx_buffer, "HAND_DETECTED", 13) == 0) {
+        if (s_hand_tracked) {
+          continue; // Ignore duplicate packets in the burst
+        }
         ESP_LOGI(TAG, "UDP Command: HAND_DETECTED");
         esp_timer_stop(s_proxim_watchdog_timer); // clear watchdog
         stop_hand_lost_timer(); // cancel any active hand-lost pulsing
         s_hand_tracked = true;
         s_current_proxim = -1;     // reset state
+
+        // Phase 2: Force stop and brief settle delay before starting new effect
+        if (s_drv2605_dev) {
+          drv_write_reg(0x0C, 0x00);
+        }
+        vTaskDelay(pdMS_TO_TICKS(50));
+
         play_haptic_effect(55, 0); // Transition Hum
       } else if (strncmp(rx_buffer, "HAND_LOST", 9) == 0) {
+        if (!s_hand_tracked) {
+          continue; // Ignore duplicate packets in the burst
+        }
         ESP_LOGI(TAG, "UDP Command: HAND_LOST");
         esp_timer_stop(s_proxim_watchdog_timer);
-        if (s_hand_tracked) {
-          // Fast repeating pulse (same as PROXIM:3) for 500ms then cut
-          play_haptic_effect(1, 250);
-          stop_hand_lost_timer();
-          esp_timer_create_args_t args = {.callback = &hand_lost_cutoff_cb,
-                                          .name = "hand_lost_cut"};
-          esp_timer_create(&args, &s_hand_lost_timer);
-          esp_timer_start_once(s_hand_lost_timer, 500000); // 500ms cutoff
-        } else {
-          stop_haptic_timer(); // ensure silence if it was already lost
+
+        // Phase 2: Stop timer and clear GO bit, then delay 100ms to let physical mass settle
+        stop_haptic_timer();
+        if (s_drv2605_dev) {
+          drv_write_reg(0x0C, 0x00);
         }
+        vTaskDelay(pdMS_TO_TICKS(100));
+
         s_hand_tracked = false;
         s_current_proxim = -1; // sync state to avoid double-trigger
+
+        // Fast repeating pulse (same as PROXIM:3) for 500ms then cut
+        play_haptic_effect(1, 250);
+        stop_hand_lost_timer();
+        esp_timer_create_args_t args = {.callback = &hand_lost_cutoff_cb,
+                                        .name = "hand_lost_cut"};
+        esp_timer_create(&args, &s_hand_lost_timer);
+        esp_timer_start_once(s_hand_lost_timer, 500000); // 500ms cutoff
       } else if (strncmp(rx_buffer, "PROXIM:", 7) == 0) {
         if (!s_hand_tracked) {
           continue; // Ignore proximity updates if the hand is not tracked
