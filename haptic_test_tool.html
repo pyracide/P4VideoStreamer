@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haptic Drawing Test Tool</title>
+    <meta name="description" content="Test tool for dynamic haptic feedback driven by drawing speed via DRV2605L over UDP">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a2234;
+            --bg-card-hover: #1e2a40;
+            --border: #2a3650;
+            --border-active: #3b82f6;
+            --text-primary: #e8ecf4;
+            --text-secondary: #8896b0;
+            --text-muted: #5a6a82;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --canvas-draw: #3b82f6;
+            --canvas-move: rgba(255, 255, 255, 0.15);
+            --glass-bg: rgba(17, 24, 39, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── Header ──────────────────────────── */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 24px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 .icon { font-size: 20px; }
+
+        .connection-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            transition: all 0.3s;
+        }
+
+        .connection-badge.connected {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+
+        .connection-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* ── Layout ──────────────────────────── */
+        .app-layout {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            grid-template-rows: 1fr auto;
+            height: calc(100vh - 53px);
+        }
+
+        /* ── Canvas Area ─────────────────────── */
+        .canvas-area {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+            overflow: hidden;
+        }
+
+        .canvas-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .toolbar-btn {
+            padding: 7px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .toolbar-btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--border-active);
+            color: var(--text-primary);
+        }
+
+        .toolbar-btn.active {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .toolbar-sep {
+            width: 1px;
+            height: 24px;
+            background: var(--border);
+        }
+
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #drawCanvas {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            cursor: crosshair;
+            box-shadow: var(--shadow-lg);
+            display: block;
+        }
+
+        /* ── Canvas HUD overlay ──────────────── */
+        .canvas-hud {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            pointer-events: none;
+        }
+
+        .hud-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            backdrop-filter: blur(12px);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .hud-label { color: var(--text-muted); }
+        .hud-value { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+        .hud-value.speed { color: var(--accent-cyan); }
+        .hud-value.period { color: var(--accent-amber); }
+        .hud-value.pulses { color: var(--accent-green); }
+
+        /* ── Side Panel ──────────────────────── */
+        .side-panel {
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-section {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-section:last-child { border-bottom: none; }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .param-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .param-row:last-child { margin-bottom: 0; }
+
+        .param-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .param-input {
+            width: 72px;
+            padding: 5px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+            text-align: right;
+            transition: border-color 0.2s;
+        }
+
+        .param-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .param-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--border);
+            outline: none;
+            margin-top: 6px;
+        }
+
+        .param-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            cursor: pointer;
+            border: 2px solid var(--bg-secondary);
+            box-shadow: 0 0 6px rgba(59, 130, 246, 0.4);
+        }
+
+        .slider-group {
+            margin-bottom: 14px;
+        }
+
+        .slider-group:last-child { margin-bottom: 0; }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .slider-val {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ── Connection section ───────────────── */
+        .conn-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .conn-input {
+            flex: 1;
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .conn-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .conn-btn {
+            padding: 7px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .conn-btn.connect {
+            background: var(--accent-blue);
+            color: white;
+        }
+
+        .conn-btn.connect:hover { background: #2563eb; }
+
+        .conn-btn.disconnect {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        /* ── Effect Browser ──────────────────── */
+        .effect-browser {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .effect-browser::-webkit-scrollbar { width: 6px; }
+        .effect-browser::-webkit-scrollbar-track { background: transparent; }
+        .effect-browser::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .effect-row {
+            display: flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-bottom: 1px solid rgba(42, 54, 80, 0.5);
+            font-size: 11px;
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+
+        .effect-row:last-child { border-bottom: none; }
+
+        .effect-row:hover { background: var(--bg-card-hover); }
+
+        .effect-row.selected {
+            background: rgba(59, 130, 246, 0.12);
+            border-left: 2px solid var(--accent-blue);
+        }
+
+        .effect-id {
+            width: 32px;
+            font-weight: 600;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .effect-name {
+            flex: 1;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .effect-test-btn {
+            padding: 3px 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .effect-test-btn:hover {
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .effect-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .effect-action-btn {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .effect-action-btn:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        .effect-filter {
+            margin-bottom: 8px;
+        }
+
+        .effect-filter input {
+            width: 100%;
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .effect-filter input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .effect-filter input::placeholder { color: var(--text-muted); }
+
+        /* ── Log Panel ───────────────────────── */
+        .log-panel {
+            grid-column: 1 / -1;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            height: 140px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .log-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .log-header span {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .log-clear-btn {
+            padding: 3px 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 10px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .log-clear-btn:hover { color: var(--text-secondary); }
+
+        .log-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 16px;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .log-content::-webkit-scrollbar { width: 6px; }
+        .log-content::-webkit-scrollbar-track { background: transparent; }
+        .log-content::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .log-entry {
+            display: flex;
+            gap: 10px;
+        }
+
+        .log-time { color: var(--text-muted); flex-shrink: 0; }
+        .log-dir { width: 18px; text-align: center; flex-shrink: 0; }
+        .log-dir.out { color: var(--accent-blue); }
+        .log-dir.in { color: var(--accent-green); }
+        .log-dir.sys { color: var(--accent-amber); }
+        .log-cmd { color: var(--text-secondary); }
+
+        /* ── Sparkline ───────────────────────── */
+        .sparkline-container {
+            height: 40px;
+            margin-top: 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            background: var(--bg-card);
+        }
+
+        #sparklineCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ── Responsive ──────────────────────── */
+        @media (max-width: 900px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+            .side-panel { border-left: none; border-top: 1px solid var(--border); }
+        }
+
+        /* Current effect badges */
+        .current-effects {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .effect-badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .effect-badge.draw {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--accent-blue);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+        }
+
+        .effect-badge.hand {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────── -->
+<div class="header">
+    <h1>
+        <span class="icon">📳</span>
+        Haptic Drawing Test Tool
+    </h1>
+    <div class="connection-badge" id="connectionBadge">
+        <div class="connection-dot"></div>
+        <span id="connectionText">Disconnected</span>
+    </div>
+</div>
+
+<!-- ── Main Layout ────────────────────────────── -->
+<div class="app-layout">
+
+    <!-- Canvas Area -->
+    <div class="canvas-area">
+        <div class="canvas-toolbar">
+            <button class="toolbar-btn" id="btnSimHandFound" title="Send HAND_FOUND command">🖐️ Hand Found</button>
+            <button class="toolbar-btn" id="btnSimHandLost" title="Send HAND_LOST command (future)">👋 Hand Lost</button>
+            <div class="toolbar-sep"></div>
+            <button class="toolbar-btn" id="btnClear" title="Clear canvas">🗑️ Clear</button>
+            <button class="toolbar-btn" id="btnPause" title="Pause/resume output">⏸️ Pause</button>
+            <div class="toolbar-sep"></div>
+            <span style="font-size: 11px; color: var(--text-muted); margin-left: auto;">
+                Left-click: Draw + Pulse &nbsp;│&nbsp; Right-click: Move Only (silent)
+            </span>
+        </div>
+        <div class="canvas-container">
+            <canvas id="drawCanvas" width="900" height="520"></canvas>
+            <div class="canvas-hud">
+                <div class="hud-item">
+                    <span class="hud-label">Speed</span>
+                    <span class="hud-value speed" id="hudSpeed">0 px/s</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">Period</span>
+                    <span class="hud-value period" id="hudPeriod">— ms</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">Pulses</span>
+                    <span class="hud-value pulses" id="hudPulses">0</span>
+                </div>
+                <div class="hud-item">
+                    <span class="hud-label">State</span>
+                    <span class="hud-value" id="hudState">Idle</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="side-panel">
+
+        <!-- Connection -->
+        <div class="panel-section">
+            <div class="section-title">Connection</div>
+            <div class="conn-row">
+                <input type="text" class="conn-input" id="wsUrl" placeholder="WebSocket URL">
+                <button class="conn-btn connect" id="btnConnect">Connect</button>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+                ESP32 target configured in haptic_bridge.py
+            </div>
+        </div>
+
+        <!-- Pulse Parameters -->
+        <div class="panel-section">
+            <div class="section-title">Pulse Parameters</div>
+
+            <div class="slider-group">
+                <div class="slider-header">
+                    <span class="param-label">Min Period (fastest)</span>
+                    <span class="slider-val" id="valMinPeriod">80 ms</span>
+                </div>
+                <input type="range" class="param-slider" id="sliderMinPeriod" min="30" max="300" value="80">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-header">
+                    <span class="param-label">Max Period (slowest)</span>
+                    <span class="slider-val" id="valMaxPeriod">500 ms</span>
+                </div>
+                <input type="range" class="param-slider" id="sliderMaxPeriod" min="200" max="2000" value="500">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-header">
+                    <span class="param-label">Speed Low Threshold</span>
+                    <span class="slider-val" id="valSpeedLow">20 px/s</span>
+                </div>
+                <input type="range" class="param-slider" id="sliderSpeedLow" min="5" max="200" value="20">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-header">
+                    <span class="param-label">Speed High Threshold</span>
+                    <span class="slider-val" id="valSpeedHigh">500 px/s</span>
+                </div>
+                <input type="range" class="param-slider" id="sliderSpeedHigh" min="100" max="2000" value="500">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-header">
+                    <span class="param-label">Hysteresis (dead-band)</span>
+                    <span class="slider-val" id="valHysteresis">30 ms</span>
+                </div>
+                <input type="range" class="param-slider" id="sliderHysteresis" min="0" max="100" value="30">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-header">
+                    <span class="param-label">Speed Smoothing</span>
+                    <span class="slider-val" id="valSmoothing">100 ms</span>
+                </div>
+                <input type="range" class="param-slider" id="sliderSmoothing" min="30" max="500" value="100">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-header">
+                    <span class="param-label">Speed Momentum (Decay)</span>
+                    <span class="slider-val" id="valDecay">85 %</span>
+                </div>
+                <input type="range" class="param-slider" id="sliderDecay" min="50" max="99" value="85">
+            </div>
+
+            <div class="sparkline-container">
+                <canvas id="sparklineCanvas"></canvas>
+            </div>
+        </div>
+
+        <!-- Current Effects -->
+        <div class="panel-section">
+            <div class="section-title">Active Effects</div>
+            <div class="current-effects">
+                <div class="effect-badge draw">Draw: <strong id="drawEffectLabel">#1 Strong Click</strong></div>
+                <div class="effect-badge hand">Hand: <strong id="handEffectLabel">#55 Trans. Hum</strong></div>
+            </div>
+        </div>
+
+        <!-- Preset Quick-Select Dropdown -->
+        <div class="panel-section">
+            <div class="section-title">Draw Pulse Presets</div>
+            <div class="conn-row" style="margin-bottom: 0;">
+                <select class="conn-input" id="drawPresetSelect" style="appearance: auto; background: var(--bg-card); color: var(--text-primary); border: 1px solid var(--border); width: 100%;">
+                    <option value="" disabled hidden>-- Custom Selected --</option>
+                    <option value="1" selected>#1 Strong Click (Default)</option>
+                    <option value="4">#4 Sharp Click (Ballpoint Pen)</option>
+                    <option value="7">#7 Soft Bump (Pencil on Paper)</option>
+                    <option value="24">#24 Sharp Tick (Fine Stylus Nib)</option>
+                    <option value="34">#34 Double Sharp Tick (Sketching Texture)</option>
+                    <option value="13">#13 Soft Fuzz (Wet Brush Stroke)</option>
+                    <option value="119">#119 Smooth Hum (Fluid Calligraphy)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Effect Library -->
+        <div class="panel-section" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
+            <div class="section-title">DRV2605L Effect Library (ROM, Library 6 LRA)</div>
+            <div class="effect-filter">
+                <input type="text" id="effectSearch" placeholder="Search effects...">
+            </div>
+            <div class="effect-browser" id="effectBrowser">
+                <!-- Populated by JS -->
+            </div>
+            <div class="effect-actions">
+                <button class="effect-action-btn" id="btnSetDrawEffect">Set as Draw Pulse</button>
+                <button class="effect-action-btn" id="btnSetHandEffect">Set as Hand Found</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log Panel -->
+    <div class="log-panel">
+        <div class="log-header">
+            <span>UDP Command Log</span>
+            <button class="log-clear-btn" id="btnClearLog">Clear</button>
+        </div>
+        <div class="log-content" id="logContent"></div>
+    </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  DRV2605L ROM Effect Library (Library 6 — LRA, 123 effects)
+// ═══════════════════════════════════════════════════════════════
+const EFFECTS = [
+    { id: 1,   name: "Strong Click - 100%", cat: "Click" },
+    { id: 2,   name: "Strong Click - 60%", cat: "Click" },
+    { id: 3,   name: "Strong Click - 30%", cat: "Click" },
+    { id: 4,   name: "Sharp Click - 100%", cat: "Click" },
+    { id: 5,   name: "Sharp Click - 60%", cat: "Click" },
+    { id: 6,   name: "Sharp Click - 30%", cat: "Click" },
+    { id: 7,   name: "Soft Bump - 100%", cat: "Bump" },
+    { id: 8,   name: "Soft Bump - 60%", cat: "Bump" },
+    { id: 9,   name: "Soft Bump - 30%", cat: "Bump" },
+    { id: 10,  name: "Double Click - 100%", cat: "Click" },
+    { id: 11,  name: "Double Click - 60%", cat: "Click" },
+    { id: 12,  name: "Triple Click - 100%", cat: "Click" },
+    { id: 13,  name: "Soft Fuzz - 60%", cat: "Fuzz" },
+    { id: 14,  name: "Strong Buzz - 100%", cat: "Buzz" },
+    { id: 15,  name: "750 ms Alert - 100%", cat: "Alert" },
+    { id: 16,  name: "1000 ms Alert - 100%", cat: "Alert" },
+    { id: 17,  name: "Strong Click 1 - 100%", cat: "Click" },
+    { id: 18,  name: "Strong Click 2 - 80%", cat: "Click" },
+    { id: 19,  name: "Strong Click 3 - 60%", cat: "Click" },
+    { id: 20,  name: "Strong Click 4 - 30%", cat: "Click" },
+    { id: 21,  name: "Medium Click 1 - 100%", cat: "Click" },
+    { id: 22,  name: "Medium Click 2 - 80%", cat: "Click" },
+    { id: 23,  name: "Medium Click 3 - 60%", cat: "Click" },
+    { id: 24,  name: "Sharp Tick 1 - 100%", cat: "Tick" },
+    { id: 25,  name: "Sharp Tick 2 - 80%", cat: "Tick" },
+    { id: 26,  name: "Sharp Tick 3 - 60%", cat: "Tick" },
+    { id: 27,  name: "Short Dbl Click Strong 1", cat: "Click" },
+    { id: 28,  name: "Short Dbl Click Strong 2", cat: "Click" },
+    { id: 29,  name: "Short Dbl Click Strong 3", cat: "Click" },
+    { id: 30,  name: "Short Dbl Click Strong 4", cat: "Click" },
+    { id: 31,  name: "Short Dbl Click Med 1", cat: "Click" },
+    { id: 32,  name: "Short Dbl Click Med 2", cat: "Click" },
+    { id: 33,  name: "Short Dbl Click Med 3", cat: "Click" },
+    { id: 34,  name: "Short Dbl Sharp Tick 1", cat: "Tick" },
+    { id: 35,  name: "Short Dbl Sharp Tick 2", cat: "Tick" },
+    { id: 36,  name: "Short Dbl Sharp Tick 3", cat: "Tick" },
+    { id: 37,  name: "Long Dbl Sharp Click Strong 1", cat: "Click" },
+    { id: 38,  name: "Long Dbl Sharp Click Strong 2", cat: "Click" },
+    { id: 39,  name: "Long Dbl Sharp Click Strong 3", cat: "Click" },
+    { id: 40,  name: "Long Dbl Sharp Click Strong 4", cat: "Click" },
+    { id: 41,  name: "Long Dbl Sharp Click Med 1", cat: "Click" },
+    { id: 42,  name: "Long Dbl Sharp Click Med 2", cat: "Click" },
+    { id: 43,  name: "Long Dbl Sharp Click Med 3", cat: "Click" },
+    { id: 44,  name: "Long Dbl Sharp Tick 1", cat: "Tick" },
+    { id: 45,  name: "Long Dbl Sharp Tick 2", cat: "Tick" },
+    { id: 46,  name: "Long Dbl Sharp Tick 3", cat: "Tick" },
+    { id: 47,  name: "Buzz 1 - 100%", cat: "Buzz" },
+    { id: 48,  name: "Buzz 2 - 80%", cat: "Buzz" },
+    { id: 49,  name: "Buzz 3 - 60%", cat: "Buzz" },
+    { id: 50,  name: "Buzz 4 - 40%", cat: "Buzz" },
+    { id: 51,  name: "Buzz 5 - 20%", cat: "Buzz" },
+    { id: 52,  name: "Pulsing Strong 1 - 100%", cat: "Pulsing" },
+    { id: 53,  name: "Pulsing Strong 2 - 60%", cat: "Pulsing" },
+    { id: 54,  name: "Pulsing Medium 1 - 100%", cat: "Pulsing" },
+    { id: 55,  name: "Pulsing Medium 2 - 60%", cat: "Pulsing" },
+    { id: 56,  name: "Pulsing Sharp 1 - 100%", cat: "Pulsing" },
+    { id: 57,  name: "Pulsing Sharp 2 - 60%", cat: "Pulsing" },
+    { id: 58,  name: "Transition Click 1 - 100%", cat: "Transition" },
+    { id: 59,  name: "Transition Click 2 - 80%", cat: "Transition" },
+    { id: 60,  name: "Transition Click 3 - 60%", cat: "Transition" },
+    { id: 61,  name: "Transition Click 4 - 40%", cat: "Transition" },
+    { id: 62,  name: "Transition Click 5 - 20%", cat: "Transition" },
+    { id: 63,  name: "Transition Click 6 - 10%", cat: "Transition" },
+    { id: 64,  name: "Transition Hum 1 - 100%", cat: "Transition" },
+    { id: 65,  name: "Transition Hum 2 - 80%", cat: "Transition" },
+    { id: 66,  name: "Transition Hum 3 - 60%", cat: "Transition" },
+    { id: 67,  name: "Transition Hum 4 - 40%", cat: "Transition" },
+    { id: 68,  name: "Transition Hum 5 - 20%", cat: "Transition" },
+    { id: 69,  name: "Transition Hum 6 - 10%", cat: "Transition" },
+    { id: 70,  name: "Transition Ramp Down Long Smooth 1", cat: "Transition" },
+    { id: 71,  name: "Transition Ramp Down Long Smooth 2", cat: "Transition" },
+    { id: 72,  name: "Transition Ramp Down Medium Smooth 1", cat: "Transition" },
+    { id: 73,  name: "Transition Ramp Down Medium Smooth 2", cat: "Transition" },
+    { id: 74,  name: "Transition Ramp Down Short Smooth 1", cat: "Transition" },
+    { id: 75,  name: "Transition Ramp Down Short Smooth 2", cat: "Transition" },
+    { id: 76,  name: "Transition Ramp Down Long Sharp 1", cat: "Transition" },
+    { id: 77,  name: "Transition Ramp Down Long Sharp 2", cat: "Transition" },
+    { id: 78,  name: "Transition Ramp Down Medium Sharp 1", cat: "Transition" },
+    { id: 79,  name: "Transition Ramp Down Medium Sharp 2", cat: "Transition" },
+    { id: 80,  name: "Transition Ramp Down Short Sharp 1", cat: "Transition" },
+    { id: 81,  name: "Transition Ramp Down Short Sharp 2", cat: "Transition" },
+    { id: 82,  name: "Transition Ramp Up Long Smooth 1", cat: "Transition" },
+    { id: 83,  name: "Transition Ramp Up Long Smooth 2", cat: "Transition" },
+    { id: 84,  name: "Transition Ramp Up Medium Smooth 1", cat: "Transition" },
+    { id: 85,  name: "Transition Ramp Up Medium Smooth 2", cat: "Transition" },
+    { id: 86,  name: "Transition Ramp Up Short Smooth 1", cat: "Transition" },
+    { id: 87,  name: "Transition Ramp Up Short Smooth 2", cat: "Transition" },
+    { id: 88,  name: "Transition Ramp Up Long Sharp 1", cat: "Transition" },
+    { id: 89,  name: "Transition Ramp Up Long Sharp 2", cat: "Transition" },
+    { id: 90,  name: "Transition Ramp Up Medium Sharp 1", cat: "Transition" },
+    { id: 91,  name: "Transition Ramp Up Medium Sharp 2", cat: "Transition" },
+    { id: 92,  name: "Transition Ramp Up Short Sharp 1", cat: "Transition" },
+    { id: 93,  name: "Transition Ramp Up Short Sharp 2", cat: "Transition" },
+    { id: 94,  name: "Transition Ramp Down Long Smooth 1 (half)", cat: "Transition" },
+    { id: 95,  name: "Transition Ramp Down Long Smooth 2 (half)", cat: "Transition" },
+    { id: 96,  name: "Transition Ramp Down Medium Smooth 1 (half)", cat: "Transition" },
+    { id: 97,  name: "Transition Ramp Down Medium Smooth 2 (half)", cat: "Transition" },
+    { id: 98,  name: "Transition Ramp Down Short Smooth 1 (half)", cat: "Transition" },
+    { id: 99,  name: "Transition Ramp Down Short Smooth 2 (half)", cat: "Transition" },
+    { id: 100, name: "Transition Ramp Down Long Sharp 1 (half)", cat: "Transition" },
+    { id: 101, name: "Transition Ramp Down Long Sharp 2 (half)", cat: "Transition" },
+    { id: 102, name: "Transition Ramp Down Medium Sharp 1 (half)", cat: "Transition" },
+    { id: 103, name: "Transition Ramp Down Medium Sharp 2 (half)", cat: "Transition" },
+    { id: 104, name: "Transition Ramp Down Short Sharp 1 (half)", cat: "Transition" },
+    { id: 105, name: "Transition Ramp Down Short Sharp 2 (half)", cat: "Transition" },
+    { id: 106, name: "Transition Ramp Up Long Smooth 1 (half)", cat: "Transition" },
+    { id: 107, name: "Transition Ramp Up Long Smooth 2 (half)", cat: "Transition" },
+    { id: 108, name: "Transition Ramp Up Medium Smooth 1 (half)", cat: "Transition" },
+    { id: 109, name: "Transition Ramp Up Medium Smooth 2 (half)", cat: "Transition" },
+    { id: 110, name: "Transition Ramp Up Short Smooth 1 (half)", cat: "Transition" },
+    { id: 111, name: "Transition Ramp Up Short Smooth 2 (half)", cat: "Transition" },
+    { id: 112, name: "Transition Ramp Up Long Sharp 1 (half)", cat: "Transition" },
+    { id: 113, name: "Transition Ramp Up Long Sharp 2 (half)", cat: "Transition" },
+    { id: 114, name: "Transition Ramp Up Medium Sharp 1 (half)", cat: "Transition" },
+    { id: 115, name: "Transition Ramp Up Medium Sharp 2 (half)", cat: "Transition" },
+    { id: 116, name: "Transition Ramp Up Short Sharp 1 (half)", cat: "Transition" },
+    { id: 117, name: "Transition Ramp Up Short Sharp 2 (half)", cat: "Transition" },
+    { id: 118, name: "Long Buzz (no click)", cat: "Buzz" },
+    { id: 119, name: "Smooth Hum 1 (no click)", cat: "Hum" },
+    { id: 120, name: "Smooth Hum 2 (no click)", cat: "Hum" },
+    { id: 121, name: "Smooth Hum 3 (no click)", cat: "Hum" },
+    { id: 122, name: "Smooth Hum 4 (no click)", cat: "Hum" },
+    { id: 123, name: "Smooth Hum 5 (no click)", cat: "Hum" },
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  State
+// ═══════════════════════════════════════════════════════════════
+let ws = null;
+let paused = false;
+let pulseCount = 0;
+let drawEffectId = 1;
+let handEffectId = 55;
+let selectedEffectId = 1;
+let lastSentPeriod = -1;
+let lastSendTime = 0;
+const MIN_SEND_INTERVAL = 100; // ms — rate limit to 10 msgs/sec
+
+// Speed tracking
+let speedHistory = [];
+let sparklineData = [];
+const MAX_SPARKLINE = 150;
+let filteredSpeed = 0;
+let hapticsActive = false;
+let lastMouseMoveTime = 0;
+let watchdogTimer = null;
+let strokeHasPulsed = false;
+
+// Drawing state
+let isDrawing = false;
+let isMoving = false; // right-click move
+let lastX = 0, lastY = 0;
+let lastTime = 0;
+let drawPoints = [];
+let movePoints = [];
+
+// ═══════════════════════════════════════════════════════════════
+//  DOM refs
+// ═══════════════════════════════════════════════════════════════
+const canvas = document.getElementById('drawCanvas');
+const ctx = canvas.getContext('2d');
+const sparkCanvas = document.getElementById('sparklineCanvas');
+const sparkCtx = sparkCanvas.getContext('2d');
+
+// ═══════════════════════════════════════════════════════════════
+//  WebSocket
+// ═══════════════════════════════════════════════════════════════
+function connectWS() {
+    const url = document.getElementById('wsUrl').value;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
+        return;
+    }
+
+    ws = new WebSocket(url);
+
+    ws.onopen = () => {
+        updateConnectionUI(true);
+        addLog('sys', 'Connected to bridge');
+    };
+
+    ws.onclose = () => {
+        updateConnectionUI(false);
+        addLog('sys', 'Disconnected');
+    };
+
+    ws.onerror = () => {
+        updateConnectionUI(false);
+        addLog('sys', 'Connection error');
+    };
+
+    ws.onmessage = (e) => {
+        try {
+            const data = JSON.parse(e.data);
+            if (data.type === 'sent') {
+                // Confirmation of our sent message — already logged on send
+            }
+        } catch (err) {}
+    };
+}
+
+function updateConnectionUI(connected) {
+    const badge = document.getElementById('connectionBadge');
+    const text = document.getElementById('connectionText');
+    const btn = document.getElementById('btnConnect');
+
+    if (connected) {
+        badge.classList.add('connected');
+        text.textContent = 'Connected';
+        btn.textContent = 'Disconnect';
+        btn.className = 'conn-btn disconnect';
+    } else {
+        badge.classList.remove('connected');
+        text.textContent = 'Disconnected';
+        btn.textContent = 'Connect';
+        btn.className = 'conn-btn connect';
+    }
+}
+
+function sendCmd(cmd) {
+    if (paused) return;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(cmd);
+        addLog('out', cmd);
+    } else {
+        addLog('sys', `[NO CONN] Would send: ${cmd}`);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Logging
+// ═══════════════════════════════════════════════════════════════
+const logEl = document.getElementById('logContent');
+let logCount = 0;
+const MAX_LOG = 200;
+
+function addLog(dir, msg) {
+    const now = new Date();
+    const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}.${now.getMilliseconds().toString().padStart(3,'0')}`;
+    const arrow = dir === 'out' ? '→' : dir === 'in' ? '←' : '●';
+
+    const entry = document.createElement('div');
+    entry.className = 'log-entry';
+    entry.innerHTML = `<span class="log-time">${time}</span><span class="log-dir ${dir}">${arrow}</span><span class="log-cmd">${msg}</span>`;
+    logEl.appendChild(entry);
+
+    logCount++;
+    if (logCount > MAX_LOG) {
+        logEl.removeChild(logEl.firstChild);
+    }
+
+    logEl.scrollTop = logEl.scrollHeight;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Speed Calculation & Pulse Period Mapping
+// ═══════════════════════════════════════════════════════════════
+function getParams() {
+    return {
+        minPeriod:  parseInt(document.getElementById('sliderMinPeriod').value),
+        maxPeriod:  parseInt(document.getElementById('sliderMaxPeriod').value),
+        speedLow:   parseInt(document.getElementById('sliderSpeedLow').value),
+        speedHigh:  parseInt(document.getElementById('sliderSpeedHigh').value),
+        hysteresis: parseInt(document.getElementById('sliderHysteresis').value),
+        smoothing:  parseInt(document.getElementById('sliderSmoothing').value),
+        decay:      parseFloat(document.getElementById('sliderDecay').value) / 100,
+    };
+}
+
+function calcSmoothedSpeed(now) {
+    const p = getParams();
+    const cutoff = now - p.smoothing;
+    // Remove old samples
+    speedHistory = speedHistory.filter(s => s.time >= cutoff);
+
+    if (speedHistory.length === 0) return 0;
+
+    // Weighted average (recent samples weighted more)
+    let totalWeight = 0, weightedSum = 0;
+    for (const s of speedHistory) {
+        const age = now - s.time;
+        const weight = 1 - (age / p.smoothing);
+        weightedSum += s.speed * weight;
+        totalWeight += weight;
+    }
+    return totalWeight > 0 ? weightedSum / totalWeight : 0;
+}
+
+function speedToPeriod(speed) {
+    const p = getParams();
+    if (speed < p.speedLow) return -1; // Below threshold — no pulse
+
+    const t = Math.min(1, (speed - p.speedLow) / (p.speedHigh - p.speedLow));
+    // Fast speed → short period (minPeriod), slow speed → long period (maxPeriod)
+    return Math.round(p.maxPeriod - t * (p.maxPeriod - p.minPeriod));
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Canvas Drawing
+// ═══════════════════════════════════════════════════════════════
+function initCanvas() {
+    ctx.fillStyle = '#111827';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Grid
+    ctx.strokeStyle = 'rgba(42, 54, 80, 0.4)';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x < canvas.width; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+}
+
+function drawLine(x1, y1, x2, y2, color, width) {
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Canvas Event Handlers
+// ═══════════════════════════════════════════════════════════════
+canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+canvas.addEventListener('mousedown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    lastX = (e.clientX - rect.left) * scaleX;
+    lastY = (e.clientY - rect.top) * scaleY;
+    lastTime = performance.now();
+    lastMouseMoveTime = performance.now();
+
+    if (e.button === 0) {
+        // Left click — draw + pulse
+        isDrawing = true;
+        strokeHasPulsed = false;
+        document.getElementById('hudState').textContent = 'Drawing';
+        document.getElementById('hudState').style.color = 'var(--accent-blue)';
+    } else if (e.button === 2) {
+        // Right click — move only (silent)
+        isMoving = true;
+        document.getElementById('hudState').textContent = 'Moving (silent)';
+        document.getElementById('hudState').style.color = 'var(--accent-amber)';
+    }
+
+    // Start watchdog timer to detect when drawing stops moving
+    if (!watchdogTimer) {
+        watchdogTimer = setInterval(tickWatchdog, 50);
+    }
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!isDrawing && !isMoving) return;
+    lastMouseMoveTime = performance.now();
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    const now = performance.now();
+
+    // Calculate instantaneous speed
+    const dx = x - lastX;
+    const dy = y - lastY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const dt = now - lastTime;
+    const speed = dt > 0 ? (dist / dt) * 1000 : 0; // px/sec
+
+    // Record speed sample
+    speedHistory.push({ time: now, speed });
+
+    const smoothedSpeed = calcSmoothedSpeed(now);
+    const p = getParams();
+
+    // Fast-attack, slow-decay momentum filter (Peak Envelope Tracker)
+    if (smoothedSpeed >= filteredSpeed) {
+        filteredSpeed = smoothedSpeed;
+    } else {
+        filteredSpeed = filteredSpeed * p.decay + smoothedSpeed * (1 - p.decay);
+    }
+
+    // Update sparkline with filtered speed
+    sparklineData.push(filteredSpeed);
+    if (sparklineData.length > MAX_SPARKLINE) sparklineData.shift();
+
+    // Draw trail
+    if (isDrawing) {
+        // Blue ink trail with glow proportional to speed
+        const alpha = Math.min(1, 0.4 + (filteredSpeed / 500) * 0.6);
+        drawLine(lastX, lastY, x, y, `rgba(59, 130, 246, ${alpha})`, 2.5);
+
+        // Speed → period mapping & send command
+        const period = speedToPeriod(filteredSpeed);
+        if (period > 0) {
+            const shouldSend =
+                (Math.abs(period - lastSentPeriod) > p.hysteresis || lastSentPeriod === -1) &&
+                (now - lastSendTime > MIN_SEND_INTERVAL);
+
+            if (shouldSend) {
+                sendCmd(`DRAW_PULSE:${period}:${drawEffectId}`);
+                lastSentPeriod = period;
+                lastSendTime = now;
+                pulseCount++;
+                hapticsActive = true;
+                strokeHasPulsed = true;
+            }
+        } else {
+            // Speed dropped below threshold while drawing (hand is still)
+            if (hapticsActive) {
+                sendCmd('DRAW_STOP');
+                hapticsActive = false;
+                lastSentPeriod = -1;
+            }
+        }
+    } else if (isMoving) {
+        // Faint dashed trail — NO haptic commands sent
+        ctx.setLineDash([4, 6]);
+        drawLine(lastX, lastY, x, y, 'rgba(255, 255, 255, 0.12)', 1.5);
+        ctx.setLineDash([]);
+    }
+
+    // Update HUD
+    document.getElementById('hudSpeed').textContent = `${Math.round(filteredSpeed)} px/s`;
+    const displayPeriod = speedToPeriod(filteredSpeed);
+    document.getElementById('hudPeriod').textContent = displayPeriod > 0 ? `${displayPeriod} ms` : '— ms';
+    document.getElementById('hudPulses').textContent = pulseCount;
+
+    lastX = x;
+    lastY = y;
+    lastTime = now;
+});
+
+function handleMouseUp() {
+    if (isDrawing) {
+        if (!strokeHasPulsed) {
+            // This was a dot or quick tap — fire a single solo pulse
+            sendCmd(`TEST_EFFECT:${drawEffectId}`);
+            pulseCount++;
+            document.getElementById('hudPulses').textContent = pulseCount;
+        }
+        if (hapticsActive) {
+            sendCmd('DRAW_STOP');
+            hapticsActive = false;
+        }
+        lastSentPeriod = -1;
+    }
+    isDrawing = false;
+    isMoving = false;
+    speedHistory = [];
+    filteredSpeed = 0; // Reset momentum
+    
+    // Stop the watchdog timer
+    if (watchdogTimer) {
+        clearInterval(watchdogTimer);
+        watchdogTimer = null;
+    }
+    
+    document.getElementById('hudState').textContent = 'Idle';
+    document.getElementById('hudState').style.color = 'var(--text-primary)';
+}
+
+function tickWatchdog() {
+    if (!isDrawing && !isMoving) return;
+    const now = performance.now();
+    const elapsed = now - lastMouseMoveTime;
+
+    if (elapsed > 80) {
+        // Hand has stopped completely — cut off haptics instantly!
+        filteredSpeed = 0;
+        speedHistory = [];
+
+        // Update sparkline
+        sparklineData.push(0);
+        if (sparklineData.length > MAX_SPARKLINE) sparklineData.shift();
+
+        // Send DRAW_STOP immediately
+        if (hapticsActive) {
+            sendCmd('DRAW_STOP');
+            hapticsActive = false;
+            lastSentPeriod = -1;
+        }
+
+        // Update HUD
+        document.getElementById('hudSpeed').textContent = `0 px/s`;
+        document.getElementById('hudPeriod').textContent = '— ms';
+        document.getElementById('hudPulses').textContent = pulseCount;
+    }
+}
+
+canvas.addEventListener('mouseup', handleMouseUp);
+canvas.addEventListener('mouseleave', handleMouseUp);
+
+// ═══════════════════════════════════════════════════════════════
+//  Sparkline Renderer
+// ═══════════════════════════════════════════════════════════════
+function renderSparkline() {
+    const rect = sparkCanvas.parentElement.getBoundingClientRect();
+    sparkCanvas.width = rect.width;
+    sparkCanvas.height = rect.height;
+
+    const w = sparkCanvas.width;
+    const h = sparkCanvas.height;
+
+    sparkCtx.clearRect(0, 0, w, h);
+
+    if (sparklineData.length < 2) {
+        requestAnimationFrame(renderSparkline);
+        return;
+    }
+
+    const maxSpeed = Math.max(50, ...sparklineData);
+    const step = w / MAX_SPARKLINE;
+
+    // Gradient fill
+    const grad = sparkCtx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, 'rgba(6, 182, 212, 0.25)');
+    grad.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+
+    sparkCtx.beginPath();
+    sparkCtx.moveTo(0, h);
+
+    for (let i = 0; i < sparklineData.length; i++) {
+        const x = i * step;
+        const y = h - (sparklineData[i] / maxSpeed) * (h - 4);
+        if (i === 0) sparkCtx.moveTo(x, y);
+        else sparkCtx.lineTo(x, y);
+    }
+
+    // Fill under curve
+    sparkCtx.lineTo((sparklineData.length - 1) * step, h);
+    sparkCtx.lineTo(0, h);
+    sparkCtx.fillStyle = grad;
+    sparkCtx.fill();
+
+    // Stroke line
+    sparkCtx.beginPath();
+    for (let i = 0; i < sparklineData.length; i++) {
+        const x = i * step;
+        const y = h - (sparklineData[i] / maxSpeed) * (h - 4);
+        if (i === 0) sparkCtx.moveTo(x, y);
+        else sparkCtx.lineTo(x, y);
+    }
+    sparkCtx.strokeStyle = '#06b6d4';
+    sparkCtx.lineWidth = 1.5;
+    sparkCtx.stroke();
+
+    requestAnimationFrame(renderSparkline);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Effect Library UI
+// ═══════════════════════════════════════════════════════════════
+function renderEffects(filter = '') {
+    const browser = document.getElementById('effectBrowser');
+    browser.innerHTML = '';
+    const lowerFilter = filter.toLowerCase();
+
+    for (const eff of EFFECTS) {
+        if (lowerFilter && !eff.name.toLowerCase().includes(lowerFilter) &&
+            !eff.id.toString().includes(lowerFilter) &&
+            !eff.cat.toLowerCase().includes(lowerFilter)) continue;
+
+        const row = document.createElement('div');
+        row.className = 'effect-row' + (eff.id === selectedEffectId ? ' selected' : '');
+        row.innerHTML = `
+            <span class="effect-id">${eff.id}</span>
+            <span class="effect-name" title="${eff.name}">${eff.name}</span>
+            <button class="effect-test-btn" data-id="${eff.id}">▶ Test</button>
+        `;
+        row.addEventListener('click', (e) => {
+            if (e.target.classList.contains('effect-test-btn')) return;
+            selectedEffectId = eff.id;
+            renderEffects(filter);
+        });
+        browser.appendChild(row);
+    }
+
+    // Wire test buttons
+    browser.querySelectorAll('.effect-test-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = parseInt(btn.dataset.id);
+            sendCmd(`TEST_EFFECT:${id}`);
+        });
+    });
+}
+
+function getEffectName(id) {
+    const eff = EFFECTS.find(e => e.id === id);
+    return eff ? `#${id} ${eff.name}` : `#${id}`;
+}
+
+function updateEffectLabels() {
+    document.getElementById('drawEffectLabel').textContent = getEffectName(drawEffectId);
+    document.getElementById('handEffectLabel').textContent = getEffectName(handEffectId);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Slider Updates
+// ═══════════════════════════════════════════════════════════════
+const sliders = [
+    { id: 'sliderMinPeriod', label: 'valMinPeriod', unit: ' ms' },
+    { id: 'sliderMaxPeriod', label: 'valMaxPeriod', unit: ' ms' },
+    { id: 'sliderSpeedLow', label: 'valSpeedLow', unit: ' px/s' },
+    { id: 'sliderSpeedHigh', label: 'valSpeedHigh', unit: ' px/s' },
+    { id: 'sliderHysteresis', label: 'valHysteresis', unit: ' ms' },
+    { id: 'sliderSmoothing', label: 'valSmoothing', unit: ' ms' },
+    { id: 'sliderDecay', label: 'valDecay', unit: ' %' },
+];
+
+sliders.forEach(s => {
+    const slider = document.getElementById(s.id);
+    const label = document.getElementById(s.label);
+    slider.addEventListener('input', () => {
+        label.textContent = slider.value + s.unit;
+    });
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  Button Handlers
+// ═══════════════════════════════════════════════════════════════
+document.getElementById('btnConnect').addEventListener('click', connectWS);
+
+document.getElementById('btnSimHandFound').addEventListener('click', () => {
+    sendCmd(`HAND_FOUND:${handEffectId}`);
+});
+
+document.getElementById('btnSimHandLost').addEventListener('click', () => {
+    addLog('sys', 'HAND_LOST: not implemented yet (deferred)');
+});
+
+document.getElementById('btnClear').addEventListener('click', () => {
+    initCanvas();
+    drawPoints = [];
+    movePoints = [];
+    pulseCount = 0;
+    document.getElementById('hudPulses').textContent = '0';
+});
+
+document.getElementById('btnPause').addEventListener('click', () => {
+    paused = !paused;
+    const btn = document.getElementById('btnPause');
+    btn.textContent = paused ? '▶️ Resume' : '⏸️ Pause';
+    btn.classList.toggle('active', paused);
+    addLog('sys', paused ? 'Output PAUSED' : 'Output RESUMED');
+});
+
+document.getElementById('btnClearLog').addEventListener('click', () => {
+    logEl.innerHTML = '';
+    logCount = 0;
+});
+
+document.getElementById('effectSearch').addEventListener('input', (e) => {
+    renderEffects(e.target.value);
+});
+
+document.getElementById('btnSetDrawEffect').addEventListener('click', () => {
+    drawEffectId = selectedEffectId;
+    updateEffectLabels();
+    
+    // Sync dropdown menu selection
+    const selectEl = document.getElementById('drawPresetSelect');
+    if (Array.from(selectEl.options).some(opt => parseInt(opt.value) === drawEffectId)) {
+        selectEl.value = drawEffectId;
+    } else {
+        selectEl.value = ""; // Show "-- Custom Selected --"
+    }
+    
+    addLog('sys', `Draw pulse effect set to ${getEffectName(drawEffectId)}`);
+});
+
+document.getElementById('btnSetHandEffect').addEventListener('click', () => {
+    handEffectId = selectedEffectId;
+    updateEffectLabels();
+    addLog('sys', `Hand-found effect set to ${getEffectName(handEffectId)}`);
+});
+
+document.getElementById('drawPresetSelect').addEventListener('change', function() {
+    if (this.value) {
+        drawEffectId = parseInt(this.value);
+        updateEffectLabels();
+        addLog('sys', `Draw pulse preset selected: ${getEffectName(drawEffectId)}`);
+    }
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  Init
+// ═══════════════════════════════════════════════════════════════
+// Dynamic WS URL detection
+const loc = window.location;
+const defaultWsUrl = (loc.protocol === 'http:' || loc.protocol === 'https:')
+    ? `ws://${loc.hostname}:${loc.port}`
+    : 'ws://localhost:9876';
+document.getElementById('wsUrl').value = defaultWsUrl;
+
+initCanvas();
+renderEffects();
+updateEffectLabels();
+renderSparkline();
+
+addLog('sys', 'Haptic Test Tool ready. Connect to bridge to start.');
+addLog('sys', 'Left-click to draw (sends DRAW_PULSE). Right-click to move (silent).');
+</script>
+</body>
+</html>

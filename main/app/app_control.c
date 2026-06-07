@@ -11,6 +11,7 @@
 #include "nvs.h"
 #include "nvs_flash.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "app_album.h"
@@ -27,35 +28,18 @@ static const char *TAG = "app_control";
 
 /* DRV2605L Haptic Variables */
 static i2c_master_dev_handle_t s_drv2605_dev = NULL;
-static esp_timer_handle_t s_haptic_timer = NULL;
 
-typedef struct {
-  uint8_t effect;
-  const char *name;
-  uint32_t period_ms;
-} haptic_test_state_t;
+/* Draw Pulse Chain — one-shot timer chain for jitter-free speed-adaptive
+ * pulsing. The UDP handler only writes to these shared variables; the timer
+ * callback is the sole point of control for the DRV2605L during drawing. */
+static esp_timer_handle_t s_draw_pulse_timer = NULL;
+static volatile uint32_t s_draw_period_ms = 200;
+static volatile uint8_t s_draw_effect = 1;
+static volatile bool s_draw_active = false;
 
-static const haptic_test_state_t s_haptic_states[] = {
-    {1, "Proximity Phase 1 (Very Slow Clicks 800ms)", 800},
-    {1, "Proximity Phase 2 (Slow Clicks 600ms)", 600},
-    {1, "Proximity Phase 3 (Medium Clicks 400ms)", 400},
-    {1, "Proximity Phase 4 (Fast Clicks 200ms)", 200},
-    {1, "Proximity Phase 5 (Ultra Fast Clicks 100ms)", 100},
-    {55, "Effect 55 (Transition Hum)", 0},
-    {12, "Effect 12 (Triple Click 100%)", 0},
-    {15, "Effect 15 (Strong Buzz 100%)", 0},
-    {64, "Effect 64 (Transient Click 100%)", 0}};
-static const int NUM_HAPTIC_STATES =
-    sizeof(s_haptic_states) / sizeof(s_haptic_states[0]);
-static int s_current_haptic_state = -1; // starts at -1 so first press goes to 0
-
-static esp_timer_handle_t s_double_press_timer = NULL;
-static esp_timer_handle_t s_proxim_watchdog_timer = NULL;
-static esp_timer_handle_t s_hand_lost_timer = NULL;
-static int s_current_proxim = -1;
-static bool s_hand_tracked = false;
-
-static void play_haptic_effect(uint8_t effect, uint32_t period_ms);
+static void play_oneshot_effect(uint8_t effect);
+static void draw_pulse_cb(void *arg);
+static void init_drv2605l_safe(void);
 
 static esp_err_t drv_write_reg(uint8_t reg, uint8_t val) {
   uint8_t buf[2] = {reg, val};
@@ -76,56 +60,64 @@ static uint8_t drv_read_reg(uint8_t reg) {
   return read_buf[0];
 }
 
-static void haptic_timer_cb(void *arg) {
-  if (s_drv2605_dev) {
-    drv_write_reg(0x0C, 0x01); // GO
+/**
+ * @brief One-shot chain callback for draw pulsing.
+ *
+ * Each time this fires, it plays the current effect and schedules itself
+ * again at the current period. Speed changes from UDP only affect the NEXT
+ * pulse — the current pulse is never interrupted, eliminating haptic jitter.
+ */
+static void draw_pulse_cb(void *arg) {
+  if (!s_draw_active || s_drv2605_dev == NULL) {
+    return; // Chain ends naturally — no reschedule
   }
+
+  // Play the current effect (previous pulse has finished by now)
+  uint8_t effect = s_draw_effect;
+  drv_write_reg(0x04, effect);
+  drv_write_reg(0x05, 0x00);
+  drv_write_reg(0x0C, 0x01); // GO
+
+  // Schedule the next pulse at the CURRENT period (may have changed)
+  uint32_t period = s_draw_period_ms;
+  if (period < 50)
+    period = 50; // Floor to prevent runaway
+  esp_timer_start_once(s_draw_pulse_timer, period * 1000);
 }
 
-static void stop_haptic_timer(void) {
-  if (s_haptic_timer != NULL) {
-    esp_timer_stop(s_haptic_timer);
-    esp_timer_delete(s_haptic_timer);
-    s_haptic_timer = NULL;
+/** @brief Stop the draw pulse chain gracefully. */
+static void stop_draw_chain(void) {
+  s_draw_active = false;
+  if (s_draw_pulse_timer != NULL) {
+    esp_timer_stop(s_draw_pulse_timer);
   }
-}
-
-static void stop_hand_lost_timer(void) {
-  if (s_hand_lost_timer != NULL) {
-    esp_timer_stop(s_hand_lost_timer);
-    esp_timer_delete(s_hand_lost_timer);
-    s_hand_lost_timer = NULL;
-  }
-}
-
-static void hand_lost_cutoff_cb(void *arg) {
-  // 500ms elapsed since HAND_LOST — cut off the pulsing
-  ESP_LOGI(TAG, "Hand-lost cutoff: stopping haptic pulse.");
-  stop_haptic_timer();
-  // Also halt DRV2605L hardware playback
+  // Halt DRV2605L hardware playback
   if (s_drv2605_dev) {
     drv_write_reg(0x0C, 0x00);
   }
-  s_hand_lost_timer = NULL;
 }
 
-static void proxim_watchdog_cb(void *arg) {
-  // 500ms without PROXIM packets, stop continuous pulsing
-  ESP_LOGI(TAG, "Proximity watchdog timeout, stopping haptics.");
-  stop_haptic_timer();
+/**
+ * @brief Start the draw pulse chain (if not already running).
+ *
+ * Creates the one-shot timer on first call, then kicks the first pulse.
+ */
+static void start_draw_chain(void) {
+  init_drv2605l_safe();
+  if (s_drv2605_dev == NULL)
+    return;
 
-  if (s_hand_tracked) {
-    // Use same approach as HAND_LOST: fast repeating pulse for 500ms
-    play_haptic_effect(1, 250);
-    stop_hand_lost_timer();
-    esp_timer_create_args_t args = {.callback = &hand_lost_cutoff_cb,
-                                    .name = "hand_lost_cut"};
-    esp_timer_create(&args, &s_hand_lost_timer);
-    esp_timer_start_once(s_hand_lost_timer, 500000); // 500ms
+  s_draw_active = true;
+
+  // Create the one-shot timer once (reused for the lifetime of the task)
+  if (s_draw_pulse_timer == NULL) {
+    esp_timer_create_args_t args = {.callback = &draw_pulse_cb,
+                                    .name = "draw_pulse"};
+    esp_timer_create(&args, &s_draw_pulse_timer);
   }
 
-  s_current_proxim = -1;
-  s_hand_tracked = false;
+  // Kick the first pulse immediately
+  draw_pulse_cb(NULL);
 }
 
 static bool s_drv_init_failed =
@@ -342,9 +334,15 @@ static void init_drv2605l_safe(void) {
   ESP_LOGI(TAG, "======== DRV2605L INIT COMPLETE ========");
 }
 
-static void play_haptic_effect(uint8_t effect, uint32_t period_ms) {
+/**
+ * @brief Play a single one-shot ROM effect (no repeating).
+ *
+ * Used for HAND_FOUND and TEST_EFFECT commands. Stops any active draw
+ * pulse chain before playing.
+ */
+static void play_oneshot_effect(uint8_t effect) {
+  stop_draw_chain();
   init_drv2605l_safe();
-  stop_haptic_timer();
 
   if (s_drv2605_dev == NULL)
     return;
@@ -356,39 +354,21 @@ static void play_haptic_effect(uint8_t effect, uint32_t period_ms) {
 
   drv_write_reg(0x04, effect);
   drv_write_reg(0x05, 0x00);
-  drv_write_reg(0x0C, 0x01);
-
-  if (period_ms > 0) {
-    esp_timer_create_args_t timer_args = {.callback = &haptic_timer_cb,
-                                          .name = "haptic_cont"};
-    esp_timer_create(&timer_args, &s_haptic_timer);
-    esp_timer_start_periodic(s_haptic_timer, period_ms * 1000);
-  }
+  drv_write_reg(0x0C, 0x01); // GO
 }
 
-static void fire_haptic_effect(void) {
-  const haptic_test_state_t *state = &s_haptic_states[s_current_haptic_state];
-  ESP_LOGI(TAG,
-           "=== Haptic Test Phase %d/%d: %s ===", s_current_haptic_state + 1,
-           NUM_HAPTIC_STATES, state->name);
-  play_haptic_effect(state->effect, state->period_ms);
-}
-
-static void double_press_timeout_cb(void *arg) {
-  // 300ms has elapsed without a second press. Safe to advance and fire!
-  s_current_haptic_state = (s_current_haptic_state + 1) % NUM_HAPTIC_STATES;
-  fire_haptic_effect();
-}
-
+/**
+ * @brief UDP haptic server task — listens on port 8282 for draw-pulse commands.
+ *
+ * Protocol:
+ *   HAND_FOUND:<effect>       One-shot welcome pulse (effect is ROM id 1-123)
+ *   DRAW_PULSE:<period>:<eff> Update draw pulse chain period (ms) and effect
+ *   DRAW_STOP                 End the draw pulse chain gracefully
+ *   TEST_EFFECT:<effect>      Play a single ROM effect for audition
+ */
 static void udp_haptic_server_task(void *pvParameters) {
   char rx_buffer[128];
   int port = 8282;
-
-  if (s_proxim_watchdog_timer == NULL) {
-    esp_timer_create_args_t wd_args = {.callback = &proxim_watchdog_cb,
-                                       .name = "proxim_wd"};
-    esp_timer_create(&wd_args, &s_proxim_watchdog_timer);
-  }
 
   while (1) {
     struct sockaddr_in dest_addr;
@@ -426,83 +406,49 @@ static void udp_haptic_server_task(void *pvParameters) {
 
       rx_buffer[len] = 0; // Null-terminate
 
-      // Parse Commands
-      if (strncmp(rx_buffer, "HAND_DETECTED", 13) == 0) {
-        if (s_hand_tracked) {
-          continue; // Ignore duplicate packets in the burst
-        }
-        ESP_LOGI(TAG, "UDP Command: HAND_DETECTED");
-        esp_timer_stop(s_proxim_watchdog_timer); // clear watchdog
-        stop_hand_lost_timer(); // cancel any active hand-lost pulsing
-        s_hand_tracked = true;
-        s_current_proxim = -1;     // reset state
+      /* ── HAND_FOUND:<effect> ───────────────────────────── */
+      if (strncmp(rx_buffer, "HAND_FOUND:", 11) == 0) {
+        int effect = atoi(rx_buffer + 11);
+        if (effect < 1 || effect > 123)
+          effect = 1;
+        ESP_LOGI(TAG, "UDP: HAND_FOUND effect=%d", effect);
+        play_oneshot_effect((uint8_t)effect);
 
-        // Phase 2: Force stop and brief settle delay before starting new effect
-        if (s_drv2605_dev) {
-          drv_write_reg(0x0C, 0x00);
-        }
-        vTaskDelay(pdMS_TO_TICKS(50));
+      /* ── DRAW_PULSE:<period_ms>:<effect> ────────────────── */
+      } else if (strncmp(rx_buffer, "DRAW_PULSE:", 11) == 0) {
+        int period_ms = 0, effect = 0;
+        if (sscanf(rx_buffer + 11, "%d:%d", &period_ms, &effect) == 2) {
+          if (effect < 1 || effect > 123)
+            effect = 1;
+          if (period_ms < 50)
+            period_ms = 50;
+          if (period_ms > 2000)
+            period_ms = 2000;
 
-        play_haptic_effect(55, 0); // Transition Hum
-      } else if (strncmp(rx_buffer, "HAND_LOST", 9) == 0) {
-        if (!s_hand_tracked) {
-          continue; // Ignore duplicate packets in the burst
-        }
-        ESP_LOGI(TAG, "UDP Command: HAND_LOST");
-        esp_timer_stop(s_proxim_watchdog_timer);
+          // Atomically update shared state — no timer restart needed
+          s_draw_effect = (uint8_t)effect;
+          s_draw_period_ms = (uint32_t)period_ms;
 
-        // Phase 2: Stop timer and clear GO bit, then delay 100ms to let physical mass settle
-        stop_haptic_timer();
-        if (s_drv2605_dev) {
-          drv_write_reg(0x0C, 0x00);
-        }
-        vTaskDelay(pdMS_TO_TICKS(100));
-
-        s_hand_tracked = false;
-        s_current_proxim = -1; // sync state to avoid double-trigger
-
-        // Fast repeating pulse (same as PROXIM:3) for 500ms then cut
-        play_haptic_effect(1, 250);
-        stop_hand_lost_timer();
-        esp_timer_create_args_t args = {.callback = &hand_lost_cutoff_cb,
-                                        .name = "hand_lost_cut"};
-        esp_timer_create(&args, &s_hand_lost_timer);
-        esp_timer_start_once(s_hand_lost_timer, 500000); // 500ms cutoff
-      } else if (strncmp(rx_buffer, "PROXIM:", 7) == 0) {
-        if (!s_hand_tracked) {
-          continue; // Ignore proximity updates if the hand is not tracked
-        }
-        int dist = rx_buffer[7] - '0'; // parse 0-3
-
-        // Restart watchdog (must stop first to reset an active esp_timer)
-        esp_timer_stop(s_proxim_watchdog_timer);
-        esp_timer_start_once(s_proxim_watchdog_timer, 500000); // 500ms
-
-        if (dist != s_current_proxim) {
-          int prev_proxim = s_current_proxim;
-          s_current_proxim = dist;
-          if (dist == 0) {
-            stop_haptic_timer(); // Stop continuous effect
-            if (prev_proxim > 0) {
-              play_haptic_effect(
-                  64,
-                  0); // Lost hand effect (only if we were actively tracking)
-            }
-          } else if (dist == 1) {
-            stop_haptic_timer(); // Overkill fix: distance 1 is COMPLETELY
-                                 // silent, but keeps tracker active (>0)
-          } else {
-            int period = 0;
-            if (dist == 2)
-              period = 500; // 500ms ping
-            else if (dist == 3)
-              period = 250; // 250ms ping
-
-            if (period > 0) {
-              play_haptic_effect(1, period); // ROM Effect 1 (Proximity Phase)
-            }
+          // Start the chain if not already running
+          if (!s_draw_active) {
+            ESP_LOGI(TAG, "UDP: DRAW_PULSE start period=%dms effect=%d",
+                     period_ms, effect);
+            start_draw_chain();
           }
         }
+
+      /* ── DRAW_STOP ─────────────────────────────────────── */
+      } else if (strncmp(rx_buffer, "DRAW_STOP", 9) == 0) {
+        ESP_LOGI(TAG, "UDP: DRAW_STOP");
+        stop_draw_chain();
+
+      /* ── TEST_EFFECT:<effect> ───────────────────────────── */
+      } else if (strncmp(rx_buffer, "TEST_EFFECT:", 12) == 0) {
+        int effect = atoi(rx_buffer + 12);
+        if (effect < 1 || effect > 123)
+          effect = 1;
+        ESP_LOGI(TAG, "UDP: TEST_EFFECT effect=%d", effect);
+        play_oneshot_effect((uint8_t)effect);
       }
     }
 
@@ -511,38 +457,6 @@ static void udp_haptic_server_task(void *pvParameters) {
     }
   }
   vTaskDelete(NULL);
-}
-
-static void trigger_haptic_buzz(void) {
-  init_drv2605l_safe();
-
-  if (s_drv2605_dev) {
-    if (s_double_press_timer != NULL &&
-        esp_timer_is_active(s_double_press_timer)) {
-      // A second press happened before the 300ms timer fired!
-      // Cancel the timer so we don't advance.
-      esp_timer_stop(s_double_press_timer);
-      esp_timer_delete(s_double_press_timer);
-      s_double_press_timer = NULL;
-
-      if (s_current_haptic_state != -1) {
-        ESP_LOGI(TAG,
-                 ">>> Double-press detected! Repeating current effect... <<<");
-        fire_haptic_effect();
-      }
-    } else {
-      // First press. Start the 300ms waiting window.
-      if (s_double_press_timer != NULL) {
-        esp_timer_delete(s_double_press_timer);
-      }
-
-      esp_timer_create_args_t dp_timer_args = {
-          .callback = &double_press_timeout_cb, .name = "double_press_wait"};
-      esp_timer_create(&dp_timer_args, &s_double_press_timer);
-      esp_timer_start_once(s_double_press_timer,
-                           300000); // 300ms in microseconds
-    }
-  }
 }
 
 /* Button related variables */
@@ -616,17 +530,11 @@ static void btn_handler(void *arg, void *data) {
       bsp_display_unlock();
       return;
     }
-    /* Trigger haptic test if in Livestream mode */
-    if (ui_extra_get_current_page() == UI_PAGE_LIVESTREAM) {
-      ESP_LOGI(TAG, "Triggering haptic buzz...");
-      trigger_haptic_buzz();
-    } else {
-      /* Normal 'Down' behavior for other pages */
-      ui_extra_btn_down();
-      if (ui_extra_get_current_page() == UI_PAGE_ALBUM &&
-          lv_obj_has_flag(ui_PanelImageScreenAlbumDelete, LV_OBJ_FLAG_HIDDEN)) {
-        app_album_next_image();
-      }
+    /* Normal 'Down' behavior for all pages (haptic test removed — now UDP-driven) */
+    ui_extra_btn_down();
+    if (ui_extra_get_current_page() == UI_PAGE_ALBUM &&
+        lv_obj_has_flag(ui_PanelImageScreenAlbumDelete, LV_OBJ_FLAG_HIDDEN)) {
+      app_album_next_image();
     }
     break;
 
