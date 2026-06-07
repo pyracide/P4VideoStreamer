@@ -8,9 +8,9 @@ extern "C" {
 #include "ui.h"
 #include <stdbool.h>
 
-#define DEFAULT_CONTRAST_PERCENT 53
+#define DEFAULT_CONTRAST_PERCENT 59
 #define DEFAULT_SATURATION_PERCENT 63
-#define DEFAULT_BRIGHTNESS_PERCENT 54
+#define DEFAULT_BRIGHTNESS_PERCENT 65
 #define DEFAULT_HUE_PERCENT 2
 
 /**

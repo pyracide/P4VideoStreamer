@@ -54,11 +54,11 @@ static EventGroupHandle_t s_wifi_event_group = NULL;
 static int s_retry_count = 0;
 static bool s_wifi_connected = false;
 
-static const char* WIFI_SSID_PRIMARY     = "CommunityFibre69420";
-static const char* WIFI_PASSWORD_PRIMARY = "43SketleyRoad";
+static const char* WIFI_SSID_PRIMARY     = "SamGraysHotspot";
+static const char* WIFI_PASSWORD_PRIMARY = "not12345678";
 
-static const char* WIFI_SSID_FALLBACK    = "SamGraysHotspot";
-static const char* WIFI_PASSWORD_FALLBACK = "not12345678";
+static const char* WIFI_SSID_FALLBACK    = "CommunityFibre69420";
+static const char* WIFI_PASSWORD_FALLBACK = "43SketleyRoad";
 
 static bool s_using_fallback = false;
 static bool s_rtsp_server_started = false;
@@ -110,30 +110,25 @@ static void wifi_event_handler(void *arg, esp_event_base_t base,
     } else if (base == WIFI_EVENT && id == WIFI_EVENT_STA_DISCONNECTED) {
         s_wifi_connected = false;
         s_state = LIVESTREAM_STATE_WIFI_CONNECTING;
-        if (s_retry_count < MAX_RETRY) {
+        if (s_retry_count < 2) {
             esp_wifi_connect();
             s_retry_count++;
-            ESP_LOGI(TAG, "Retry Wi-Fi connect (%d/%d)", s_retry_count, MAX_RETRY);
+            ESP_LOGI(TAG, "Retry Wi-Fi connect (%d/3)", s_retry_count + 1);
         } else {
-            if (!s_using_fallback) {
-                s_using_fallback = true;
-                s_retry_count = 0;
-                ESP_LOGW(TAG, "Failed to connect to primary network %s. Switching to fallback %s...", 
-                         WIFI_SSID_PRIMARY, WIFI_SSID_FALLBACK);
-                wifi_config_t wifi_config = {
-                    .sta = {
-                        .threshold.authmode = WIFI_AUTH_WPA2_PSK,
-                    },
-                };
-                strlcpy((char*)wifi_config.sta.ssid, WIFI_SSID_FALLBACK, sizeof(wifi_config.sta.ssid));
-                strlcpy((char*)wifi_config.sta.password, WIFI_PASSWORD_FALLBACK, sizeof(wifi_config.sta.password));
-                esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
-                esp_wifi_connect();
-            } else {
-                xEventGroupSetBits(s_wifi_event_group, WIFI_FAIL_BIT);
-                s_state = LIVESTREAM_STATE_ERROR;
-                ESP_LOGE(TAG, "Wi-Fi connect failed after %d retries on fallback network", MAX_RETRY);
-            }
+            s_using_fallback = !s_using_fallback;
+            s_retry_count = 0;
+            const char* next_ssid = s_using_fallback ? WIFI_SSID_FALLBACK : WIFI_SSID_PRIMARY;
+            const char* next_pass = s_using_fallback ? WIFI_PASSWORD_FALLBACK : WIFI_PASSWORD_PRIMARY;
+            ESP_LOGW(TAG, "Failed to connect after 3 attempts. Switching network to %s...", next_ssid);
+            wifi_config_t wifi_config = {
+                .sta = {
+                    .threshold.authmode = WIFI_AUTH_WPA2_PSK,
+                },
+            };
+            strlcpy((char*)wifi_config.sta.ssid, next_ssid, sizeof(wifi_config.sta.ssid));
+            strlcpy((char*)wifi_config.sta.password, next_pass, sizeof(wifi_config.sta.password));
+            esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
+            esp_wifi_connect();
         }
     } else if (base == IP_EVENT && id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t *event = (ip_event_got_ip_t *)data;
