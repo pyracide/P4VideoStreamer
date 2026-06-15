@@ -38,7 +38,7 @@ static const char *TAG = "app_livestream";
 
 /* Configuration */
 #define STREAM_FPS          25
-#define STREAM_BITRATE      1000000  /* 1.0 Mbps (Better Wi-Fi stability) */
+#define STREAM_BITRATE      700000   /* 700 Kbps (Better Wi-Fi stability) */
 #define STREAM_GOP          25       /* 1 I-frame per second */
 #define RTSP_SERVER_PORT    554
 #define RTP_LOCAL_PORT      55400
@@ -741,6 +741,15 @@ esp_err_t app_livestream_init(void)
     ESP_ERROR_CHECK(esp_wifi_set_config(WIFI_IF_STA, &wifi_config));
     ESP_ERROR_CHECK(esp_wifi_start());
     esp_wifi_set_ps(WIFI_PS_NONE);
+
+    // Force absolute maximum transmission power (80 units * 0.25 = 20 dBm)
+    int8_t power;
+    esp_wifi_get_max_tx_power(&power);
+    ESP_LOGI(TAG, "Default Wi-Fi TX Power was: %d (%.2f dBm)", power, power * 0.25);
+    
+    ESP_ERROR_CHECK(esp_wifi_set_max_tx_power(80));
+    esp_wifi_get_max_tx_power(&power);
+    ESP_LOGI(TAG, "New Wi-Fi TX Power set to: %d (%.2f dBm)", power, power * 0.25);
 
     s_state = LIVESTREAM_STATE_WIFI_CONNECTING;
     s_using_fallback = false;
