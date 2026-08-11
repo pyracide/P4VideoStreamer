@@ -17,6 +17,9 @@
 #include "app_album.h"
 #include "app_control.h"
 #include "app_livestream.h"
+#undef _IO
+#undef _IOR
+#undef _IOW
 #include "app_video.h"
 #include "app_video_stream.h"
 #include "ui_extra.h"
@@ -449,6 +452,12 @@ static void udp_haptic_server_task(void *pvParameters) {
           effect = 1;
         ESP_LOGI(TAG, "UDP: TEST_EFFECT effect=%d", effect);
         play_oneshot_effect((uint8_t)effect);
+
+      /* â”€â”€ BITRATE:<bps> â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+      } else if (strncmp(rx_buffer, "BITRATE:", 8) == 0) {
+        int bitrate = atoi(rx_buffer + 8);
+        ESP_LOGI(TAG, "UDP: BITRATE value=%d bps", bitrate);
+        app_livestream_set_bitrate((uint32_t)bitrate);
       }
     }
 

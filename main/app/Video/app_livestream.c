@@ -36,9 +36,15 @@
 
 static const char *TAG = "app_livestream";
 
+static esp_err_t init_h264_encoder(void);
+
 /* Configuration */
 #define STREAM_FPS          25
-#define STREAM_BITRATE      700000   /* 700 Kbps (Better Wi-Fi stability) */
+#define STREAM_BITRATE      600000   /* Default fallback bitrate */
+
+static volatile uint32_t s_target_bitrate = STREAM_BITRATE;
+static volatile uint32_t s_current_bitrate = STREAM_BITRATE;
+
 #define STREAM_GOP          25       /* 1 I-frame per second */
 #define RTSP_SERVER_PORT    554
 #define RTP_LOCAL_PORT      55400
@@ -506,6 +512,23 @@ static void livestream_process_task(void *arg)
                          req.index, s_is_streaming);
             }
 
+            if (s_target_bitrate != s_current_bitrate) {
+                ESP_LOGI(TAG, "Dynamic bitrate change: %" PRIu32 " -> %" PRIu32, s_current_bitrate, s_target_bitrate);
+                if (s_h264_enc) {
+                    esp_h264_enc_close(s_h264_enc);
+                    esp_h264_enc_del(s_h264_enc);
+                    s_h264_enc = NULL;
+                }
+                if (s_out_buf) { heap_caps_free(s_out_buf); s_out_buf = NULL; }
+                if (s_task_rgb_buf) { heap_caps_free(s_task_rgb_buf); s_task_rgb_buf = NULL; }
+                
+                s_current_bitrate = s_target_bitrate;
+                esp_err_t err = init_h264_encoder();
+                if (err != ESP_OK) {
+                    ESP_LOGE(TAG, "Failed to re-initialize H.264 encoder after bitrate change");
+                }
+            }
+
             if (!s_is_streaming || !s_h264_enc) {
                 app_video_return_buf(req.index);
                 continue;
@@ -619,7 +642,7 @@ static esp_err_t init_h264_encoder(void)
         .fps = STREAM_FPS,
         .res = { .width = s_stream_width, .height = s_stream_height },
         .rc = {
-            .bitrate = STREAM_BITRATE,
+            .bitrate = s_current_bitrate,
             .qp_min = 22,
             .qp_max = 40,
         },
@@ -691,8 +714,8 @@ static esp_err_t init_h264_encoder(void)
         }
     }
 
-    ESP_LOGI(TAG, "H.264 encoder initialized: %" PRIu32 "x%" PRIu32 " @ %dfps, %d bps",
-             s_stream_width, s_stream_height, STREAM_FPS, STREAM_BITRATE);
+    ESP_LOGI(TAG, "H.264 encoder initialized: %" PRIu32 "x%" PRIu32 " @ %dfps, %" PRIu32 " bps",
+             s_stream_width, s_stream_height, STREAM_FPS, s_current_bitrate);
     return ESP_OK;
 }
 
@@ -883,4 +906,13 @@ void app_livestream_switch_network(void)
     esp_wifi_disconnect();
     esp_wifi_set_config(WIFI_IF_STA, &wifi_config);
     esp_wifi_connect();
+}
+
+void app_livestream_set_bitrate(uint32_t bitrate_bps)
+{
+    if (bitrate_bps < 100000) bitrate_bps = 100000;
+    if (bitrate_bps > 5000000) bitrate_bps = 5000000;
+    
+    s_target_bitrate = bitrate_bps;
+    ESP_LOGI(TAG, "Requested bitrate change to: %" PRIu32 " bps", bitrate_bps);
 }

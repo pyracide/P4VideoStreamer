@@ -563,7 +563,10 @@ static void camera_video_frame_operation(uint8_t *camera_buf, uint8_t camera_buf
                                         uint32_t camera_buf_hes, uint32_t camera_buf_ves, 
                                         size_t camera_buf_len)
 {
-    int scale_level = app_extra_get_magnification_factor();
+    (void)camera_buf;
+    (void)camera_buf_hes;
+    (void)camera_buf_ves;
+    (void)camera_buf_len;
 
     // Camera initialization check
     if(!camera_state.flags.is_initialized) {
@@ -574,9 +577,6 @@ static void camera_video_frame_operation(uint8_t *camera_buf, uint8_t camera_buf
             ESP_LOGI(TAG, "Camera initialized after %d frames", CAMERA_INIT_FRAMES);
         }
     }
-
-    // Use synchronized PPA rotation angle (no need for independent QMA6100 detection)
-    ppa_srm_rotation_angle_t rotation_angle = current_ppa_rotation;
 
     // Process video frame with rotation compensation (hardware conversion YUV422 -> RGB565)
     // esp_err_t ret = app_image_process_video_frame(
